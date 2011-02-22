@@ -1,0 +1,8 @@
+/**
+ * The boot.Main IDL defines a "main" method. A component-based application must
+ * provides an interface of this type, so that it can be launched by a bootstrap
+ * compoenent.
+ */
+interface mjpeg.Start {
+  int start(int argc, char **argv);
+}

@@ -1,0 +1,5 @@
+
+interface mjpeg.ChannelReadItf {
+  void channel_init(int32_t length, int32_t size);
+  int32_t channel_read(void * buf, uint32_t rsize);
+}

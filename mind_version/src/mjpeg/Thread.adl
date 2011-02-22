@@ -1,0 +1,4 @@
+primitive mjpeg.Thread {
+  data thread.h;
+  source thread.c;
+}

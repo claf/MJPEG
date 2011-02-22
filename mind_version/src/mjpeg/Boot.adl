@@ -1,0 +1,7 @@
+@Singleton
+primitive mjpeg.Boot {
+
+  requires Start as entryPoint;
+  
+  source boot.c;
+}

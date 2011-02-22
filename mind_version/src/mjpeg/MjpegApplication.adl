@@ -1,0 +1,8 @@
+@Singleton
+
+composite mjpeg.MjpegApplication {
+  contains Boot as boot;
+  contains Mjpeg as app;
+
+  binds boot.entryPoint to app.entryPoint;
+}

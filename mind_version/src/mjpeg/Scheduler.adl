@@ -1,0 +1,10 @@
+primitive mjpeg.Scheduler {
+  
+  
+  provides Start as entryPoint;
+
+  requires SchedulerItf as sched_fetch_itf;
+  requires SchedulerItf as sched_comp_itf;
+
+  source scheduler.c;
+}

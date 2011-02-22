@@ -1,0 +1,13 @@
+composite mjpeg.Compute {
+  
+  contains ComputePrimitive as compute;
+  contains Channel as channel;
+
+  provides SchedulerItf as sched_itf;
+  provides ChannelWriteItf as channel_write;
+
+  binds this.sched_itf to compute.sched_itf;
+  binds this.channel_write to channel.channel_write;
+
+  binds compute.channel_read to channel.channel_read;
+}
