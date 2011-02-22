@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE definition PUBLIC "-//objectweb.org//DTD Fractal ADL 2.0//EN"
+"classpath://org/objectweb/fractal/cecilia/adl/parser/xml/cecilia.dtd">
+<definition name="mjpeg.Loader">
+	<interface name="entry" role="server" signature="minus.common.generic.activity.api.Main"/>
+	<interface name="componentManager" role="client" signature="comete.generic.api.ComponentManager"/>
+	<interface name="allocator" role="client" signature="memory.api.Allocator"/>
+	
+		
+	    <!-- Interfaces of the client component -->
+    <interface name="introspection" role="server" signature="observation.obs.api.introspection" />
+    <interface name="introspectionAnswer" role="client" signature="observation.treatment.api.observationAnswer" contingency="optional" />
+       <interface name="init" role="client" signature="observation.basic.api.init" contingency="optional" />
+	<content class="mjpeg.loader" language="thinkMC" >
+    	   <ldflag value="-lpthread"/>
+        </content>
+</definition>

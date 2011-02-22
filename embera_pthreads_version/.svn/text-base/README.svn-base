@@ -1,0 +1,36 @@
+EMBERA: EMbedded component Based Environment Realtime Applications.
+
+1. Compilation & installation.
+
+
+
+Download EMBERA V_0.2 using a SVN client from the following address:
+
+svn checkout --username user https://scm.gforge.inria.fr/svn/memo/people/prada/dEvelop/embera/
+
+For compiling simply check the Makefile compilation options, and set the apropiate ones according 
+with your architecture and compiler preferences (GCC compiler is used by default).
+
+
+
+IMPORTANT!
+Use "make embera" before any example compilation.
+
+
+2. Examples
+
+The "examples" directory contains several examples of component creation, component connection
+and message interchange among components.
+
+2.1. The "helloworld" example implements a client - server behavior between two components, without any observation.
+
+2.2. The "hello-observation" example implements the same task with the observer
+
+2.3. The "pi" example computes the value of pi, with one master thread and 4 slaves threads to do the computation.
+
+2.4. The "imageTiff" example inverts the colors of a Tiff image. The libtiff needs to be installed to compile this example.
+
+2.5. The "mjpeg" example decodes a mjpeg video (located in the examples/mjpeg/video folder).
+
+2.6. The "hello-composite" example illustrates the composition of components very simply
+

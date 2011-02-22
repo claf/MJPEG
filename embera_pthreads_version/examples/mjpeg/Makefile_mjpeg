@@ -1,0 +1,17 @@
+SUBDIRS = src
+BUILDDIR = ../../build
+CC = gcc
+#CC=/opt/STM/STLinux-2.3/devkit/sh4/bin/sh4-linux-gcc
+#activate frame view with the sdl library
+#TARGET_CFLAGS = `sdl-config --cflags`
+#LIBS = -lpthread `sdl-config --libs` -L.
+
+TARGET_CFLAGS = 
+LIBS = -lpthread -ldl -L. -ltiff
+
+all: $(OBJ)
+	for i in $(SUBDIRS) ; do make -C $$i || exit $? ; done;
+	$(CC) -o ../../mjpeg_decoder $(BUILDDIR)/*.o $(LIBS)
+
+clean:
+	rm -rf $(BUILDDIR)/* mjpeg_decoder
