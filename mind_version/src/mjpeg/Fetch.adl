@@ -8,5 +8,6 @@ primitive mjpeg.Fetch {
   requires ChannelWriteItf as channel_write;
 
   source fetch.c;
+  data fetch.h;
   
 }

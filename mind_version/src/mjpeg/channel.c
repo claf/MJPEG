@@ -7,7 +7,9 @@
 
 int32_t METH(channel_read, channel_read)(void * buf, uint32_t rsize)
 {
+#ifdef DEBUG
   printf("Thread 0x%.8x read channel %p\n", (unsigned int)pthread_self(), (PRIVATE.c));
+#endif
 	int32_t n = rsize*(PRIVATE.c)->cellSize;
 
 	while (n) {
@@ -35,7 +37,9 @@ int32_t METH(channel_read, channel_read)(void * buf, uint32_t rsize)
 }
 
 int32_t METH(channel_write, channel_write)(void *buf, uint32_t wsize) {
+#ifdef DEBUG
   printf("Thread 0x%.8x write channel %p\n", (unsigned int)pthread_self(), (PRIVATE.c));
+#endif
 	int32_t n = wsize*(PRIVATE.c)->cellSize;
 
 	while (n) {

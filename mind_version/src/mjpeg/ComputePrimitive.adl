@@ -4,4 +4,5 @@ primitive mjpeg.ComputePrimitive {
   requires ChannelReadItf as channel_read;
   
   source compute.c;  
+  data compute.h;
 }
