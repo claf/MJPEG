@@ -3,10 +3,6 @@ primitive mjpeg.Scheduler {
   
   provides Start as entryPoint;
 
-  requires ChannelItf as comp_chann_itf;
-  requires ChannelItf as disp_chann_itf;
-  requires ChannelItf as disp_chann_init_itf;
-
   requires ThreadItf as fetch_thread_itf;
   requires ThreadItf as comp_thread_itf;
   requires ThreadItf as disp_thread_itf;

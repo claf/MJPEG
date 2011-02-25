@@ -5,6 +5,5 @@
 
 struct {
   Channel * c;
-  char name[100];
 } PRIVATE;
 #endif

@@ -1,7 +1,7 @@
 composite mjpeg.Compute {
   
   contains ComputePrimitive as compute;
-  contains Channel as channel;
+  contains Channel(l=65536, s=1) as channel;
 
   provides ThreadItf as thread_itf;
   provides ChannelItf as channel_itf;

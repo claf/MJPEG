@@ -1,8 +1,8 @@
 composite mjpeg.Dispatch {
   
   contains DispatchPrimitive as dispatch;
-  contains Channel as channel;
-  contains Channel as channel_init;
+  contains Channel(l=65536, s=1) as channel;
+  contains Channel(l=128, s=1) as channel_init;
 
   provides ThreadItf as thread_itf;
   provides ChannelItf as channel_init_itf;

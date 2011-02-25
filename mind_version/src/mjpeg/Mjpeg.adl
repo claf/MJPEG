@@ -1,4 +1,5 @@
 composite mjpeg.Mjpeg {
+// TODO: constant NB_IDCT defined in inc/mjpeg.h should be an attribute of Mjpeg component
   provides Start as entryPoint;
 
   contains Scheduler as sched;
@@ -15,11 +16,8 @@ composite mjpeg.Mjpeg {
   binds sched.fetch_thread_itf  to fetch.thread_itf;
   //  Compute
   binds sched.comp_thread_itf  to comp.thread_itf;
-  binds sched.comp_chann_itf to comp.channel_itf;
   //  Dispatch
   binds sched.disp_thread_itf  to disp.thread_itf;
-  binds sched.disp_chann_itf to disp.channel_itf;
-  binds sched.disp_chann_init_itf to disp.channel_init_itf;
 
   // Communication bindings
   binds fetch.channel_write to comp.channel_itf;

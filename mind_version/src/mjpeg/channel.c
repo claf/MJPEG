@@ -6,9 +6,10 @@
 
 #include "inc/dpn.h"
 
+
 int32_t METH(channel_itf, channel_read)(void * buf, uint32_t rsize) {
 #ifdef DEBUG
-  printf("%s : Thread 0x%.8x read channel %s\n", __FUNCTION__, (unsigned int)pthread_self(), (PRIVATE.name));
+  printf("%s : Thread 0x%.8x read channel %p\n", __FUNCTION__, (unsigned int)pthread_self(), (PRIVATE.c));
 #endif
 	int32_t n = rsize*(PRIVATE.c)->cellSize;
 
@@ -38,7 +39,7 @@ int32_t METH(channel_itf, channel_read)(void * buf, uint32_t rsize) {
 
 int32_t METH(channel_itf, channel_write)(void *buf, uint32_t wsize) {
 #ifdef DEBUG
-  printf("%s : Thread 0x%.8x write channel %s\n", __FUNCTION__, (unsigned int)pthread_self(), (PRIVATE.name));
+  printf("%s : Thread 0x%.8x write channel %p\n", __FUNCTION__, (unsigned int)pthread_self(), (PRIVATE.c));
 #endif
 	int32_t n = wsize*(PRIVATE.c)->cellSize;
 
@@ -66,11 +67,11 @@ int32_t METH(channel_itf, channel_write)(void *buf, uint32_t wsize) {
 	return wsize;
 }
 
-void METH(channel_itf, channel_init) (int32_t length, int32_t size, char *name) {
-#ifdef DEBUG
-  printf("%s : Thread 0x%.8x init channel %s\n", __FUNCTION__, (unsigned int)pthread_self(), name);
-#endif
+void METH(channel_init) (int32_t length, int32_t size) {
 	(PRIVATE.c) = calloc (1, sizeof(Channel));
+#ifdef DEBUG
+  printf("%s : Thread 0x%.8x init channel %p\n", __FUNCTION__, (unsigned int)pthread_self(), PRIVATE.c);
+#endif
 	char * buffer = malloc (length * size);
 
 	(PRIVATE.c) -> data = buffer;
@@ -80,7 +81,9 @@ void METH(channel_itf, channel_init) (int32_t length, int32_t size, char *name) 
 	pthread_cond_init (&(PRIVATE.c)->cond, NULL);
 	pthread_mutex_init (&(PRIVATE.c)->mutex, NULL);
 
-  strcpy(PRIVATE.name, name);
-
 	return;
+}
+
+CONSTRUCTOR() {
+  CALL(channel_init)(ATTR(length), ATTR(size));
 }

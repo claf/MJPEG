@@ -1,5 +1,8 @@
-primitive mjpeg.Channel {
+primitive mjpeg.Channel(l, s) {
   provides ChannelItf as channel_itf;
+
+  attribute int length = l;
+  attribute int size = s;
 
   source channel.c;
   data channel.h;
