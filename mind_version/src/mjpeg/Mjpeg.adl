@@ -19,8 +19,10 @@ composite mjpeg.Mjpeg {
   //  Dispatch
   binds sched.disp_thread_itf  to disp.thread_itf;
   binds sched.disp_chann_itf to disp.channel_itf;
+  binds sched.disp_chann_init_itf to disp.channel_init_itf;
 
   // Communication bindings
   binds fetch.channel_write to comp.channel_itf;
   binds comp.channel_write to disp.channel_itf;
+  binds fetch.channel_init_itf to disp.channel_init_itf;
 }

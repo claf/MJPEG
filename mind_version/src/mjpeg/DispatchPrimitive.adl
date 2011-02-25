@@ -1,6 +1,7 @@
 primitive mjpeg.DispatchPrimitive extends Thread{
 
   requires ChannelItf as channel_read;
+  requires ChannelItf as channel_init_itf;
   
   source dispatch.c;  
 //  data compute.h;

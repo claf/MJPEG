@@ -2,8 +2,10 @@ composite mjpeg.Dispatch {
   
   contains DispatchPrimitive as dispatch;
   contains Channel as channel;
+  contains Channel as channel_init;
 
   provides ThreadItf as thread_itf;
+  provides ChannelItf as channel_init_itf;
   provides ChannelItf as channel_itf;
 
   binds this.thread_itf to dispatch.thread_itf;
@@ -11,7 +13,9 @@ composite mjpeg.Dispatch {
   //  - init for the scheduler
   //  - write to the fetch
   binds this.channel_itf to channel.channel_itf;
+  binds this.channel_init_itf to channel_init.channel_itf;
 
   binds dispatch.channel_read to channel.channel_itf;
+  binds dispatch.channel_init_itf to channel_init.channel_itf;
 
 }

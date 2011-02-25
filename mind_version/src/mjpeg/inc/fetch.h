@@ -6,7 +6,7 @@
 
 #include "mjpeg.h"
 #include "utils.h"
-#include <data_endian.h>
+#include "data_endian.h"
 
 #define IS_EOF feof (movie)
 
