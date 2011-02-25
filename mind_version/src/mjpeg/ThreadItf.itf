@@ -1,5 +1,4 @@
 interface mjpeg.ThreadItf {
-//  void init();
   void start();
   void thread_join();
 }

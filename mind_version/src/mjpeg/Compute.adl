@@ -6,12 +6,16 @@ composite mjpeg.Compute {
   provides ThreadItf as thread_itf;
   provides ChannelItf as channel_itf;
 
+  requires ChannelItf as channel_write;
+
   binds this.thread_itf to compute.thread_itf;
   // this binding offers:
   //  - init for the scheduler
   //  - write to the fetch
+
   binds this.channel_itf to channel.channel_itf;
 
   binds compute.channel_read to channel.channel_itf;
-
+  
+  binds compute.channel_write to this.channel_write;
 }

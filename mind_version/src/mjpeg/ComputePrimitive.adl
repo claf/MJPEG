@@ -1,6 +1,7 @@
 primitive mjpeg.ComputePrimitive extends Thread{
 
   requires ChannelItf as channel_read;
+  requires ChannelItf as channel_write;
   
   source compute.c;  
 //  data compute.h;

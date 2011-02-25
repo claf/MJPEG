@@ -9,6 +9,9 @@ void *METH(process)() {
     printf("Comp: waiting for receive\n");
     CALL(channel_read, channel_read)(tmp, 5);
     printf("Comp: received msg from fetch: %s\n", tmp);
+    printf("Comp: send to dispatch\n");
+    CALL(channel_write, channel_write)("toto", 5);
+    printf("Comp: message sent\n");
     usleep(100000);
   }
 }
