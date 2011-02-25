@@ -1,6 +1,5 @@
 primitive mjpeg.Channel {
-  provides ChannelReadItf as channel_read;
-  provides ChannelWriteItf as channel_write;
+  provides ChannelItf as channel_itf;
 
   source channel.c;
   data channel.h;

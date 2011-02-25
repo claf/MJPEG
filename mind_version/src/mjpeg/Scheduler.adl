@@ -5,6 +5,8 @@ primitive mjpeg.Scheduler {
 
   requires SchedulerItf as sched_fetch_itf;
   requires SchedulerItf as sched_comp_itf;
+  requires ChannelItf as comp_chann_itf;
+
 
   source scheduler.c;
 }

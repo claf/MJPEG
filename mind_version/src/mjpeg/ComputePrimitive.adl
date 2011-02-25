@@ -1,7 +1,7 @@
 primitive mjpeg.ComputePrimitive {
 
   provides SchedulerItf as sched_itf;
-  requires ChannelReadItf as channel_read;
+  requires ChannelItf as channel_read;
   
   source compute.c;  
   data compute.h;

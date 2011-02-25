@@ -1,4 +1,0 @@
-
-interface mjpeg.ChannelWriteItf {
-  int32_t channel_write(void *buf, uint32_t wsize);
-}

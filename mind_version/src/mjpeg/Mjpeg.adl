@@ -12,7 +12,8 @@ composite mjpeg.Mjpeg {
   // Initialization bindings
   binds schedSubC.sched_fetch_itf to fetchSubC.sched_itf;
   binds schedSubC.sched_comp_itf  to compSubC.sched_itf;
+  binds schedSubC.comp_chann_itf to compSubC.channel_itf;
 
   // Communication bindings
-  binds fetchSubC.channel_write to compSubC.channel_write;
+  binds fetchSubC.channel_write to compSubC.channel_itf;
 }

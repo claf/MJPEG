@@ -5,8 +5,7 @@
 
 #include "inc/dpn.h"
 
-int32_t METH(channel_read, channel_read)(void * buf, uint32_t rsize)
-{
+int32_t METH(channel_itf, channel_read)(void * buf, uint32_t rsize) {
 #ifdef DEBUG
   printf("Thread 0x%.8x read channel %p\n", (unsigned int)pthread_self(), (PRIVATE.c));
 #endif
@@ -36,7 +35,7 @@ int32_t METH(channel_read, channel_read)(void * buf, uint32_t rsize)
 	return rsize;
 }
 
-int32_t METH(channel_write, channel_write)(void *buf, uint32_t wsize) {
+int32_t METH(channel_itf, channel_write)(void *buf, uint32_t wsize) {
 #ifdef DEBUG
   printf("Thread 0x%.8x write channel %p\n", (unsigned int)pthread_self(), (PRIVATE.c));
 #endif
@@ -66,7 +65,7 @@ int32_t METH(channel_write, channel_write)(void *buf, uint32_t wsize) {
 	return wsize;
 }
 
-void METH(channel_read, channel_init) (int32_t length, int32_t size) {
+void METH(channel_itf, channel_init) (int32_t length, int32_t size) {
 	(PRIVATE.c) = calloc (1, sizeof(Channel));
 	char * buffer = malloc (length * size);
 
