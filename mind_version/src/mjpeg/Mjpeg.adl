@@ -2,16 +2,17 @@ composite mjpeg.Mjpeg {
   provides Start as entryPoint;
 
   contains Scheduler as schedSubC;
+
   contains Fetch as fetchSubC;
   contains Compute as compSubC;
-//  contains Dispatch as dispatchSubC;
+//  contains Dispatch as dispSubC;
 
   // Entry point
   binds this.entryPoint to schedSubC.entryPoint;
   
   // Initialization bindings
-  binds schedSubC.sched_fetch_itf to fetchSubC.sched_itf;
-  binds schedSubC.sched_comp_itf  to compSubC.sched_itf;
+  binds schedSubC.fetch_thread_itf  to fetchSubC.thread_itf;
+  binds schedSubC.comp_thread_itf  to compSubC.thread_itf;
   binds schedSubC.comp_chann_itf to compSubC.channel_itf;
 
   // Communication bindings

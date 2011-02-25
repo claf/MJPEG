@@ -1,6 +1,6 @@
 # If the MIND_ROOT variable is defined, look for 'mindc' in this directory
 # otherwise, expect that 'mindc' is in the PATH.
-MINDC = mindc --keep --no-bin -c=-g -e
+MINDC = mindc --keep --no-bin -c=-g -e -c=-DDEBUG
 
 all: mjpeg
 

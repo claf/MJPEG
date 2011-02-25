@@ -1,13 +1,6 @@
-//@LDFlags "-lpthread"
-@Singleton
-primitive mjpeg.Fetch {
-//  requires ChannelItf as channel_itf;
-  
-  provides SchedulerItf as sched_itf;
-
-  requires ChannelWriteItf as channel_write;
+primitive mjpeg.Fetch extends Thread{
+  requires ChannelItf as channel_write;
 
   source fetch.c;
-  data fetch.h;
-  
+//  data fetch.h;
 }

@@ -1,8 +1,7 @@
-primitive mjpeg.ComputePrimitive {
+primitive mjpeg.ComputePrimitive extends Thread{
 
-  provides SchedulerItf as sched_itf;
   requires ChannelItf as channel_read;
   
   source compute.c;  
-  data compute.h;
+//  data compute.h;
 }

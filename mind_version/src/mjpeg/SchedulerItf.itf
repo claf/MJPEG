@@ -1,5 +1,0 @@
-
-interface mjpeg.SchedulerItf {
-  int init();
-  int start(char *str);
-}

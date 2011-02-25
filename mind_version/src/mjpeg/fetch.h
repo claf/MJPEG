@@ -1,9 +1,7 @@
 #ifndef FETCH_DATA_H
 #define FETCH_DATA_H
-
-#include <pthread.h>
-
 struct {
-  pthread_t thread;
+//  pthread_t thread;
+  int toto;
 } PRIVATE;
 #endif

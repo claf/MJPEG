@@ -6,6 +6,5 @@ struct {
   pthread_t thread;
   pthread_mutex_t mutex;
   pthread_cond_t cond;
-  void *process(void *args);
 } PRIVATE;
 #endif
