@@ -1,5 +1,5 @@
 primitive mjpeg.Fetch extends Thread{
-  requires ChannelItf as channel_write;
+  requires ChannelItf as channel_write[4];
   requires ChannelItf as channel_init_itf;
 
   source fetch.c;

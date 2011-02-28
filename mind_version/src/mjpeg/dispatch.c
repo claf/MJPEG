@@ -115,7 +115,7 @@ void *METH(process)() {
     // read the channel one after the others, on modulo NB_IDCT
     // parallel is not very efficient here as the dispatch is locked on every channelRead
     // if a 
-		CALL(channel_read, channel_read)( MCU_YCbCr, flit_bytes);
+		CALL(channel_read[idct_index], channel_read)( MCU_YCbCr, flit_bytes);
 		idct_index = (idct_index + 1) % NB_IDCT;
     int flit_index;
 		for (flit_index = 0; flit_index < flit_size; flit_index += NB_CELLS) {

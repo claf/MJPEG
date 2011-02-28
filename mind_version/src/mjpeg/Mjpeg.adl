@@ -5,7 +5,10 @@ composite mjpeg.Mjpeg {
   contains Scheduler as sched;
 
   contains Fetch as fetch;
-  contains Compute as comp;
+  contains Compute as comp0;
+  contains Compute as comp1;
+  contains Compute as comp2;
+  contains Compute as comp3;
   contains Dispatch as disp;
 
   // Entry point
@@ -15,12 +18,23 @@ composite mjpeg.Mjpeg {
   //  Fetch
   binds sched.fetch_thread_itf  to fetch.thread_itf;
   //  Compute
-  binds sched.comp_thread_itf  to comp.thread_itf;
+  binds sched.comp_thread_itf[0]  to comp0.thread_itf;
+  binds sched.comp_thread_itf[1]  to comp1.thread_itf;
+  binds sched.comp_thread_itf[2]  to comp2.thread_itf;
+  binds sched.comp_thread_itf[3]  to comp3.thread_itf;
   //  Dispatch
   binds sched.disp_thread_itf  to disp.thread_itf;
 
   // Communication bindings
-  binds fetch.channel_write to comp.channel_itf;
-  binds comp.channel_write to disp.channel_itf;
+  binds fetch.channel_write[0] to comp0.channel_itf;
+  binds fetch.channel_write[1] to comp1.channel_itf;
+  binds fetch.channel_write[2] to comp2.channel_itf;
+  binds fetch.channel_write[3] to comp3.channel_itf;
+
+  binds comp0.channel_write to disp.channel_itf[0];
+  binds comp1.channel_write to disp.channel_itf[1];
+  binds comp2.channel_write to disp.channel_itf[2];
+  binds comp3.channel_write to disp.channel_itf[3];
+
   binds fetch.channel_init_itf to disp.channel_init_itf;
 }

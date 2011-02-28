@@ -26,7 +26,7 @@
 
 #include "jpeg.h"
 
-#define NB_IDCT			1
+#define NB_IDCT			4
 
 /*****************************
  * Differents levels of print

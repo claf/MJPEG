@@ -4,7 +4,7 @@ primitive mjpeg.Scheduler {
   provides Start as entryPoint;
 
   requires ThreadItf as fetch_thread_itf;
-  requires ThreadItf as comp_thread_itf;
+  requires ThreadItf as comp_thread_itf[4];
   requires ThreadItf as disp_thread_itf;
 
   source scheduler.c;

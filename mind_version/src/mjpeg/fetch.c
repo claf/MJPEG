@@ -99,9 +99,9 @@ void *METH(process)() {
 						CALL(channel_init_itf, channel_write)( (unsigned char *) & YH, sizeof (uint32_t));
 						CALL(channel_init_itf, channel_write)( (unsigned char *) & flit_size, sizeof (uint32_t));
 
-						for (i = 1; i <= NB_IDCT; i++) 
+						for (i = 0; i < NB_IDCT; i++) 
 			/* Initialisation de la fonction en face, qui va connaitre la bonne taille des flits */
-							CALL(channel_write, channel_write)( (uint8_t *) & flit_size, sizeof (uint32_t));
+							CALL(channel_write[i], channel_write)( (uint8_t *) & flit_size, sizeof (uint32_t));
 						dispatch_info = false;
 					}
 
@@ -305,7 +305,7 @@ void *METH(process)() {
 						}
 
             // here to send the data to compute to the threads
-						CALL(channel_write, channel_write)( (unsigned char *) FLIT[to_idct_index], flit_size * 64 * sizeof (int32_t));
+						CALL(channel_write[to_idct_index], channel_write)( (unsigned char *) FLIT[to_idct_index], flit_size * 64 * sizeof (int32_t));
 						to_idct_index = (to_idct_index + 1) % NB_IDCT;
 
 						nb_MCU -= YV * nb_MCU_sx;
