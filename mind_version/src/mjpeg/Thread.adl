@@ -1,3 +1,4 @@
+@controller.LifeCycleController
 primitive mjpeg.Thread {
   provides ThreadItf as thread_itf;
   data thread.h;

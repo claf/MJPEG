@@ -1,11 +1,12 @@
+import boot.Main;
+
 primitive mjpeg.Scheduler {
   
   
-  provides Start as entryPoint;
+  provides Main as entryPoint;
 
+  // Only need this to synchronize at the end
   requires ThreadItf as fetch_thread_itf;
-  requires ThreadItf as comp_thread_itf[4];
-  requires ThreadItf as disp_thread_itf;
 
   source scheduler.c;
 }

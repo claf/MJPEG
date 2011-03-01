@@ -1,8 +1,8 @@
+import boot.LCCApplicationType;
+
 @Singleton
-
-composite mjpeg.MjpegApplication {
-  contains Boot as boot;
+composite mjpeg.MjpegApplication extends LCCApplicationType {
+//  contains Boot as boot;
   contains Mjpeg as app;
-
-  binds boot.entryPoint to app.entryPoint;
+  binds this.entryPoint to app.entryPoint;
 }

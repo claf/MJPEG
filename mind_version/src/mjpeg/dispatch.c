@@ -165,11 +165,12 @@ void *METH(process)() {
 			if (LB_X == 0) {
 				LB_Y = (LB_Y + YV) % NB_MCU_Y;
 				if (LB_Y == 0)  {
+					SDL_LockYUVOverlay(m_image);
 					memcpy (m_image->pixels[0], y, y_size);
 					memcpy (m_image->pixels[1], cb, c_size);; 
+          // TODO: segfault here sometimes, donno why...
 					memcpy (m_image->pixels[2], cr, c_size);; 
 
-					SDL_LockYUVOverlay(m_image);
 					SDL_DisplayYUVOverlay(m_image, & rect);
 					SDL_UnlockYUVOverlay(m_image);
 
