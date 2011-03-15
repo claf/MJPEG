@@ -1,0 +1,5 @@
+.svn
+src/*.o
+callgrind.out*
+mire
+mjpeg

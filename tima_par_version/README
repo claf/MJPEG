@@ -1,0 +1,6 @@
+Parallel Motion JPEG application, based on the sequential version
+developped for educational purpose at the Ensimag mostly by
+Pierre-Henri Horrein, Frédéric Pétrot and Olivier Muller on a basis
+provided by Patrice Gerin and Frédéric.
+
+Version 1.0 : currently decodes correctly only 444 movies. 
