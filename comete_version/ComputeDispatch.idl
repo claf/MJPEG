@@ -1,6 +1,0 @@
-package mjpeg;
-
-interface ComputeDispatch {
-  void  dispatch_process(uint8_t * Idct_YCbCr);
-  void eof();
-}

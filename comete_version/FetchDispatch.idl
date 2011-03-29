@@ -1,4 +1,0 @@
-package mjpeg;
-interface FetchDispatch {
-	void init( any SOF_section , uint32_t YV , uint32_t YH , uint32_t flit_size);
-}

@@ -1,5 +1,0 @@
-package mjpeg.observation;
-
-record gtgprofilerAttributes{
-  int minTime;
-}

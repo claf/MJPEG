@@ -1,6 +1,0 @@
-package mjpeg;
-interface FetchCompute {
-  void   idct_init (uint32_t flit_size, any cond, any mutex);
-  void idct_process (int32_t * block_YCbCr);
-  void eof();
-}
