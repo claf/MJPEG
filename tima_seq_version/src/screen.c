@@ -135,13 +135,19 @@ void screen_cpyrect(uint32_t x, uint32_t y, uint32_t w, uint32_t h, void *ptr)
 
 int screen_refresh()
 {
+  int delay;
 	SDL_Rect offset;
 	uint64_t finish_time;
 	SDL_Event event;
 	offset.x = 0;
 	offset.y = 0;
 	finish_time = SDL_GetTicks();
-	while (SDL_GetTicks() - old_time < 1000 / global_framerate);
+
+  //	while (SDL_GetTicks() - old_time < 1000 / global_framerate)
+  delay = (1000/global_framerate) + old_time - SDL_GetTicks();
+  if (delay > 0 )
+    SDL_Delay(delay);
+
 	if (SDL_Flip(screen) == -1) {
 		printf("Could not refresh screen: %s\n.", SDL_GetError() );
 	}
@@ -153,6 +159,14 @@ int screen_refresh()
 	old_time = SDL_GetTicks();
 	// Check wether close event was detected, otherwise SDL freezes
 	if(SDL_PollEvent(&event)) {
+    if (event.type == SDL_KEYDOWN) {
+      if (event.key.keysym.sym == SDLK_q) {
+        printf("bye bye\n");
+        initialized = 0;
+        SDL_Quit();
+        return 1;
+      }
+    }
 		if (event.type == SDL_QUIT) {
 			printf("\n");
 			initialized = 0;
