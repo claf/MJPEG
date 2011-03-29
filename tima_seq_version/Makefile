@@ -6,10 +6,10 @@ INC_DIR = include
 
 # Define compilation flags
 
-CC = gcc -DINFO
+CC = gcc -g -DINFO #-pg
 INC = -I$(INC_DIR)
-CFLAGS = -O3 $(INC) -Wall -std=c99 -g
-LDFLAGS = -lSDL
+CFLAGS = $(INC) -Wall -std=c99 #-g
+LDFLAGS = -lSDL #-g
 
 # Define object files list
 

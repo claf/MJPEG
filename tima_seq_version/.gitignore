@@ -1,3 +1,4 @@
+gmon.out
 .svn
 src/*.o
 callgrind.out*
