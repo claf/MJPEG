@@ -1,3 +1,5 @@
+CFLAGS=-g
+
 libdpn.a(dpn.o) : dpn.o
 realclean : clean
 	$(RM) libdpn.a
