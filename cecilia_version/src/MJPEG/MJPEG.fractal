@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+<!DOCTYPE definition PUBLIC "-//objectweb.org//DTD Fractal ADL 2.0//EN" "classpath://org/objectweb/fractal/cecilia/adl/parser/xml/cecilia.dtd">
+<definition name="MJPEG.MJPEG">
+  
+  <interface name="main" role="server" signature="boot.api.Main" />
+  
+  <component name="Fetch" definition="MJPEG.Fetch" />
+  <component name="Decode" definition="MJPEG.Decode" />
+  <component name="Render" definition="MJPEG.Render" />
+  <component name="Resize" definition="MJPEG.Resize" />
+
+  <binding client="this.main" server="Fetch.entry" /> <!-- main() -->
+  <binding client="Fetch.render" server="Render.render" /> <!-- render_init() -->
+  <binding client="Fetch.decode" server="Decode.decode" /> <!-- decode() -->
+  <binding client="Render.fetch" server="Fetch.fetch" /> <!-- fetch() -->
+  <binding client="Fetch.resize" server="Resize.resize" /> <!-- resize_init() -->
+  <binding client="Decode.resize" server="Resize.resize" /> <!-- resize() -->
+  <binding client="Resize.render" server="Render.render" /> <!-- render() -->
+  <binding client="Render.resize" server="Resize.resize" /> <!-- click() -->
+
+</definition>

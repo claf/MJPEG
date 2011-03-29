@@ -1,0 +1,10 @@
+<?xml version="1.0" ?>
+<!DOCTYPE definition PUBLIC "-//objectweb.org//DTD Fractal ADL 2.0//EN" "classpath://org/objectweb/fractal/cecilia/adl/parser/xml/cecilia.dtd">
+<definition name="MJPEG.Resize">
+
+  <interface name="resize" role="server" signature="MJPEG.Resize" />
+  <interface name="render" role="client" signature="MJPEG.Render" />
+
+  <content class="MJPEG.resize" language="thinkMC" />
+
+</definition>

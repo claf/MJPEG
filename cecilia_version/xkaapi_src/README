@@ -1,0 +1,8 @@
+* le Makefile est celui de 'blur_dfg_xkaapi'.
+
+* le fichier 'blur.c' contient le main generique (à ajouter dans le script).
+
+* utilisation standart : 
+  ./cecilia2xkaapi.pl ../blur_par_cecilia/src/Blur/*.c
+
+* les fichiers '.c' sont parsés et réécris dans le repertoire courant.

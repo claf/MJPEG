@@ -1,0 +1,7 @@
+package MJPEG;
+
+public interface Render {
+  void render_init ();
+  void render ();
+}
+

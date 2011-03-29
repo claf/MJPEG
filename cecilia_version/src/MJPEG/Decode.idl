@@ -1,0 +1,6 @@
+package MJPEG;
+
+public interface Decode {
+  void decode ();
+}
+

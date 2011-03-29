@@ -1,0 +1,6 @@
+package MJPEG;
+
+public interface Fetch {
+  void fetch ();
+}
+

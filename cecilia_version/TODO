@@ -1,0 +1,1 @@
+une interface service fournissant resize et init. le init prend X et Y avec X le nb de video et Y le nb de lookahead, et initialise les structures et alloue les buffers

@@ -1,0 +1,8 @@
+package MJPEG;
+
+public interface Resize {
+  void resize_init ();
+  void resize      ();
+  void click       ();
+}
+
