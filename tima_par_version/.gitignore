@@ -1,1 +1,4 @@
 callgrind.out*
+mjpeg
+*.a
+*.o
