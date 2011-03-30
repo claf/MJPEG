@@ -18,7 +18,7 @@ $(OUT):$(OBJ)
 	$(CC) $(CFLAGS) -o $@ -c $^
 
 $(TMPFILE):$(wildcard $(ORI)/*.c)
-	cecilia2xkaapi.pl $^ 
+	c2x ./ $(ORI) 
 	touch .Generated
 
 $(SRC):$(TMPFILE)
