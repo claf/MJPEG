@@ -26,6 +26,11 @@ uint8_t *YCbCr_MCU_ds[3] = { NULL, NULL, NULL};
 uint32_t *RGB_MCU = NULL;
 
 
+void METHOD(decode, decode_init)(void *_this)
+{
+  // TODO : Init of dynamic intern variables
+}
+
 void METHOD(decode, decode)(void *_this, frame_chunk_t* chunks)
 {
   /* to get ((SOF_component[component_index].HV >> 4) & 0xf) now use Streams[video_id].HV */
