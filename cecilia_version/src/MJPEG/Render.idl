@@ -1,7 +1,7 @@
 package MJPEG;
 
 public interface Render {
-  void render_init ();
-  void render ();
+  void render_init (int width, int height, int framerate);
+  void render (int X, int Y, int W, int H, void* resized_buff);
 }
 

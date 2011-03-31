@@ -1,6 +1,6 @@
 package MJPEG;
 
 public interface Decode {
-  void decode ();
+  void decode (uint32_t *MCU[3][64], uint8_t *DQT_table[64], int sf_h, int sf_v, int X, int Y, int video_id, int frame_id);
 }
 

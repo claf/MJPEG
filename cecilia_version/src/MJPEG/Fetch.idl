@@ -1,6 +1,6 @@
 package MJPEG;
 
 public interface Fetch {
-  void fetch ();
+  void fetch (int nb_frame);
 }
 
