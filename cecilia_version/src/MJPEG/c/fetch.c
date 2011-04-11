@@ -331,7 +331,7 @@ int main(int argc, char** argv)
                 chunk->y = index_Y;
                 chunk->stream_id = stream_id;
                 chunk->frame_id  = frame_id[stream_id];
-                MCU = MCUs[stream_id][frame_id[stream_id]][index_X][index_Y];
+                MCU = (int32_t*) MCUs [stream_id] [frame_id[stream_id]] [index_X] [index_Y];
 
                 // Fill MCU structure :
                 for (index = 0; index < SOS_section.n; index++)
@@ -346,7 +346,7 @@ int main(int argc, char** argv)
 
                 }
                 chunk->data = MCU;
-                chunk->DQT_table = &DQT_table[stream_id][frame_id[stream_id] % FRAME_LOOKAHEAD][SOF_component[component_index].q_table];
+                //chunk->DQT_table = &DQT_table[stream_id][frame_id[stream_id] % FRAME_LOOKAHEAD][SOF_component[component_index].q_table];
                 decode(chunk);
               }
             }

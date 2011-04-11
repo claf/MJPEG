@@ -7,15 +7,15 @@ INC_DIR =.
 # Define compilation flags
 
 CC = gcc -g -DINFO #-pg
-INC = -I$(INC_DIR)
+INC = -I$(INC_DIR) -I/opt/local/include/
 CFLAGS = $(INC) -Wall -std=c99 #-g
-LDFLAGS = -lSDL #-g
+LDFLAGS = -L/opt/local/lib/ -lSDL #-g
 
 # Define object files list
 
 GENERATED_OBJ_FILES =  $(OBJ_DIR)/screen.o 
 OBJ_FILES = $(GENERATED_OBJ_FILES) $(OBJ_DIR)/fetch.o 
-OBJ_FILES += $(OBJ_DIR)/upsampler.o $(OBJ_DIR)/skip_segment.o $(OBJ_DIR)/huffman.o $(OBJ_DIR)/unpack_block.o $(OBJ_DIR)/decode.o 
+OBJ_FILES += $(OBJ_DIR)/idct.o $(OBJ_DIR)/conv.o $(OBJ_DIR)/upsampler.o $(OBJ_DIR)/skip_segment.o $(OBJ_DIR)/huffman.o $(OBJ_DIR)/unpack_block.o $(OBJ_DIR)/decode.o 
 NEW_OBJ_FILES =
 
 all : mjpeg
@@ -23,7 +23,7 @@ all : mjpeg
 # Real compilation
 
 mjpeg : $(OBJ_FILES)
-	$(CC) -o mjpeg $(OBJ_FILES) -lSDL
+	$(CC) -o mjpeg $(OBJ_FILES) $(LDFLAGS)
 $(OBJ_DIR)/screen.o : $(SRC_DIR)/screen.c $(INC_DIR)/screen.h
 	$(CC) $(CFLAGS) -c $(SRC_DIR)/screen.c -o $(OBJ_DIR)/screen.o
 $(OBJ_DIR)/example.o : example/example.c 

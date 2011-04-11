@@ -34,7 +34,7 @@ typedef struct {
 } stream_info_t;
 
 // Global stream table :
-extern stream_info_t* Streams;
+extern stream_info_t* streams;
 
 // Global chunk achievement table :
 /* in fact A[X][Y] with X stream and Y frame lookahead */
