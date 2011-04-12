@@ -6,10 +6,10 @@
 
 #include <stdint.h>
 
-extern void YCbCr_to_ARGB(uint8_t YCbCr_MCU[3][256], uint32_t *RGB_MCU,
+extern void YCbCr_to_ARGB(uint8_t YCbCr_MCU[3][64], uint32_t *RGB_MCU,
 		uint32_t nb_MCU_H, uint32_t nb_MCU_V);
 
-extern void to_NB(uint8_t YCbCr_MCU[3][256], uint32_t *RGB_MCU,
+extern void to_NB(uint8_t YCbCr_MCU[3][64], uint32_t *RGB_MCU,
 		uint32_t nb_MCU_H, uint32_t nb_MCU_V);
 
 #endif

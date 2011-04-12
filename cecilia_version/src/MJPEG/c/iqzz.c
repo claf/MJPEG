@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "iqzz.h"
+#include "define_common.h"
 
 /*---- Localy used variables ----*/
 const uint8_t G_ZZ[64] = {
@@ -23,6 +24,9 @@ void iqzz_block(int32_t in[64], int32_t out[64],
 		uint8_t table[64])
 {
 	uint32_t index;
+
+  PRINT_DQT(table);
+  pause();
 
 	for (index = 0; index < 64; index++)
 		out[G_ZZ[index]] = in[index] * table[index];

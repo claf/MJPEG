@@ -21,7 +21,7 @@ uint32_t color = 1;
 
 /* Intern declarations : */
 
-int32_t MCUs[MAX_STREAM][FRAME_LOOKAHEAD][MAX_X][MAX_Y][4][4][64];
+int32_t MCUs[MAX_STREAM][FRAME_LOOKAHEAD][MAX_MCU_X][MAX_MCU_Y][4][4][64];
 
 /* Intern functions : */
 
@@ -121,10 +121,13 @@ int main(int argc, char** argv)
     usage(argv[0]);
     exit(1);
   } else {
+    printf ("debug once\n");
     nb_streams = argc - args;
-    chunks = malloc (sizeof(frame_chunk_t) * nb_streams * FRAME_LOOKAHEAD * MAX_X * MAX_Y);
+    chunks = malloc (sizeof(frame_chunk_t) * nb_streams * FRAME_LOOKAHEAD * MAX_MCU_X * MAX_MCU_Y);
     frame_id = malloc (sizeof(int) * nb_streams);
-    streams = malloc (sizeof(stream_info_t) * nb_streams);
+    //TODO zero frame_id
+    frame_id[0] = 0;
+    streams = (stream_info_t*) malloc (sizeof(stream_info_t) * nb_streams);
   }
     
   // Allocation for streams FILE table :
@@ -162,7 +165,6 @@ int main(int argc, char** argv)
       switch (marker[1]) {
         case M_SOF0:
           {
-            frame_id[stream_id]++;
             IPRINTF("SOF0 marker found for stream %d : frame %d\r\n", stream_id, frame_id[stream_id]);
             
             COPY_SECTION(&SOF_section, sizeof(SOF_section), movies[0]);
@@ -185,6 +187,10 @@ int main(int argc, char** argv)
 
             YV = SOF_component[0].HV & 0x0f;
             YH = (SOF_component[0].HV >> 4) & 0x0f;
+
+            streams[stream_id].HV = SOF_component[0].HV;
+            streams[stream_id].max_ss_h = max_ss_h;
+            streams[stream_id].max_ss_v = max_ss_v;
 
             for (index = 0 ; index < SOF_section.n ; index++) {
               if (YV > max_ss_v) {
@@ -213,9 +219,6 @@ int main(int argc, char** argv)
               nb_MCU = nb_MCU_X * nb_MCU_Y;
 
 
-              streams[stream_id].HV = SOF_component[0].HV;
-              streams[stream_id].max_ss_h = max_ss_h;
-              streams[stream_id].max_ss_v = max_ss_v;
             }
 
             break;
@@ -331,22 +334,26 @@ int main(int argc, char** argv)
                 chunk->y = index_Y;
                 chunk->stream_id = stream_id;
                 chunk->frame_id  = frame_id[stream_id];
-                MCU = (int32_t*) MCUs [stream_id] [frame_id[stream_id]] [index_X] [index_Y];
 
                 // Fill MCU structure :
                 for (index = 0; index < SOS_section.n; index++)
                 {
                   uint32_t component_index = component_order[index];
+                  chunk->component_index[index] = component_index;
                   //avoiding unneeded computation
                   int nb_MCU = ((SOF_component[component_index].HV>> 4) & 0xf)
                                 * (SOF_component[component_index].HV & 0x0f);
 
                   for (chroma_ss = 0; chroma_ss < nb_MCU; chroma_ss++)
-                    unpack_block(movies[0], &scan_desc,index, MCU + (index * chroma_ss));
+                  {
+                    MCU = MCUs [stream_id] [frame_id[stream_id] % FRAME_LOOKAHEAD] [index_X] [index_Y] [index] [chroma_ss];
+                    unpack_block(movies[0], &scan_desc,index, MCU);
+                    chunk->DQT_index[index][chroma_ss] = SOF_component[component_index].q_table;
+                  }
 
                 }
-                chunk->data = MCU;
-                //chunk->DQT_table = &DQT_table[stream_id][frame_id[stream_id] % FRAME_LOOKAHEAD][SOF_component[component_index].q_table];
+                chunk->data = (int32_t*) MCUs [stream_id] [frame_id[stream_id] % FRAME_LOOKAHEAD] [index_X] [index_Y];
+                chunk->DQT_table = (uint8_t*) &(DQT_table[stream_id][frame_id[stream_id] % FRAME_LOOKAHEAD]);/*[SOF_component[component_index].q_table];*/
                 decode(chunk);
               }
             }
@@ -363,6 +370,7 @@ int main(int argc, char** argv)
 
 
             COPY_SECTION(&marker, 2, movies[0]);
+            frame_id[stream_id]++;
 
             break;
           }

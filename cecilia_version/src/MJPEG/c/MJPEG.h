@@ -9,8 +9,8 @@
 #define MAX_SAMPLING 4
 #define MAX_STREAM 3
 // TODO : read from files :
-#define MAX_X 256
-#define MAX_Y 144
+#define MAX_MCU_Y 32
+#define MAX_MCU_X 18
 
 typedef struct {
   int x;
@@ -18,8 +18,9 @@ typedef struct {
   int stream_id;
   int frame_id;
   uint8_t index;
-  uint32_t component_index;
+  uint32_t component_index[4];
   int32_t *data; /* will point to whatever changing type data are */
+  uint8_t DQT_index[4][4]; /* Quantization tables index*/
   uint8_t *DQT_table; /* Quantization tables */
   struct frame_chunk_t* next; /* chain $nb_MCU chunk from Fetch to Decode */
 } frame_chunk_t;
