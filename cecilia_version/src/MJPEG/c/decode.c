@@ -21,7 +21,7 @@ void decode(frame_chunk_t* chunk)
   //printf ("Decoding stream_id : %d, frame_id : %d\n", chunk->stream_id, chunk->frame_id);
 
   int stream_id = chunk->stream_id;
-  //int frame_id = chunk->frame_id;
+  int frame_id = chunk->frame_id;
   
   //printf ("Decoding max_h : %d, max_v : %d\n", streams[stream_id].max_ss_h, streams[stream_id].max_ss_v);
 
@@ -87,12 +87,20 @@ void decode(frame_chunk_t* chunk)
   }
 
   screen_cpyrect
-    (index_Y * MCU_sy * max_ss_h,
-     index_X * MCU_sx * max_ss_v,
+    (index_Y * MCU_sy * max_ss_h + decalage[stream_id].y,
+     index_X * MCU_sx * max_ss_v + decalage[stream_id].x,
      MCU_sy * max_ss_h,
      MCU_sx * max_ss_v,
      RGB_MCU);
-
+  
+  //TODO : lock start
+  Achievements[stream_id][frame_id]++;
+  if (__sync_bool_compare_and_swap (&Achievements[stream_id][frame_id], streams[stream_id].nb_MCU, 0))
+  {
+    printf("\n Call Resize Component \n");
+    //resize ();
+  }
+  //TODO : lock end
 /*
   if (achievement)
     resize()

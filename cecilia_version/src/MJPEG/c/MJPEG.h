@@ -32,7 +32,16 @@ typedef struct {
   uint8_t HV;
   int max_ss_h;
   int max_ss_v;
+  int nb_MCU;
 } stream_info_t;
+
+typedef struct {
+  int x;
+  int y;
+} shift_t;
+
+//Global shift table :
+extern shift_t* decalage;
 
 // Global stream table :
 extern stream_info_t* streams;
