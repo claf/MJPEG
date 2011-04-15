@@ -25,8 +25,8 @@ void iqzz_block(int32_t in[64], int32_t out[64],
 {
 	uint32_t index;
 
-  PRINT_DQT(table);
-  pause();
+  //PRINT_DQT(table);
+  //pause();
 
 	for (index = 0; index < 64; index++)
 		out[G_ZZ[index]] = in[index] * table[index];

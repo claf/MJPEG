@@ -189,8 +189,6 @@ int main(int argc, char** argv)
             YH = (SOF_component[0].HV >> 4) & 0x0f;
 
             streams[stream_id].HV = SOF_component[0].HV;
-            streams[stream_id].max_ss_h = max_ss_h;
-            streams[stream_id].max_ss_v = max_ss_v;
 
             for (index = 0 ; index < SOF_section.n ; index++) {
               if (YV > max_ss_v) {
@@ -200,6 +198,10 @@ int main(int argc, char** argv)
                 max_ss_h = YH;
               }
             }
+            streams[stream_id].max_ss_h = max_ss_h;
+            streams[stream_id].max_ss_v = max_ss_v;
+  
+            printf ("max_ss_h = %d, max_ss_v = %d\n", max_ss_h, max_ss_v);
 
             if (SOF_section.n > 1) {
               CrV = SOF_component[1].HV & 0x0f;
