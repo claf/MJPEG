@@ -6,7 +6,7 @@ INC_DIR = include
 
 # Define compilation flags
 
-CC = gcc -g -DINFO #-pg
+CC = gcc -g #-DINFO #-pg
 INC = -I$(INC_DIR) -I/opt/local/include/ -I/usr/include/
 CFLAGS = $(INC) -Wall -std=c99 #-g
 LDFLAGS = -L/opt/local/lib/ -lSDL #-g

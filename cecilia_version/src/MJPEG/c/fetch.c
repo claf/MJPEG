@@ -14,6 +14,7 @@
 
 // Global stream table :
 stream_info_t* streams;
+shift_t* decalage;
 
 // Global frame achievement table (nb_chunk already treated) :
 uint32_t Achievements[MAX_STREAM][FRAME_LOOKAHEAD];
@@ -21,7 +22,7 @@ uint32_t color = 1;
 
 /* Intern declarations : */
 
-int32_t MCUs[MAX_STREAM][FRAME_LOOKAHEAD][MAX_X][MAX_Y][4][4][64];
+int32_t MCUs[MAX_STREAM][FRAME_LOOKAHEAD][MAX_MCU_X][MAX_MCU_Y][4][4][64];
 
 /* Intern functions : */
 
@@ -121,10 +122,20 @@ int main(int argc, char** argv)
     usage(argv[0]);
     exit(1);
   } else {
+    printf ("debug once\n");
     nb_streams = argc - args;
-    chunks = malloc (sizeof(frame_chunk_t) * nb_streams * FRAME_LOOKAHEAD * MAX_X * MAX_Y);
+    chunks = malloc (sizeof(frame_chunk_t) * nb_streams * FRAME_LOOKAHEAD * MAX_MCU_X * MAX_MCU_Y);
     frame_id = malloc (sizeof(int) * nb_streams);
-    streams = malloc (sizeof(stream_info_t) * nb_streams);
+    //TODO zero frame_id
+    frame_id[0] = 0;
+    streams = (stream_info_t*) malloc (sizeof(stream_info_t) * nb_streams);
+    decalage = (shift_t*) malloc (sizeof(shift_t) * nb_streams);
+    //TODO : need to be dynamic decalage alloc :
+    decalage[0].x = 0;
+    decalage[0].y = 0;
+    decalage[1].x = 144;
+    decalage[1].y = 144;
+
   }
     
   // Allocation for streams FILE table :
@@ -140,15 +151,16 @@ int main(int argc, char** argv)
     }
     args++;
   }
+  stream_id = 0;
 
 //TODO : read begining of every files to find max_X and max_Y
 
   /*---- Actual computation ----*/
   end_of_file = 0;
   while (!end_of_file ) {
-    int elem_read = fread(&marker, 2, 1, movies[0]);
+    int elem_read = fread(&marker, 2, 1, movies[stream_id]);
     if (elem_read != 1) {
-      if (feof(movies[0])) {
+      if (feof(movies[stream_id])) {
         // TODO : atomic increment, the if end_of_file == nb_streams ...
         end_of_file = 1;
         break;
@@ -162,10 +174,9 @@ int main(int argc, char** argv)
       switch (marker[1]) {
         case M_SOF0:
           {
-            frame_id[stream_id]++;
             IPRINTF("SOF0 marker found for stream %d : frame %d\r\n", stream_id, frame_id[stream_id]);
             
-            COPY_SECTION(&SOF_section, sizeof(SOF_section), movies[0]);
+            COPY_SECTION(&SOF_section, sizeof(SOF_section), movies[stream_id]);
             CPU_DATA_IS_BIGENDIAN(16, SOF_section.length);
             CPU_DATA_IS_BIGENDIAN(16, SOF_section.height);
             CPU_DATA_IS_BIGENDIAN(16, SOF_section.width);
@@ -181,10 +192,12 @@ int main(int argc, char** argv)
                 (SOF_section.n > 1) ? 's' : ' ');
 
             COPY_SECTION(&SOF_component,
-                sizeof(SOF_component_t)* SOF_section.n, movies[0]);
+                sizeof(SOF_component_t)* SOF_section.n, movies[stream_id]);
 
             YV = SOF_component[0].HV & 0x0f;
             YH = (SOF_component[0].HV >> 4) & 0x0f;
+
+            streams[stream_id].HV = SOF_component[0].HV;
 
             for (index = 0 ; index < SOF_section.n ; index++) {
               if (YV > max_ss_v) {
@@ -194,6 +207,10 @@ int main(int argc, char** argv)
                 max_ss_h = YH;
               }
             }
+            streams[stream_id].max_ss_h = max_ss_h;
+            streams[stream_id].max_ss_v = max_ss_v;
+  
+            printf ("max_ss_h = %d, max_ss_v = %d\n", max_ss_h, max_ss_v);
 
             if (SOF_section.n > 1) {
               CrV = SOF_component[1].HV & 0x0f;
@@ -211,11 +228,11 @@ int main(int argc, char** argv)
               nb_MCU_X = intceil(SOF_section.height, MCU_sx * max_ss_v);
               nb_MCU_Y = intceil(SOF_section.width, MCU_sy * max_ss_h);
               nb_MCU = nb_MCU_X * nb_MCU_Y;
+                
+              streams[stream_id].nb_MCU = nb_MCU;
 
-
-              streams[stream_id].HV = SOF_component[0].HV;
-              streams[stream_id].max_ss_h = max_ss_h;
-              streams[stream_id].max_ss_v = max_ss_v;
+              for (int i = 0; i < FRAME_LOOKAHEAD; i++)
+                Achievements[stream_id][i] = nb_MCU;
             }
 
             break;
@@ -231,7 +248,7 @@ int main(int argc, char** argv)
             volatile int DHT_size = 0;
             IPRINTF("DHT marker found\r\n");
 
-            COPY_SECTION(&DHT_section.length, 2, movies[0]);
+            COPY_SECTION(&DHT_section.length, 2, movies[stream_id]);
             CPU_DATA_IS_BIGENDIAN(16, DHT_section.length);
             // We've read the size : DHT_size is now 2
             DHT_size += 2;
@@ -241,7 +258,7 @@ int main(int argc, char** argv)
 
               int loaded_size = 0;
               // read huffman info, DHT size ++
-              NEXT_TOKEN(DHT_section.huff_info, movies[0]);
+              NEXT_TOKEN(DHT_section.huff_info, movies[stream_id]);
               DHT_size++;
 
               // load the current huffman table
@@ -254,7 +271,7 @@ int main(int argc, char** argv)
 
               VPRINTF("Loading Huffman table\r\n");
               tables[HT_type][HT_index] = (huff_table_t *) malloc(sizeof(huff_table_t));
-              loaded_size = load_huffman_table_size(movies[0],
+              loaded_size = load_huffman_table_size(movies[stream_id],
                   DHT_section.length,
                   DHT_section.huff_info,
                   tables[HT_type][HT_index]);
@@ -288,15 +305,15 @@ int main(int argc, char** argv)
           {
             IPRINTF("SOS marker found\r\n");
 
-            COPY_SECTION(&SOS_section, sizeof(SOS_section), movies[0]);
+            COPY_SECTION(&SOS_section, sizeof(SOS_section), movies[stream_id]);
             CPU_DATA_IS_BIGENDIAN(16, SOS_section.length);
 
             COPY_SECTION(&SOS_component,
-                sizeof(SOS_component_t) * SOS_section.n, movies[0]);
+                sizeof(SOS_component_t) * SOS_section.n, movies[stream_id]);
             IPRINTF("Scan with %d components\r\n", SOS_section.n);
 
             /* On ignore les champs Ss, Se, Ah, Al */
-            SKIP(3, movies[0]);
+            SKIP(3, movies[stream_id]);
 
             scan_desc.bit_count = 0;
             for (index = 0; index < SOS_section.n; index++) {
@@ -331,28 +348,33 @@ int main(int argc, char** argv)
                 chunk->y = index_Y;
                 chunk->stream_id = stream_id;
                 chunk->frame_id  = frame_id[stream_id];
-                MCU = (int32_t*) MCUs [stream_id] [frame_id[stream_id]] [index_X] [index_Y];
 
                 // Fill MCU structure :
                 for (index = 0; index < SOS_section.n; index++)
                 {
                   uint32_t component_index = component_order[index];
+                  chunk->component_index[index] = component_index;
                   //avoiding unneeded computation
                   int nb_MCU = ((SOF_component[component_index].HV>> 4) & 0xf)
                                 * (SOF_component[component_index].HV & 0x0f);
 
                   for (chroma_ss = 0; chroma_ss < nb_MCU; chroma_ss++)
-                    unpack_block(movies[0], &scan_desc,index, MCU + (index * chroma_ss));
+                  {
+                    MCU = MCUs [stream_id] [frame_id[stream_id] % FRAME_LOOKAHEAD] [index_X] [index_Y] [index] [chroma_ss];
+                    unpack_block(movies[stream_id], &scan_desc,index, MCU);
+                    chunk->DQT_index[index][chroma_ss] = SOF_component[component_index].q_table;
+                  }
 
                 }
-                chunk->data = MCU;
-                //chunk->DQT_table = &DQT_table[stream_id][frame_id[stream_id] % FRAME_LOOKAHEAD][SOF_component[component_index].q_table];
+                chunk->data = (int32_t*) MCUs [stream_id] [frame_id[stream_id] % FRAME_LOOKAHEAD] [index_X] [index_Y];
+                chunk->DQT_table = (uint8_t*) &(DQT_table[stream_id][frame_id[stream_id] % FRAME_LOOKAHEAD]);/*[SOF_component[component_index].q_table];*/
                 decode(chunk);
               }
             }
-
+            if (stream_id == nb_streams -1){
             if (screen_refresh() == 1) {
               end_of_file = 1;
+            }
             }
             for (HT_index = 0; HT_index < 4; HT_index++) {
               free_huffman_tables(tables[HUFF_DC][HT_index]);
@@ -362,8 +384,9 @@ int main(int argc, char** argv)
             }
 
 
-            COPY_SECTION(&marker, 2, movies[0]);
-
+            COPY_SECTION(&marker, 2, movies[stream_id]);
+            frame_id[stream_id]++;
+            stream_id = (stream_id + 1) % nb_streams;
             break;
           }
 
@@ -372,13 +395,13 @@ int main(int argc, char** argv)
             int DQT_size = 0;
             IPRINTF("DQT marker found\r\n");
 
-            COPY_SECTION(&DQT_section.length, 2, movies[0]);
+            COPY_SECTION(&DQT_section.length, 2, movies[stream_id]);
             CPU_DATA_IS_BIGENDIAN(16, DQT_section.length);
             DQT_size += 2;
 
             while (DQT_size < DQT_section.length) {
 
-              NEXT_TOKEN(DQT_section.pre_quant, movies[0]);
+              NEXT_TOKEN(DQT_section.pre_quant, movies[stream_id]);
               DQT_size += 1;
               IPRINTF
                 ("Quantization precision is %s\r\n",
@@ -389,7 +412,7 @@ int main(int argc, char** argv)
               IPRINTF("Quantization table index is %d\r\n", QT_index);
 
               IPRINTF("Reading quantization table\r\n");
-              COPY_SECTION(DQT_table[stream_id][frame_id[stream_id] % FRAME_LOOKAHEAD][QT_index], 64, movies[0]);
+              COPY_SECTION(DQT_table[stream_id][frame_id[stream_id] % FRAME_LOOKAHEAD][QT_index], 64, movies[stream_id]);
               DQT_size += 64;
 
             }
@@ -401,7 +424,7 @@ int main(int argc, char** argv)
           {
             IPRINTF("APP0 marker found\r\n");
 
-            COPY_SECTION(&jfif_header, sizeof(jfif_header), movies[0]);
+            COPY_SECTION(&jfif_header, sizeof(jfif_header), movies[stream_id]);
             CPU_DATA_IS_BIGENDIAN(16, jfif_header.length);
             CPU_DATA_IS_BIGENDIAN(16, jfif_header.xdensity);
             CPU_DATA_IS_BIGENDIAN(16, jfif_header.ydensity);
@@ -421,10 +444,10 @@ int main(int argc, char** argv)
             IPRINTF("COM marker found\r\n");
             uint16_t length;
             char * comment;
-            COPY_SECTION(&length, 2, movies[0]);
+            COPY_SECTION(&length, 2, movies[stream_id]);
             CPU_DATA_IS_BIGENDIAN(16, length);
             comment = (char *) malloc (length - 2);
-            COPY_SECTION(comment, length - 2, movies[0]);
+            COPY_SECTION(comment, length - 2, movies[stream_id]);
             IPRINTF("Comment found : %s\r\n", comment);
             free(comment);
             break;
@@ -437,7 +460,7 @@ int main(int argc, char** argv)
         default:
           {
             IPRINTF("Unsupported token: 0x%x\r\n", marker[1]);
-            skip_segment(movies[0]);
+            skip_segment(movies[stream_id]);
             break;
           }
       }

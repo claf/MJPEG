@@ -7,7 +7,7 @@
 #include "stdio.h"
 #include "utils.h"
 
-void YCbCr_to_ARGB(uint8_t YCbCr_MCU[3][256], uint32_t *RGB_MCU, uint32_t nb_MCU_H, uint32_t nb_MCU_V)
+void YCbCr_to_ARGB(uint8_t *YCbCr_MCU[3], uint32_t *RGB_MCU, uint32_t nb_MCU_H, uint32_t nb_MCU_V)
 {
 
 	uint8_t *MCU_Y, *MCU_Cb, *MCU_Cr;
@@ -46,7 +46,7 @@ void YCbCr_to_ARGB(uint8_t YCbCr_MCU[3][256], uint32_t *RGB_MCU, uint32_t nb_MCU
 }
 
 
-void to_NB(uint8_t  YCbCr_MCU[3][256], uint32_t *RGB_MCU,
+void to_NB(uint8_t  *YCbCr_MCU[3], uint32_t *RGB_MCU,
 		uint32_t nb_MCU_H, uint32_t nb_MCU_V)
 {
 

@@ -1,6 +1,15 @@
 #ifndef DEFINE_COMMON_H
 #define DEFINE_COMMON_H
 
+#define PRINT_DQT(dqt) \
+  for (int __i = 0; __i < 8; __i++){ \
+    printf ("\n("); \
+    for (int __j = 0; __j < 8; __j++){ \
+      printf ("%i\t", dqt[(__i*8)+__j]); \
+    } \
+    printf (")"); \
+  }
+
 #define SWITCH_ENDIAN_32(x)   \
 	x = ((x & 0x000000ff) << 24) | ((x & 0x0000ff00) << 8)  |  \
 ((x & 0x00ff0000) >> 8)  | ((x & 0xff000000) >> 24)

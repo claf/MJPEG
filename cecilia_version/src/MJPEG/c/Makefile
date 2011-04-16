@@ -6,16 +6,16 @@ INC_DIR =.
 
 # Define compilation flags
 
-CC = gcc -g -DINFO #-pg
-INC = -I$(INC_DIR) -I/opt/local/include/
+CC = gcc -g -DINFO #-fno-inline #-mcmodel=medium #-DINFO #-pg
+INC = -I$(INC_DIR) -I/opt/local/include/ -I/usr/include/SDL/
 CFLAGS = $(INC) -Wall -std=c99 #-g
-LDFLAGS = -L/opt/local/lib/ -lSDL #-g
+LDFLAGS = -L/opt/local/lib/ -lSDL -lSGE -g
 
 # Define object files list
 
 GENERATED_OBJ_FILES =  $(OBJ_DIR)/screen.o 
 OBJ_FILES = $(GENERATED_OBJ_FILES) $(OBJ_DIR)/fetch.o 
-OBJ_FILES += $(OBJ_DIR)/idct.o $(OBJ_DIR)/conv.o $(OBJ_DIR)/upsampler.o $(OBJ_DIR)/skip_segment.o $(OBJ_DIR)/huffman.o $(OBJ_DIR)/unpack_block.o $(OBJ_DIR)/decode.o 
+OBJ_FILES += $(OBJ_DIR)/iqzz.o $(OBJ_DIR)/idct.o $(OBJ_DIR)/conv.o $(OBJ_DIR)/upsampler.o $(OBJ_DIR)/skip_segment.o $(OBJ_DIR)/huffman.o $(OBJ_DIR)/unpack_block.o $(OBJ_DIR)/decode.o 
 NEW_OBJ_FILES =
 
 all : mjpeg
@@ -34,10 +34,10 @@ $(OBJ_DIR)/fetch.o : $(SRC_DIR)/fetch.c $(INC_DIR)/MJPEG.h $(INC_DIR)/huffman.h 
 	$(CC) $(CFLAGS) -c $(SRC_DIR)/fetch.c -o $@
 $(OBJ_DIR)/idct.o : $(SRC_DIR)/idct.c $(INC_DIR)/idct.h
 	$(CC) $(CFLAGS) -c $(SRC_DIR)/idct.c -o $@
-$(OBJ_DIR)/conv.o : $(SRC_DIR)/conv.c $(INC_DIR)/conv.h
-	$(CC) $(CFLAGS) -c $(SRC_DIR)/conv.c -o $@
 $(OBJ_DIR)/iqzz.o : $(SRC_DIR)/iqzz.c $(INC_DIR)/iqzz.h
 	$(CC) $(CFLAGS) -c $(SRC_DIR)/iqzz.c -o $@
+$(OBJ_DIR)/conv.o : $(SRC_DIR)/conv.c $(INC_DIR)/conv.h
+	$(CC) $(CFLAGS) -c $(SRC_DIR)/conv.c -o $@
 $(OBJ_DIR)/upsampler.o : $(SRC_DIR)/upsampler.c $(INC_DIR)/upsampler.h
 	$(CC) $(CFLAGS) -c $(SRC_DIR)/upsampler.c -o $@
 $(OBJ_DIR)/skip_segment.o : $(SRC_DIR)/skip_segment.c $(INC_DIR)/skip_segment.h
