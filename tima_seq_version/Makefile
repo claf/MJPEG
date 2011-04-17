@@ -7,9 +7,9 @@ INC_DIR = include
 # Define compilation flags
 
 CC = gcc -g #-DINFO #-pg
-INC = -I$(INC_DIR)
+INC = -I$(INC_DIR) -I/opt/local/include/ -I/usr/include/
 CFLAGS = $(INC) -Wall -std=c99 #-g
-LDFLAGS = -lSDL #-g
+LDFLAGS = -L/opt/local/lib/ -lSDL #-g
 
 # Define object files list
 
@@ -23,9 +23,9 @@ all : mjpeg mire
 # Real compilation
 
 mire : $(OBJ_DIR)/example.o $(OBJ_DIR)/screen.o
-	$(CC) -o mire $(OBJ_DIR)/example.o $(OBJ_DIR)/screen.o -lSDL
+	$(CC) -o mire $(OBJ_DIR)/example.o $(OBJ_DIR)/screen.o $(LDFLAGS)
 mjpeg : $(OBJ_FILES)
-	$(CC) -o mjpeg $(OBJ_FILES) -lSDL
+	$(CC) -o mjpeg $(OBJ_FILES) $(LDFLAGS)
 $(OBJ_DIR)/screen.o : $(SRC_DIR)/screen.c $(INC_DIR)/screen.h
 	$(CC) $(CFLAGS) -c $(SRC_DIR)/screen.c -o $(OBJ_DIR)/screen.o
 $(OBJ_DIR)/example.o : example/example.c 
