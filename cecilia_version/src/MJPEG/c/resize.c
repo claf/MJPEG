@@ -1,13 +1,8 @@
 #include <stdio.h>
 #include "MJPEG.h"
 
-DECLARE_DATA{
-  //int foo;
-};
-
-
 /* Passing frame_chunk_t as a full frame for internal infos only. */
-void METHOD(resize, resize)(void *_this, frame_chunk_t* frame)
+void resize(frame_chunk_t* chunk)
 {
 
   printf ("Resize start\n");
@@ -33,18 +28,34 @@ void METHOD(resize, resize)(void *_this, frame_chunk_t* frame)
    *   bit = 0
    */
 
-  CALL (REQUIRED.render, render);
+  //CALL (REQUIRED.render, render);
 
   /* Dans le cas d'un render "autonome" :
    * si last_frame_id == effective_frame
    *   bit = 0
    */
 
+
+  /* IMPLANTATION : */
+
+  int stream_id = chunk->stream_id;
+  int frame_id = chunk->frame_id % FRAME_LOOKAHEAD;
+
+  int x_factor = ;
+  int y_factor = ;
+
+  sge_transform(Surfaces_normal[stream_id][frame_id],
+                Surfaces_resized[frame_id],
+                0, x_factor, y_factor, 0,0, 0,0, SGE_TAA);
+
+  // TODO : set Done[frame_id] = true;
+  // and don't forget to set it back to false in screen_refresh when really Fliping.
+
   printf ("Resize end\n");
 
 }
 
-void METHOD(resize, click)(void *_this)
+void click()
 {
   /*
    * Lors d'un clic :

@@ -8,9 +8,14 @@
 #define FRAME_LOOKAHEAD 5
 #define MAX_SAMPLING 4
 #define MAX_STREAM 3
+
 // TODO : read from files :
 #define MAX_MCU_Y 32
 #define MAX_MCU_X 18
+
+//TODO : dynamic values
+#define WINDOW_H 500
+#define WINDOW_W 500
 
 typedef struct {
   int x;
@@ -39,6 +44,13 @@ typedef struct {
   int x;
   int y;
 } shift_t;
+
+// Global number of streams variable :
+extern uint8_t nb_stream;
+
+// Global Surfaces structures :
+extern SDL_Surface *Surfaces_normal[MAX_STREAM][FRAME_LOOKAHEAD];
+extern SDL_Surface *Surfaces_resized[FRAME_LOOKAHEAD];
 
 //Global shift table :
 extern shift_t* decalage;

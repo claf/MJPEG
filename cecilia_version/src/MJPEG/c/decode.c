@@ -2,6 +2,10 @@
 #include "define_common.h"
 #include <stdio.h>
 #include "MJPEG.h"
+
+/* Internal functions : */
+
+void screen2surface_cpyrect(uint32_t x, uint32_t y, uint32_t w, uint32_t h, void *ptr, SDL_Surface* screen);
 #include "idct.h"
 #include "iqzz.h"
 #include "upsampler.h"
@@ -86,23 +90,66 @@ void decode(frame_chunk_t* chunk)
     to_NB(YCbCr_MCU, RGB_MCU, max_ss_h, max_ss_v);
   }
 
-  screen_cpyrect
+  screen2surface_cpyrect
     (index_Y * MCU_sy * max_ss_h + decalage[stream_id].y,
      index_X * MCU_sx * max_ss_v + decalage[stream_id].x,
      MCU_sy * max_ss_h,
      MCU_sx * max_ss_v,
-     RGB_MCU);
+     RGB_MCU, Surfaces_normal[stream_id][frame_id % FRAME_LOOKAHEAD]);
   
   //TODO : lock start
   Achievements[stream_id][frame_id]++;
   if (__sync_bool_compare_and_swap (&Achievements[stream_id][frame_id], streams[stream_id].nb_MCU, 0))
-  {
-    printf("\n Call Resize Component \n");
-    //resize ();
-  }
+    {
+      printf("\n Call Resize Component \n");
+      resize (chunk);
+    }
   //TODO : lock end
-/*
-  if (achievement)
-    resize()
-    */
+}
+
+void screen2surface_cpyrect(uint32_t x, uint32_t y, uint32_t w, uint32_t h, void *ptr, SDL_Surface* screen)
+{
+  void *dest_ptr;
+  void *src_ptr;
+  uint32_t line;
+  uint32_t w_internal = w, h_internal = h;
+  int w_length;
+
+  SDL_LockSurface(screen);
+  w_length = screen->pitch / (screen->format->BitsPerPixel / 8 );
+
+#ifdef DEBUG
+  if ((y) > screen->h) {
+    printf("[%s] : block can't be copied, "
+	   "not in the screen (too low)\n", __func__);
+    exit(1);
+  }
+  if ((x) > screen->w) {
+    printf("[%s] : block can't be copied, "
+	   "not in the screen (right border)\n", __func__);
+    exit(1);
+  }
+#endif
+  if ((x+w) > screen->w) {
+    w_internal = screen->w -x; 
+  }
+  if ((y+h) > screen->h) {
+    h_internal = screen->h -y; 
+  }
+  for(line = 0; line < h_internal ; line++)
+    {
+      // Positionning src and dest pointers
+      //  _ src : must be placed at the beginning of line "line"
+      //  _ dest : must be placed at the beginning
+      //          of the corresponding block :
+      //(line offset + current line + position on the current line)
+      // We assume that RGB is 4 bytes
+
+      dest_ptr = (void*)((uint32_t *)(screen->pixels) +
+			 ((y+line)*w_length) + x); 
+      src_ptr = (void*)((uint32_t *)ptr + ((line * w)));
+      memcpy(dest_ptr,src_ptr,w_internal * sizeof(uint32_t));
+    }
+
+  SDL_UnlockSurface(screen);
 }

@@ -11,6 +11,11 @@
 #include "screen.h"
 
 /* Global definition : */
+uint8_t nb_streams; 
+
+// Global Surfaces structures :
+SDL_Surface *Surfaces_normal[MAX_STREAM][FRAME_LOOKAHEAD];
+SDL_Surface *Surfaces_resized[FRAME_LOOKAHEAD];
 
 // Global stream table :
 stream_info_t* streams;
@@ -25,6 +30,9 @@ uint32_t color = 1;
 int32_t MCUs[MAX_STREAM][FRAME_LOOKAHEAD][MAX_MCU_X][MAX_MCU_Y][4][4][64];
 
 /* Intern functions : */
+
+void surfaces_init ();
+void factors_init ();
 
 static void usage(char *progname) {
 	printf("Usage : %s [options] <mjpeg_file_1> [<mjpeg_file_2> ...]\n", progname);
@@ -71,7 +79,7 @@ int main(int argc, char** argv)
   SOS_component_t SOS_component[3];
 
   frame_chunk_t *chunks;
-  uint8_t nb_streams = 0;
+  nb_streams = 0;
   int stream_id = 0;
   int *frame_id;
   int32_t *MCU = NULL;
@@ -118,39 +126,37 @@ int main(int argc, char** argv)
     }
   }
 
+  // Some initialisation :
   if ((argc - args) < 1) {
     usage(argv[0]);
     exit(1);
   } else {
-    printf ("debug once\n");
     nb_streams = argc - args;
-    chunks = malloc (sizeof(frame_chunk_t) * nb_streams * FRAME_LOOKAHEAD * MAX_MCU_X * MAX_MCU_Y);
-    frame_id = malloc (sizeof(int) * nb_streams);
-    //TODO zero frame_id
-    frame_id[0] = 0;
-    streams = (stream_info_t*) malloc (sizeof(stream_info_t) * nb_streams);
-    decalage = (shift_t*) malloc (sizeof(shift_t) * nb_streams);
-    //TODO : need to be dynamic decalage alloc :
-    decalage[0].x = 0;
-    decalage[0].y = 0;
-    decalage[1].x = 144;
-    decalage[1].y = 144;
 
+    chunks = malloc (sizeof(frame_chunk_t) * nb_streams * FRAME_LOOKAHEAD * MAX_MCU_X * MAX_MCU_Y);
+    
+    frame_id = malloc (sizeof(int) * nb_streams);
+    
+    streams = (stream_info_t*) malloc (sizeof(stream_info_t) * nb_streams);
+    
+    
+    surfaces_init ();
   }
     
   // Allocation for streams FILE table :
   FILE *movies[nb_streams];
 
   for (int i = 0; i < nb_streams; i++)
-  {
-    movies[i] = NULL;
-    if ((movies[i] = fopen(argv[args], "r")) == NULL)
     {
-      perror(strerror(errno));
-      exit(-1);
+      frame_id[i] = 0;
+      movies[i] = NULL;
+      if ((movies[i] = fopen(argv[args], "r")) == NULL)
+	{
+	  perror(strerror(errno));
+	  exit(-1);
+	}
+      args++;
     }
-    args++;
-  }
   stream_id = 0;
 
 //TODO : read begining of every files to find max_X and max_Y
@@ -496,4 +502,34 @@ clean_end:/*
 
   printf ("Main end\n");
 
+}
+
+// resize_init is not in resize component to avoid blocking call :
+void surfaces_init ()
+{
+  for (int frame = 0; frame < FRAME_LOOKAHEAD; frame++)
+    {
+      Surfaces_resized[frame] = SDL_CreateRGBSurface(SDL_SWSURFACE, WINDOW_H, WINDOW_W, 32, 0, 0, 0, 0);
+      if (Surfaces_resized[frame] == NULL)
+	printf ("SDL_CreateRGBSurface ERROR %s:%d\n", __FILE__, __LINE__);
+
+      for (int stream = 0; stream < nb_streams; stream++)
+	{
+	  Surfaces_normal[stream][frame] = SDL_CreateRGBSurface(SDL_SWSURFACE, WINDOW_H, WINDOW_W, 32, 0, 0, 0, 0);
+	  if (Surfaces_normal[stream][frame] == NULL)
+	    printf ("SDL_CreateRGBSurface ERROR %s:%d\n", __FILE__, __LINE__);
+	}
+    }
+}
+
+void factors_init ()
+{
+  decalage = (shift_t*) malloc (sizeof(shift_t) * nb_streams);
+    
+  //TODO : need to be dynamic decalage alloc :
+  decalage[0].x = 0;
+  decalage[0].y = 0;
+  decalage[1].x = 144;
+  decalage[1].y = 0;
+  
 }

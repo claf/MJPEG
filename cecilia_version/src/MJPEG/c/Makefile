@@ -15,7 +15,7 @@ LDFLAGS = -L/opt/local/lib/ -lSDL -lSGE -g
 
 GENERATED_OBJ_FILES =  $(OBJ_DIR)/screen.o 
 OBJ_FILES = $(GENERATED_OBJ_FILES) $(OBJ_DIR)/fetch.o 
-OBJ_FILES += $(OBJ_DIR)/iqzz.o $(OBJ_DIR)/idct.o $(OBJ_DIR)/conv.o $(OBJ_DIR)/upsampler.o $(OBJ_DIR)/skip_segment.o $(OBJ_DIR)/huffman.o $(OBJ_DIR)/unpack_block.o $(OBJ_DIR)/decode.o 
+OBJ_FILES += $(OBJ_DIR)/iqzz.o $(OBJ_DIR)/idct.o $(OBJ_DIR)/conv.o $(OBJ_DIR)/upsampler.o $(OBJ_DIR)/skip_segment.o $(OBJ_DIR)/huffman.o $(OBJ_DIR)/unpack_block.o $(OBJ_DIR)/decode.o $(OBJ_DIR)/resize.o 
 NEW_OBJ_FILES =
 
 all : mjpeg
@@ -44,6 +44,8 @@ $(OBJ_DIR)/skip_segment.o : $(SRC_DIR)/skip_segment.c $(INC_DIR)/skip_segment.h
 	$(CC) $(CFLAGS) -c $(SRC_DIR)/skip_segment.c -o $@
 $(OBJ_DIR)/decode.o : $(SRC_DIR)/decode.c $(INC_DIR)/decode.h
 	$(CC) $(CFLAGS) -c $(SRC_DIR)/decode.c -o $@
+$(OBJ_DIR)/resize.o : $(SRC_DIR)/resize.c $(INC_DIR)/resize.h
+	$(CC) $(CFLAGS) -c $(SRC_DIR)/resize.c -o $@
 $(OBJ_DIR)/huffman.o : $(SRC_DIR)/huffman.c $(INC_DIR)/huffman.h
 	$(CC) $(CFLAGS) -c $(SRC_DIR)/huffman.c -o $@
 $(OBJ_DIR)/unpack_block.o : $(SRC_DIR)/unpack_block.c $(INC_DIR)/unpack_block.h
