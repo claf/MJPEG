@@ -1,13 +1,15 @@
 /*************************************************************************************
  * vim :set ts=8:
  ******************************************************************************/
-#include "stdio.h"
-#include "string.h"
-#include "stdlib.h"
-#include "stdint.h"
-#include "unistd.h"
-#include "SDL.h"
-#include "sge.h"
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <unistd.h>
+#include <SDL/SDL.h>
+#include <SDL/sge.h>
+
+#include "MJPEG.h"
 
 //Define debug to print info when a block is copied out of bound
 #define DEBUG
@@ -27,7 +29,7 @@ static int old_time;
 void screen_init(uint32_t width, uint32_t height, uint32_t framerate)
 {
 
-  int width_int = width , height_int = height;
+  //int width_int = width , height_int = height;
   /* Initialize defaults, Video and Audio */
   if ((SDL_Init(SDL_INIT_VIDEO) == -1)) {
     printf("Could not initialize SDL: %s.\n", SDL_GetError());
@@ -49,7 +51,7 @@ void screen_init(uint32_t width, uint32_t height, uint32_t framerate)
     global_framerate = framerate;
   }
 
-  screen = SDL_SetVideoMode(/*width_int, height_int,*/500, 500, 32, SDL_SWSURFACE);
+  screen = SDL_SetVideoMode(/*width_int, height_int,*/WINDOW_H, WINDOW_W, 32, SDL_SWSURFACE);
   if (screen == NULL) {
     fprintf(stderr,
 	    "Couldn't set %dx%dx32 video mode for screen: %s\n",
@@ -64,10 +66,6 @@ void screen_init(uint32_t width, uint32_t height, uint32_t framerate)
 
   old_time = SDL_GetTicks();
   initialized	= 1;
-
-
-  screen2 = SDL_CreateRGBSurface(SDL_SWSURFACE,500,500,32,0,0,0,0);
-
 }
 
 int screen_exit()
@@ -100,26 +98,26 @@ void screen_cpyrect(uint32_t x, uint32_t y, uint32_t w, uint32_t h, void *ptr)
   uint32_t w_internal = w, h_internal = h;
   int w_length;
 
-  SDL_LockSurface(screen2);
-  w_length = screen2->pitch / (screen2->format->BitsPerPixel / 8 );
+  SDL_LockSurface(screen);
+  w_length = screen->pitch / (screen->format->BitsPerPixel / 8 );
 
 #ifdef DEBUG
-  if ((y) > screen2->h) {
+  if ((y) > screen->h) {
     printf("[%s] : block can't be copied, "
 	   "not in the screen (too low)\n", __func__);
     exit(1);
   }
-  if ((x) > screen2->w) {
+  if ((x) > screen->w) {
     printf("[%s] : block can't be copied, "
 	   "not in the screen (right border)\n", __func__);
     exit(1);
   }
 #endif
-  if ((x+w) > screen2->w) {
-    w_internal = screen2->w -x;
+  if ((x+w) > screen->w) {
+    w_internal = screen->w -x;
   }
-  if ((y+h) > screen2->h) {
-    h_internal = screen2->h -y;
+  if ((y+h) > screen->h) {
+    h_internal = screen->h -y;
   }
   for(line = 0; line < h_internal ; line++)
     {
@@ -130,13 +128,13 @@ void screen_cpyrect(uint32_t x, uint32_t y, uint32_t w, uint32_t h, void *ptr)
       //(line offset + current line + position on the current line)
       // We assume that RGB is 4 bytes
 
-      dest_ptr = (void*)((uint32_t *)(screen2->pixels) +
+      dest_ptr = (void*)((uint32_t *)(screen->pixels) +
 			 ((y+line)*w_length) + x);
       src_ptr = (void*)((uint32_t *)ptr + ((line * w)));
       memcpy(dest_ptr,src_ptr,w_internal * sizeof(uint32_t));
     }
 
-  SDL_UnlockSurface(screen2);
+  SDL_UnlockSurface(screen);
 }
 
 int screen_refresh()
@@ -149,13 +147,18 @@ int screen_refresh()
   offset.y = 0;
   finish_time = SDL_GetTicks();
 
-  //	while (SDL_GetTicks() - old_time < 1000 / global_framerate)
+  // Check if we can actually copy frame with Done[frame_id] table
+  // filed by resize component et RAZ by render component.
+  last_frame_id = (last_frame_id + 1) % FRAME_LOOKAHEAD;
+
+  SDL_Surface* src = Surfaces_resized[last_frame_id];
+
+  screen_cpyrect(0,0,WINDOW_H, WINDOW_W, src->pixels);
+
+  //while (SDL_GetTicks() - old_time < 1000 / global_framerate)
   delay = (1000/global_framerate) + old_time - SDL_GetTicks();
   if (delay > 0 )
     SDL_Delay(delay);
-
-  //sge_transform(screen2, screen, 0, 4, 4, 0,0, 0,0, SGE_TAA);
-  sge_transform(screen2, screen, 0, 1, 1, 0,0, 0,0, SGE_TAA);
 
   if (SDL_Flip(screen) == -1) {
     printf("Could not refresh screen: %s\n.", SDL_GetError() );

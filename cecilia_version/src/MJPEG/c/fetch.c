@@ -20,10 +20,13 @@ SDL_Surface *Surfaces_resized[FRAME_LOOKAHEAD];
 // Global stream table :
 stream_info_t* streams;
 shift_t* decalage;
+shift_t* resize_Factors;
+uint8_t position[MAX_STREAM];
 
 // Global frame achievement table (nb_chunk already treated) :
 uint32_t Achievements[MAX_STREAM][FRAME_LOOKAHEAD];
 uint32_t color = 1;
+uint32_t last_frame_id;
 
 /* Intern declarations : */
 
@@ -80,6 +83,7 @@ int main(int argc, char** argv)
 
   frame_chunk_t *chunks;
   nb_streams = 0;
+  last_frame_id = -1;
   int stream_id = 0;
   int *frame_id;
   int32_t *MCU = NULL;
@@ -141,15 +145,18 @@ int main(int argc, char** argv)
     
     
     surfaces_init ();
+    factors_init ();
   }
     
   // Allocation for streams FILE table :
   FILE *movies[nb_streams];
+  uint8_t stream_init[nb_streams];
 
   for (int i = 0; i < nb_streams; i++)
     {
       frame_id[i] = 0;
       movies[i] = NULL;
+      stream_init[i] = 1;
       if ((movies[i] = fopen(argv[args], "r")) == NULL)
 	{
 	  perror(strerror(errno));
@@ -216,8 +223,6 @@ int main(int argc, char** argv)
             streams[stream_id].max_ss_h = max_ss_h;
             streams[stream_id].max_ss_v = max_ss_v;
   
-            printf ("max_ss_h = %d, max_ss_v = %d\n", max_ss_h, max_ss_v);
-
             if (SOF_section.n > 1) {
               CrV = SOF_component[1].HV & 0x0f;
               CrH = (SOF_component[1].HV >> 4) & 0x0f;
@@ -227,18 +232,27 @@ int main(int argc, char** argv)
             IPRINTF("Subsampling factor = %ux%u, %ux%u, %ux%u\r\n",
                 YH, YV, CrH, CrV, CbH, CbV);
 
-            if (screen_init_needed == 1) {
-              screen_init_needed = 0;
-              screen_init(SOF_section.width, SOF_section.height, framerate);
+	    if (stream_init[stream_id] == 1){
+	      stream_init[stream_id] == 0;
 
+	      if (screen_init_needed == 1) {
+		screen_init_needed = 0;
+		// TODO : here 1st and 2nd arguments are not used.
+		screen_init(SOF_section.width, SOF_section.height, framerate);
+	      }
+	      
               nb_MCU_X = intceil(SOF_section.height, MCU_sx * max_ss_v);
               nb_MCU_Y = intceil(SOF_section.width, MCU_sy * max_ss_h);
               nb_MCU = nb_MCU_X * nb_MCU_Y;
                 
               streams[stream_id].nb_MCU = nb_MCU;
 
+#ifdef MY_DEBUG
+	      printf ("Setting Achievements table to 0 for stream_id %d, nb_MCU = %d\n", stream_id, nb_MCU);
+#endif
+
               for (int i = 0; i < FRAME_LOOKAHEAD; i++)
-                Achievements[stream_id][i] = nb_MCU;
+                Achievements[stream_id][i] = 0;//nb_MCU;
             }
 
             break;
@@ -309,6 +323,10 @@ int main(int argc, char** argv)
 
         case M_SOS:
           {
+#ifdef MY_DEBUG
+	    printf ("Processing next frame (%d) for stream_id %d\n", frame_id[stream_id], stream_id);
+#endif
+
             IPRINTF("SOS marker found\r\n");
 
             COPY_SECTION(&SOS_section, sizeof(SOS_section), movies[stream_id]);
@@ -374,6 +392,7 @@ int main(int argc, char** argv)
                 }
                 chunk->data = (int32_t*) MCUs [stream_id] [frame_id[stream_id] % FRAME_LOOKAHEAD] [index_X] [index_Y];
                 chunk->DQT_table = (uint8_t*) &(DQT_table[stream_id][frame_id[stream_id] % FRAME_LOOKAHEAD]);/*[SOF_component[component_index].q_table];*/
+		//printf("\tCalling decode for stream %d frame %d\n", stream_id, frame_id[stream_id]);
                 decode(chunk);
               }
             }
@@ -390,10 +409,16 @@ int main(int argc, char** argv)
             }
 
 
-            COPY_SECTION(&marker, 2, movies[stream_id]);
-            frame_id[stream_id]++;
+            
             stream_id = (stream_id + 1) % nb_streams;
-            break;
+	    if (stream_id == 0) {
+	      for (int s = 0; s < nb_streams; s++)
+		frame_id[s]++;
+	    }
+	    printf ("\n\t\tNow gonna process stream %d frame %d\n", stream_id, frame_id[stream_id]);
+
+            COPY_SECTION(&marker, 2, movies[stream_id]);
+	    break;
           }
 
         case M_DQT:
@@ -524,12 +549,37 @@ void surfaces_init ()
 
 void factors_init ()
 {
-  decalage = (shift_t*) malloc (sizeof(shift_t) * nb_streams);
-    
-  //TODO : need to be dynamic decalage alloc :
-  decalage[0].x = 0;
-  decalage[0].y = 0;
-  decalage[1].x = 144;
-  decalage[1].y = 0;
+  // TODO : open every stream, read first SOF0 marker to know h and w
+  // and calculate resizing factors, then close every filehandlers.
+
+  decalage = (shift_t*) malloc (sizeof(shift_t) * MAX_STREAM);
+  resize_Factors = (shift_t*) malloc (sizeof(shift_t) * MAX_STREAM);
   
+  // decalage and resize_Factors are related, the index is not the
+  // stream_id but position onto the final window.
+  // [0] is the upper left area (no resize);
+  // [2] is the upper right area (no resize);
+  // [1] is the main area (zoom x2);
+  decalage[0].x = 0;
+  decalage[0].y = 144;
+  decalage[1].x = 256;
+  decalage[1].y = 0;
+  decalage[2].x = 0;
+  decalage[2].y = 0;
+
+  resize_Factors[0].x = 2;
+  resize_Factors[0].y = 2;
+  resize_Factors[1].x = 1;
+  resize_Factors[1].y = 1;
+  resize_Factors[2].x = 1;
+  resize_Factors[2].y = 1;
+
+  //decalage[2].x = 0;
+  //decalage[2].y = 0;
+  //resize_Factors[2].x = 1;
+  //resize_Factors[2].y = 1;
+
+  position[0] = 0;
+  position[1] = 1;
+  position[2] = 2;
 }

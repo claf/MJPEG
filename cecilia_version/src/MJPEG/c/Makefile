@@ -6,7 +6,7 @@ INC_DIR =.
 
 # Define compilation flags
 
-CC = gcc -g -DINFO #-fno-inline #-mcmodel=medium #-DINFO #-pg
+CC = gcc -g #-DMY_DEBUG #-DINFO #-fno-inline #-mcmodel=medium #-DINFO #-pg
 INC = -I$(INC_DIR) -I/opt/local/include/ -I/usr/include/SDL/
 CFLAGS = $(INC) -Wall -std=c99 #-g
 LDFLAGS = -L/opt/local/lib/ -lSDL -lSGE -g

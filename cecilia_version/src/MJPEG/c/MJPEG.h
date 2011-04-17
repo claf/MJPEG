@@ -2,6 +2,7 @@
 #define _MJPEG_HEADER_
 
 #include <stdint.h>
+#include <SDL/SDL.h>
 
 #include "utils.h"
 
@@ -14,8 +15,8 @@
 #define MAX_MCU_X 18
 
 //TODO : dynamic values
-#define WINDOW_H 500
-#define WINDOW_W 500
+#define WINDOW_H 512
+#define WINDOW_W 432
 
 typedef struct {
   int x;
@@ -48,6 +49,9 @@ typedef struct {
 // Global number of streams variable :
 extern uint8_t nb_stream;
 
+// Global stream_id <=> position correspondance table :
+extern uint8_t position[MAX_STREAM];
+
 // Global Surfaces structures :
 extern SDL_Surface *Surfaces_normal[MAX_STREAM][FRAME_LOOKAHEAD];
 extern SDL_Surface *Surfaces_resized[FRAME_LOOKAHEAD];
@@ -55,24 +59,14 @@ extern SDL_Surface *Surfaces_resized[FRAME_LOOKAHEAD];
 //Global shift table :
 extern shift_t* decalage;
 
+// Global resizing factors table :
+extern shift_t* resize_Factors;
+
 // Global stream table :
 extern stream_info_t* streams;
 
 // Global chunk achievement table :
-/* in fact A[X][Y] with X stream and Y frame lookahead */
 extern uint32_t Achievements[MAX_STREAM][FRAME_LOOKAHEAD];
-
-// Global unresized buffers table :
-/* in fact A[X][Y] with X stream and Y frame lookahead */
-extern void* Buffers[FRAME_LOOKAHEAD];
-
-// Global resized buffers table :
-/* in fact A[X][Y] with X stream and Y frame lookahead */
-extern void* resized_Buffers[FRAME_LOOKAHEAD];
-
-// Global resizing factors table :
-/* */
-extern uint8_t* resize_Factors;
 
 // Global last frame_id on the screen :
 extern uint32_t last_frame_id;
