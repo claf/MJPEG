@@ -38,11 +38,11 @@ void surfaces_init ();
 void factors_init ();
 
 static void usage(char *progname) {
-	printf("Usage : %s [options] <mjpeg_file_1> [<mjpeg_file_2> ...]\n", progname);
-	printf("Options list :\n");
-	printf("\t-f <framerate> : set framerate for the movie\n");
+  printf("Usage : %s [options] <mjpeg_file_1> [<mjpeg_file_2> ...]\n", progname);
+  printf("Options list :\n");
+  printf("\t-f <framerate> : set framerate for the movie\n");
   printf("\t-c : decode streams in black and white format\n");
-	printf("\t-h : display this help and exit\n");
+  printf("\t-h : display this help and exit\n");
 }
 
 int main(int argc, char** argv)
@@ -138,35 +138,35 @@ int main(int argc, char** argv)
     nb_streams = argc - args;
 
     chunks = malloc (sizeof(frame_chunk_t) * nb_streams * FRAME_LOOKAHEAD * MAX_MCU_X * MAX_MCU_Y);
-    
+
     frame_id = malloc (sizeof(int) * nb_streams);
-    
+
     streams = (stream_info_t*) malloc (sizeof(stream_info_t) * nb_streams);
-    
-    
+
+
     surfaces_init ();
     factors_init ();
   }
-    
+
   // Allocation for streams FILE table :
   FILE *movies[nb_streams];
   uint8_t stream_init[nb_streams];
 
   for (int i = 0; i < nb_streams; i++)
+  {
+    frame_id[i] = 0;
+    movies[i] = NULL;
+    stream_init[i] = 1;
+    if ((movies[i] = fopen(argv[args], "r")) == NULL)
     {
-      frame_id[i] = 0;
-      movies[i] = NULL;
-      stream_init[i] = 1;
-      if ((movies[i] = fopen(argv[args], "r")) == NULL)
-	{
-	  perror(strerror(errno));
-	  exit(-1);
-	}
-      args++;
+      perror(strerror(errno));
+      exit(-1);
     }
+    args++;
+  }
   stream_id = 0;
 
-//TODO : read begining of every files to find max_X and max_Y
+  //TODO : read begining of every files to find max_X and max_Y
 
   /*---- Actual computation ----*/
   end_of_file = 0;
@@ -188,7 +188,7 @@ int main(int argc, char** argv)
         case M_SOF0:
           {
             IPRINTF("SOF0 marker found for stream %d : frame %d\r\n", stream_id, frame_id[stream_id]);
-            
+
             COPY_SECTION(&SOF_section, sizeof(SOF_section), movies[stream_id]);
             CPU_DATA_IS_BIGENDIAN(16, SOF_section.length);
             CPU_DATA_IS_BIGENDIAN(16, SOF_section.height);
@@ -222,7 +222,7 @@ int main(int argc, char** argv)
             }
             streams[stream_id].max_ss_h = max_ss_h;
             streams[stream_id].max_ss_v = max_ss_v;
-  
+
             if (SOF_section.n > 1) {
               CrV = SOF_component[1].HV & 0x0f;
               CrH = (SOF_component[1].HV >> 4) & 0x0f;
@@ -232,27 +232,27 @@ int main(int argc, char** argv)
             IPRINTF("Subsampling factor = %ux%u, %ux%u, %ux%u\r\n",
                 YH, YV, CrH, CrV, CbH, CbV);
 
-	    if (stream_init[stream_id] == 1){
-	      stream_init[stream_id] == 0;
+            if (stream_init[stream_id] == 1){
+              stream_init[stream_id] == 0;
 
-	      if (screen_init_needed == 1) {
-		screen_init_needed = 0;
-		// TODO : here 1st and 2nd arguments are not used.
-		screen_init(SOF_section.width, SOF_section.height, framerate);
-	      }
-	      
+              if (screen_init_needed == 1) {
+                screen_init_needed = 0;
+                // TODO : here 1st and 2nd arguments are not used.
+                screen_init(SOF_section.width, SOF_section.height, framerate);
+              }
+
               nb_MCU_X = intceil(SOF_section.height, MCU_sx * max_ss_v);
               nb_MCU_Y = intceil(SOF_section.width, MCU_sy * max_ss_h);
               nb_MCU = nb_MCU_X * nb_MCU_Y;
-                
+
               streams[stream_id].nb_MCU = nb_MCU;
 
-#ifdef MY_DEBUG
-	      printf ("Setting Achievements table to 0 for stream_id %d, nb_MCU = %d\n", stream_id, nb_MCU);
-#endif
+//#ifdef MY_DEBUG
+              printf ("Read and Set nb_MCU :  %d\n",nb_MCU);
+//#endif
 
               for (int i = 0; i < FRAME_LOOKAHEAD; i++)
-                Achievements[stream_id][i] = 0;//nb_MCU;
+                Achievements[stream_id][i] = 0;
             }
 
             break;
@@ -324,7 +324,7 @@ int main(int argc, char** argv)
         case M_SOS:
           {
 #ifdef MY_DEBUG
-	    printf ("Processing next frame (%d) for stream_id %d\n", frame_id[stream_id], stream_id);
+            printf ("Processing next frame (%d) for stream_id %d\n", frame_id[stream_id], stream_id);
 #endif
 
             IPRINTF("SOS marker found\r\n");
@@ -392,14 +392,14 @@ int main(int argc, char** argv)
                 }
                 chunk->data = (int32_t*) MCUs [stream_id] [frame_id[stream_id] % FRAME_LOOKAHEAD] [index_X] [index_Y];
                 chunk->DQT_table = (uint8_t*) &(DQT_table[stream_id][frame_id[stream_id] % FRAME_LOOKAHEAD]);/*[SOF_component[component_index].q_table];*/
-		//printf("\tCalling decode for stream %d frame %d\n", stream_id, frame_id[stream_id]);
+                //printf("\tCalling decode for stream %d frame %d\n", stream_id, frame_id[stream_id]);
                 decode(chunk);
               }
             }
             if (stream_id == nb_streams -1){
-            if (screen_refresh() == 1) {
-              end_of_file = 1;
-            }
+              if (screen_refresh() == 1) {
+                end_of_file = 1;
+              }
             }
             for (HT_index = 0; HT_index < 4; HT_index++) {
               free_huffman_tables(tables[HUFF_DC][HT_index]);
@@ -409,16 +409,16 @@ int main(int argc, char** argv)
             }
 
 
-            
+
             stream_id = (stream_id + 1) % nb_streams;
-	    if (stream_id == 0) {
-	      for (int s = 0; s < nb_streams; s++)
-		frame_id[s]++;
-	    }
-	    printf ("\n\t\tNow gonna process stream %d frame %d\n", stream_id, frame_id[stream_id]);
+            if (stream_id == 0) {
+              for (int s = 0; s < nb_streams; s++)
+                frame_id[s]++;
+            }
+            printf ("\n\t\tNow gonna process stream %d frame %d\n", stream_id, frame_id[stream_id]);
 
             COPY_SECTION(&marker, 2, movies[stream_id]);
-	    break;
+            break;
           }
 
         case M_DQT:
@@ -501,20 +501,20 @@ int main(int argc, char** argv)
   }
 
 clean_end:/*
-  for (int i = 0 ; i < 3 ; i++) {
-    if (YCbCr_MCU[i] != NULL) {
-      free(YCbCr_MCU[i]);
-      YCbCr_MCU[i] = NULL;
-    }
-    if (YCbCr_MCU_ds[i] != NULL) {
-      free(YCbCr_MCU_ds[i]);
-      YCbCr_MCU_ds[i] = NULL;
-    }
-  }
-  if (RGB_MCU != NULL) {
-    free(RGB_MCU);
-    RGB_MCU = NULL;
-  }*/
+             for (int i = 0 ; i < 3 ; i++) {
+             if (YCbCr_MCU[i] != NULL) {
+             free(YCbCr_MCU[i]);
+             YCbCr_MCU[i] = NULL;
+             }
+             if (YCbCr_MCU_ds[i] != NULL) {
+             free(YCbCr_MCU_ds[i]);
+             YCbCr_MCU_ds[i] = NULL;
+             }
+             }
+             if (RGB_MCU != NULL) {
+             free(RGB_MCU);
+             RGB_MCU = NULL;
+             }*/
   for (HT_index = 0; HT_index < 4; HT_index++) {
     free_huffman_tables(tables[HUFF_DC][HT_index]);
     free_huffman_tables(tables[HUFF_AC][HT_index]);
@@ -533,18 +533,18 @@ clean_end:/*
 void surfaces_init ()
 {
   for (int frame = 0; frame < FRAME_LOOKAHEAD; frame++)
-    {
-      Surfaces_resized[frame] = SDL_CreateRGBSurface(SDL_SWSURFACE, WINDOW_H, WINDOW_W, 32, 0, 0, 0, 0);
-      if (Surfaces_resized[frame] == NULL)
-	printf ("SDL_CreateRGBSurface ERROR %s:%d\n", __FILE__, __LINE__);
+  {
+    Surfaces_resized[frame] = SDL_CreateRGBSurface(SDL_SWSURFACE, WINDOW_H, WINDOW_W, 32, 0, 0, 0, 0);
+    if (Surfaces_resized[frame] == NULL)
+      printf ("SDL_CreateRGBSurface ERROR %s:%d\n", __FILE__, __LINE__);
 
-      for (int stream = 0; stream < nb_streams; stream++)
-	{
-	  Surfaces_normal[stream][frame] = SDL_CreateRGBSurface(SDL_SWSURFACE, WINDOW_H, WINDOW_W, 32, 0, 0, 0, 0);
-	  if (Surfaces_normal[stream][frame] == NULL)
-	    printf ("SDL_CreateRGBSurface ERROR %s:%d\n", __FILE__, __LINE__);
-	}
+    for (int stream = 0; stream < nb_streams; stream++)
+    {
+      Surfaces_normal[stream][frame] = SDL_CreateRGBSurface(SDL_SWSURFACE, WINDOW_H, WINDOW_W, 32, 0, 0, 0, 0);
+      if (Surfaces_normal[stream][frame] == NULL)
+        printf ("SDL_CreateRGBSurface ERROR %s:%d\n", __FILE__, __LINE__);
     }
+  }
 }
 
 void factors_init ()
@@ -554,7 +554,7 @@ void factors_init ()
 
   decalage = (shift_t*) malloc (sizeof(shift_t) * MAX_STREAM);
   resize_Factors = (shift_t*) malloc (sizeof(shift_t) * MAX_STREAM);
-  
+
   // decalage and resize_Factors are related, the index is not the
   // stream_id but position onto the final window.
   // [0] is the upper left area (no resize);
