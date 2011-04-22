@@ -8,7 +8,7 @@
 void resize(frame_chunk_t* chunk)
 {
 
-  printf ("Resize start\n");
+  //printf ("Resize start\n");
 
   /* Lors de l'arrivée d'une frame :
    * si bit == 1
@@ -47,7 +47,7 @@ void resize(frame_chunk_t* chunk)
   int x_factor = resize_Factors[position[stream_id]].x;
   int y_factor = resize_Factors[position[stream_id]].y;
 
-  printf ("x_factor %d y_factor %d", x_factor, y_factor);
+  //printf ("x_factor %d y_factor %d", x_factor, y_factor);
 
   SDL_Rect rect_src, rect_dest;
 
@@ -76,7 +76,7 @@ void resize(frame_chunk_t* chunk)
   // TODO : set Done[frame_id] = true;
   // and don't forget to set it back to false in screen_refresh when really Fliping.
 
-  printf ("Resize end\n");
+  //printf ("Resize end\n");
 
 }
 

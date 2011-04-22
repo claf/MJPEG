@@ -34,7 +34,6 @@ void decode(frame_chunk_t* chunk)
 
   uint16_t max_ss_h = streams[stream_id].max_ss_h;
   uint16_t max_ss_v = streams[stream_id].max_ss_v;
-  int nb_MCU = ((streams[stream_id].HV >> 4) & 0xf) * (streams[stream_id].HV & 0xf);
 
   /*  
   uint8_t YCbCr_MCU[3][MCU_sx * MCU_sy * max_ss_h * max_ss_v];
@@ -65,17 +64,24 @@ void decode(frame_chunk_t* chunk)
       printf("\nmalloc error line %d\n", __LINE__);
   }
 
+  int nb_MCUz = ((streams[stream_id].HV >> 4) & 0xf) * (streams[stream_id].HV & 0xf);
 
   for (index = 0; index < chunk->index; index++)
   {
     uint32_t component_index = chunk->component_index[index];
+    uint8_t nb_MCU = chunk->nb_MCU[index];
+
+    //printf ("MCU used : %d, MCU orig : %d\n", nb_MCU, nb_MCUz);
 
     for (int chroma_ss = 0; chroma_ss < nb_MCU; chroma_ss++)
     {
-      MCU = chunk->data + (index * sizeof(int32_t) * 64);
-
+      MCU = chunk->data + (( (index * 4) + (chroma_ss) ) * 64);
+      
       int i = chunk->DQT_index[index][chroma_ss];
+      //printf("\nQT_index %d\n", i);
       iqzz_block(MCU, unZZ_MCU, (uint8_t*)(chunk->DQT_table + i*64));
+
+      //PRINT_DQT ((uint8_t*)(chunk->DQT_table + i*64));
 
       IDCT(unZZ_MCU, YCbCr_MCU_ds[component_index] + (64 * chroma_ss));
     }
@@ -108,8 +114,8 @@ void decode(frame_chunk_t* chunk)
   if (Achievements[stream_id][frame_id % FRAME_LOOKAHEAD] == streams[stream_id].nb_MCU)
     {
       Achievements[stream_id][frame_id % FRAME_LOOKAHEAD] = 0;
-      printf("\nCall Resize Component for stream %d frame %d\n", stream_id, frame_id);
-      printf("\nAchievements[%d][%d] value %d\n", stream_id, frame_id, Achievements[stream_id][frame_id]); 
+      //printf("\nCall Resize Component for stream %d frame %d\n", stream_id, frame_id);
+      //printf("\nAchievements[%d][%d] value %d\n", stream_id, frame_id, Achievements[stream_id][frame_id]); 
       resize (chunk);
     }
   //TODO : lock end

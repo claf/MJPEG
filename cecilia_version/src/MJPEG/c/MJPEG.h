@@ -24,6 +24,7 @@ typedef struct {
   int stream_id;
   int frame_id;
   uint8_t index;
+  uint8_t nb_MCU[4];
   uint32_t component_index[4];
   int32_t *data; /* will point to whatever changing type data are */
   uint8_t DQT_index[4][4]; /* Quantization tables index*/

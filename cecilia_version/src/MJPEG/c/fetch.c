@@ -31,6 +31,7 @@ uint32_t last_frame_id;
 /* Intern declarations : */
 
 int32_t MCUs[MAX_STREAM][FRAME_LOOKAHEAD][MAX_MCU_X][MAX_MCU_Y][4][4][64];
+uint8_t DQT_table[MAX_STREAM][FRAME_LOOKAHEAD][4][64];
 
 /* Intern functions : */
 
@@ -58,7 +59,6 @@ int main(int argc, char** argv)
   uint8_t marker[2];
   uint8_t HT_type = 0;
   uint8_t HT_index = 0;
-  uint8_t DQT_table[MAX_STREAM][FRAME_LOOKAHEAD][4][64];
   uint8_t QT_index = 0;
   uint16_t nb_MCU = 0, nb_MCU_X = 0, nb_MCU_Y = 0;
   uint16_t max_ss_h = 0 , max_ss_v = 0;
@@ -248,7 +248,7 @@ int main(int argc, char** argv)
               streams[stream_id].nb_MCU = nb_MCU;
 
 //#ifdef MY_DEBUG
-              printf ("Read and Set nb_MCU :  %d\n",nb_MCU);
+              //printf ("Read and Set nb_MCU :  %d\n",nb_MCU);
 //#endif
 
               for (int i = 0; i < FRAME_LOOKAHEAD; i++)
@@ -379,10 +379,14 @@ int main(int argc, char** argv)
                   uint32_t component_index = component_order[index];
                   chunk->component_index[index] = component_index;
                   //avoiding unneeded computation
-                  int nb_MCU = ((SOF_component[component_index].HV>> 4) & 0xf)
-                                * (SOF_component[component_index].HV & 0x0f);
+                  int nb_MCUz = ((SOF_component[component_index].HV>> 4) & 0xf)
+                    * (SOF_component[component_index].HV & 0x0f);
 
-                  for (chroma_ss = 0; chroma_ss < nb_MCU; chroma_ss++)
+                  chunk->nb_MCU[index] = nb_MCUz;
+
+                  //printf("MCU used %d MCU orig %d\n", nb_MCUz, nb_MCU);
+                  
+                  for (chroma_ss = 0; chroma_ss < nb_MCUz; chroma_ss++)
                   {
                     MCU = MCUs [stream_id] [frame_id[stream_id] % FRAME_LOOKAHEAD] [index_X] [index_Y] [index] [chroma_ss];
                     unpack_block(movies[stream_id], &scan_desc,index, MCU);
@@ -415,7 +419,7 @@ int main(int argc, char** argv)
               for (int s = 0; s < nb_streams; s++)
                 frame_id[s]++;
             }
-            printf ("\n\t\tNow gonna process stream %d frame %d\n", stream_id, frame_id[stream_id]);
+            //printf ("\n\t\tNow gonna process stream %d frame %d\n", stream_id, frame_id[stream_id]);
 
             COPY_SECTION(&marker, 2, movies[stream_id]);
             break;
@@ -443,9 +447,10 @@ int main(int argc, char** argv)
               IPRINTF("Quantization table index is %d\r\n", QT_index);
 
               IPRINTF("Reading quantization table\r\n");
+             // printf("\nQT_index = %d\n", QT_index);
               COPY_SECTION(DQT_table[stream_id][frame_id[stream_id] % FRAME_LOOKAHEAD][QT_index], 64, movies[stream_id]);
               DQT_size += 64;
-
+              //PRINT_DQT(DQT_table[stream_id][frame_id[stream_id] % FRAME_LOOKAHEAD][QT_index]);
             }
 
             break;
