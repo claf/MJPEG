@@ -10,6 +10,8 @@
 // of bound.
 #define _RENDER_DEBUG
 
+#define test
+
 static uint32_t global_framerate;
 static SDL_Surface *screen;
 
