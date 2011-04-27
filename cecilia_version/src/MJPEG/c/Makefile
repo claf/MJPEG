@@ -6,10 +6,10 @@ INC_DIR =.
 
 # Define compilation flags
 
+INC = -I$(INC_DIR) -I/opt/local/include/ -I/usr/include/ -I/usr/local/include/
 CC = gcc -g #-DMY_DEBUG #-DINFO #-fno-inline #-mcmodel=medium #-DINFO #-pg
-INC = -I$(INC_DIR) -I/opt/local/include/ -I/usr/include/SDL/
 CFLAGS = $(INC) -Wall -std=c99 #-g
-LDFLAGS = -L/opt/local/lib/ -lSDL -lSGE -g
+LDFLAGS = -L/usr/local/lib/ -L/opt/local/lib/ -lSDL -lSGE -g
 
 # Define object files list
 

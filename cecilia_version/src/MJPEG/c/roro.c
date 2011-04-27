@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "SDL.h"
-#include "sge.h"
+#include "SDL/SDL.h"
+#include "SDL/sge.h"
 
 int main(int argc, char** argv)
 {	
