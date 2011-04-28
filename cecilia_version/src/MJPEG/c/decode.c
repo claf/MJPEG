@@ -29,7 +29,13 @@ void decode(frame_chunk_t* chunk)
 
   int stream_id = chunk->stream_id;
   int frame_id = chunk->frame_id;
-  
+
+  if (Drop[frame_id % FRAME_LOOKAHEAD] == 1)
+  {
+    printf ("\nDecode component droped frame %d\n", frame_id);
+    goto end;
+  }
+
   //printf ("Decoding max_h : %d, max_v : %d\n", streams[stream_id].max_ss_h, streams[stream_id].max_ss_v);
 
   uint16_t max_ss_h = streams[stream_id].max_ss_h;
@@ -64,7 +70,7 @@ void decode(frame_chunk_t* chunk)
       printf("\nmalloc error line %d\n", __LINE__);
   }
 
-  int nb_MCUz = ((streams[stream_id].HV >> 4) & 0xf) * (streams[stream_id].HV & 0xf);
+  //int nb_MCUz = ((streams[stream_id].HV >> 4) & 0xf) * (streams[stream_id].HV & 0xf);
 
   for (index = 0; index < chunk->index; index++)
   {
@@ -108,13 +114,14 @@ void decode(frame_chunk_t* chunk)
      MCU_sx * max_ss_v,
      RGB_MCU, Surfaces_normal[stream_id][frame_id % FRAME_LOOKAHEAD]);
   
+end: 
   //TODO : lock start
   //  printf ("\tIncrement Achievement for stream %d frame %d value %d\n", stream_id, frame_id, Achievements[stream_id][frame_id]);
   Achievements[stream_id][frame_id % FRAME_LOOKAHEAD]++;
   if (Achievements[stream_id][frame_id % FRAME_LOOKAHEAD] == streams[stream_id].nb_MCU)
     {
       Achievements[stream_id][frame_id % FRAME_LOOKAHEAD] = 0;
-      //printf("\nCall Resize Component for stream %d frame %d\n", stream_id, frame_id);
+      printf("\nCall Resize Component for stream %d frame %d\n", stream_id, frame_id);
       //printf("\nAchievements[%d][%d] value %d\n", stream_id, frame_id, Achievements[stream_id][frame_id]); 
       resize (chunk);
     }

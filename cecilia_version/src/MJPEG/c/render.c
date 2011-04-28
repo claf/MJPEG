@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdint.h>
-//#include <unistd.h>
+#include <unistd.h>
 #include <SDL/SDL.h>
 //#include <SDL/sge.h>
 
@@ -19,7 +19,57 @@ static SDL_Surface *screen;
 static int old_time;
 
 // Global timeouted frames table :
+int32_t Done[FRAME_LOOKAHEAD];
 int32_t Drop[FRAME_LOOKAHEAD];
+uint8_t initialized;
+
+void cpyrect(uint32_t x, uint32_t y, uint32_t w, uint32_t h, void *ptr)
+{
+  void *dest_ptr;
+  void *src_ptr;
+  uint32_t line;
+  uint32_t w_internal = w, h_internal = h;
+  int w_length;
+
+  SDL_LockSurface(screen);
+  w_length = screen->pitch / (screen->format->BitsPerPixel / 8 );
+
+#ifdef DEBUG
+  if ((y) > screen->h) {
+    printf("[%s] : block can't be copied, "
+     "not in the screen (too low)\n", __func__);
+    exit(1);
+  }
+  if ((x) > screen->w) {
+    printf("[%s] : block can't be copied, "
+     "not in the screen (right border)\n", __func__);
+    exit(1);
+  }
+#endif
+  if ((x+w) > screen->w) {
+    w_internal = screen->w -x; 
+  }
+  if ((y+h) > screen->h) {
+    h_internal = screen->h -y; 
+  }
+  for(line = 0; line < h_internal ; line++)
+    {   
+      // Positionning src and dest pointers
+      //  _ src : must be placed at the beginning of line "line"
+      //  _ dest : must be placed at the beginning
+      //          of the corresponding block :
+      //(line offset + current line + position on the current line)
+      // We assume that RGB is 4 bytes
+
+      dest_ptr = (void*)((uint32_t *)(screen->pixels) +
+       ((y+line)*w_length) + x); 
+      src_ptr = (void*)((uint32_t *)ptr + ((line * w)));
+      memcpy(dest_ptr,src_ptr,w_internal * sizeof(uint32_t));
+    }   
+
+  SDL_UnlockSurface(screen);
+}
+
 
 void render_init(int width, int height, int framerate)
 {
@@ -79,16 +129,27 @@ int render_exit()
   return 0;
 }
 
-void render()
+
+
+void render(void* nothing)
 {
   //CALL (REQUIRED.fetch, fetch);
 
-  int delay;
+  int delay, frame_id, dropped = 0;
   uint64_t finish_time;
   SDL_Event event;
 
+/* TODO auto init?
+  if (last_frame_id == -1)
+    render_init ();
+*/
+
+  sleep(1);
+
   /* Because now it's a thread. */
   while (1) {
+
+  
 
   compute:
 
@@ -96,29 +157,50 @@ void render()
   
     // Check if we can actually copy frame with Done[frame_id] table
     // filed by resize component et RAZ by render component.
-    frame_id = last_frame_id;
+    frame_id = last_frame_id + 1;
 
-    while (!Done[frame_id % FRAME_LOOKAHEAD]) {
+    while (Done[frame_id % FRAME_LOOKAHEAD] != nb_streams) {
 #ifdef _RENDER_DEBUG
-      printf("\nRENDER_DEBUG :: frame %d not ready yet (Done[%d]\n",
+      printf("\nRENDER_DEBUG :: frame %d not ready yet (Done = %d\n",
 	     frame_id, Done[frame_id % FRAME_LOOKAHEAD]);
 #endif
-      if (/*j'ai encore le temps*/) {
+    delay = (1000/global_framerate) + old_time - SDL_GetTicks();
+      if (delay > 0) {
 	// TODO : Find a better delay?
-	SDL_Delay(1);
+	SDL_Delay(10);
       } else {
 	// TODO : drop frames
-	
-	goto compute;
+	printf ("should drop frame, already dropped %d\n", dropped);
+  last_frame_id++;
+    frame_id = last_frame_id + 1;
+
+  if (dropped < FRAME_LOOKAHEAD)
+  {
+    dropped++;
+    Drop[frame_id % FRAME_LOOKAHEAD] = 1;
+	  goto compute;
+  } else {
+    printf ("FRAME_LOOKAHEAD frame to be dropped, aborting");
+    abort();
+  }
       }
     }
 
-    SDL_Surface* src = Surfaces_resized[frame_id];
+    SDL_Surface* src = Surfaces_resized[frame_id % FRAME_LOOKAHEAD];
 
-    screen_cpyrect(0,0,WINDOW_H, WINDOW_W, src->pixels);
+    cpyrect(0,0,WINDOW_H, WINDOW_W, src->pixels);
 
-    // TODO : launch next frame!
-    // probleme si
+    Done[frame_id % FRAME_LOOKAHEAD] = 0;
+
+    if (dropped == 0)
+    {
+      printf ("\n no frame droped \n");
+      // fetch();
+    } else {
+      printf ("\n %d dropped frames\n", dropped);
+      // TODO : clean system? what to launch ? then update dropped
+      dropped = 0;
+    }
 
     delay = (1000 / global_framerate) + old_time - SDL_GetTicks();
     if (delay > 0 ) {
@@ -147,16 +229,16 @@ void render()
 	  printf("bye bye\n");
 	  initialized = 0;
 	  SDL_Quit();
-	  return 1;
+	  exit(1);
 	} 
       }   
       if (event.type == SDL_QUIT) {
 	printf("\n");
 	initialized = 0;
 	SDL_Quit();
-	return 1;
+	exit(1);
       }
     }
   }
-  return 0;
+  exit(0);
 }

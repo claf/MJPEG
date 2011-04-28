@@ -6,7 +6,7 @@
 
 #include "utils.h"
 
-#define FRAME_LOOKAHEAD 5
+#define FRAME_LOOKAHEAD 30
 #define MAX_SAMPLING 4
 #define MAX_STREAM 3
 
@@ -47,8 +47,12 @@ typedef struct {
   int y;
 } shift_t;
 
+// Global table for ready and drop frames :
+extern int32_t Done[FRAME_LOOKAHEAD];
+extern int32_t Drop[FRAME_LOOKAHEAD];
+
 // Global number of streams variable :
-extern uint8_t nb_stream;
+extern uint8_t nb_streams;
 
 // Global stream_id <=> position correspondance table :
 extern uint8_t position[MAX_STREAM];
@@ -70,7 +74,7 @@ extern stream_info_t* streams;
 extern uint32_t Achievements[MAX_STREAM][FRAME_LOOKAHEAD];
 
 // Global last frame_id on the screen :
-extern uint32_t last_frame_id;
+extern volatile int32_t last_frame_id;
 
 // Global value for color :
 extern uint32_t color;

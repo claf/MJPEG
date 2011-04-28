@@ -15,7 +15,6 @@
 #define DEBUG
 
 static SDL_Surface *screen;
-static SDL_Surface *screen2;
 static SDL_Rect ClipRect;
 // According to when the quit event is detected, the player can get stuck
 // the "initialized" parameter prevents this
@@ -149,9 +148,9 @@ int screen_refresh()
 
   // Check if we can actually copy frame with Done[frame_id] table
   // filed by resize component et RAZ by render component.
-  last_frame_id = (last_frame_id + 1) % FRAME_LOOKAHEAD;
+  last_frame_id = last_frame_id + 1;
 
-  SDL_Surface* src = Surfaces_resized[last_frame_id];
+  SDL_Surface* src = Surfaces_resized[last_frame_id % FRAME_LOOKAHEAD];
 
   screen_cpyrect(0,0,WINDOW_H, WINDOW_W, src->pixels);
 
@@ -164,7 +163,7 @@ int screen_refresh()
     printf("Could not refresh screen: %s\n.", SDL_GetError() );
   }
   //\r is required to avoid latency due to screening on terminal
-  printf("\r[screen] : framerate is %0.2ffps, "
+  printf("[screen] : framerate is %0.2ffps, "
 	 "computed one image in %0.2fms",
 	 1000.00f / (SDL_GetTicks() - old_time),
 	 (finish_time - old_time) * 1.00f);

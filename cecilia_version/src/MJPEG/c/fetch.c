@@ -2,13 +2,17 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <string.h>
+#include <unistd.h>
+
+#include <pthread.h>
+
 #include "MJPEG.h"
 #include "huffman.h"
 #include "unpack_block.h"
 #include "define_common.h"
 #include "skip_segment.h"
 #include "decode.h"
-#include "screen.h"
+#include "render.h"
 
 /* Global definition : */
 uint8_t nb_streams; 
@@ -26,7 +30,7 @@ uint8_t position[MAX_STREAM];
 // Global frame achievement table (nb_chunk already treated) :
 uint32_t Achievements[MAX_STREAM][FRAME_LOOKAHEAD];
 uint32_t color = 1;
-uint32_t last_frame_id;
+volatile int32_t last_frame_id;
 
 /* Intern declarations : */
 
@@ -56,7 +60,7 @@ int main(int argc, char** argv)
    * MCUs
    */
 
-  uint8_t marker[2];
+uint8_t marker[2];
   uint8_t HT_type = 0;
   uint8_t HT_index = 0;
   uint8_t QT_index = 0;
@@ -170,7 +174,8 @@ int main(int argc, char** argv)
 
   /*---- Actual computation ----*/
   end_of_file = 0;
-  while (!end_of_file ) {
+  int printed = 0;
+  while (printed < FRAME_LOOKAHEAD ) {
     int elem_read = fread(&marker, 2, 1, movies[stream_id]);
     if (elem_read != 1) {
       if (feof(movies[stream_id])) {
@@ -233,12 +238,29 @@ int main(int argc, char** argv)
                 YH, YV, CrH, CrV, CbH, CbV);
 
             if (stream_init[stream_id] == 1){
-              stream_init[stream_id] == 0;
+              stream_init[stream_id] = 0;
+
+              for (int i = 0; i < FRAME_LOOKAHEAD; i++)
+              {
+                Achievements[stream_id][i] = 0;
+              }
 
               if (screen_init_needed == 1) {
                 screen_init_needed = 0;
+
+                
+              for (int i = 0; i < FRAME_LOOKAHEAD; i++)
+              {
+                Drop[i] = 0;
+                Done[i] = 0;
+}
+
                 // TODO : here 1st and 2nd arguments are not used.
-                screen_init(SOF_section.width, SOF_section.height, framerate);
+                // TODO : pthread_create now!
+                //render_init(SOF_section.width, SOF_section.height, framerate);
+                render_init(WINDOW_H, WINDOW_W, framerate);
+                pthread_t tid;
+                pthread_create(&tid, NULL, (void*(*)(void*)) &render, NULL);
               }
 
               nb_MCU_X = intceil(SOF_section.height, MCU_sx * max_ss_v);
@@ -251,8 +273,6 @@ int main(int argc, char** argv)
               //printf ("Read and Set nb_MCU :  %d\n",nb_MCU);
 //#endif
 
-              for (int i = 0; i < FRAME_LOOKAHEAD; i++)
-                Achievements[stream_id][i] = 0;
             }
 
             break;
@@ -401,9 +421,11 @@ int main(int argc, char** argv)
               }
             }
             if (stream_id == nb_streams -1){
-              if (screen_refresh() == 1) {
-                end_of_file = 1;
-              }
+            // now it wont terminate
+              //if (screen_refresh() == 1) {
+              //  end_of_file = 1;
+              //}
+              printed++;
             }
             for (HT_index = 0; HT_index < 4; HT_index++) {
               free_huffman_tables(tables[HUFF_DC][HT_index]);
@@ -525,7 +547,9 @@ clean_end:/*
     free_huffman_tables(tables[HUFF_AC][HT_index]);
   }
 
-  screen_exit();
+  // TODO : and now?
+  //screen_exit();
+  sleep(20000000);
   return 0;
 
 
