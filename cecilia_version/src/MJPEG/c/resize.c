@@ -46,12 +46,16 @@ void resize(frame_chunk_t* chunk)
   int stream_id = chunk->stream_id;
   int frame_id = chunk->frame_id % FRAME_LOOKAHEAD;
 
-  if (Drop[frame_id % FRAME_LOOKAHEAD] == 1)
+  if (Drop[frame_id] == 1)
   {
+    Done[frame_id] ++;
+
+    if (Done[frame_id] == nb_streams) {
 #ifdef _RESIZE_DEBUG
     printf ("Resize component - Droped frame %d for good!\n", frame_id);
 #endif
-    Drop[frame_id % FRAME_LOOKAHEAD] = 0;
+      Drop[frame_id] = 0;
+    }
 
     /* TODO : here we could call fetch component to start decoding next frame,
      * but what about multiples frames to drop ...
@@ -109,12 +113,12 @@ void resize(frame_chunk_t* chunk)
       result_rect.x, result_rect.y, result_rect.h, result_rect.w);
 #endif
 
-  int nb_frames = __sync_add_and_fetch (&Done[frame_id % FRAME_LOOKAHEAD], 1);
+  int nb_frames = __sync_add_and_fetch (&Done[frame_id], 1);
 
 #ifdef _RESIZE_DEBUG
   if (nb_frames == nb_streams) {
     printf("Resize component - Frame %d ready to print ( Done[%d] = %d )\n",
-        frame_id, frame_id, Done[frame_id % FRAME_LOOKAHEAD]);
+        frame_id, frame_id, Done[frame_id]);
   }
 #endif
 
