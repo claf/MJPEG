@@ -14,6 +14,8 @@
 #include "decode.h"
 #include "render.h"
 
+//#define _FETCH_DEBUG
+
 /* Global definition : */
 uint8_t nb_streams; 
 
@@ -36,9 +38,11 @@ volatile int32_t last_frame_id;
 
 int32_t MCUs[MAX_STREAM][FRAME_LOOKAHEAD][MAX_MCU_X][MAX_MCU_Y][4][4][64];
 uint8_t DQT_table[MAX_STREAM][FRAME_LOOKAHEAD][4][64];
+volatile int32_t nb_ftp; // number of frame to process.
 
 /* Intern functions : */
 
+void fetch();
 void surfaces_init ();
 void factors_init ();
 
@@ -91,6 +95,8 @@ uint8_t marker[2];
   int stream_id = 0;
   int *frame_id;
   int32_t *MCU = NULL;
+  
+  nb_ftp = FRAME_LOOKAHEAD;
 
   scan_desc_t scan_desc = { 0, 0, {}, {} };
   huff_table_t *tables[2][4] = {
@@ -174,8 +180,25 @@ uint8_t marker[2];
 
   /*---- Actual computation ----*/
   end_of_file = 0;
-  int printed = 0;
-  while (printed < FRAME_LOOKAHEAD ) {
+  int tour_de_perif = 0;
+  while (nb_ftp >= 0) {
+
+    while (nb_ftp == 0) {
+      for (int tdp = 0; tdp < 1000; tdp++) {
+        tour_de_perif++;
+        if (tour_de_perif == 1000) {
+          tour_de_perif = 0;
+        }
+      }
+    }
+
+    if (frame_id[stream_id] <= last_frame_id)
+    {
+#ifdef _FETCH_DEBUG
+      printf ("Fetch component - fetching frame and drop\n");
+#endif
+    }
+
     int elem_read = fread(&marker, 2, 1, movies[stream_id]);
     if (elem_read != 1) {
       if (feof(movies[stream_id])) {
@@ -251,9 +274,8 @@ uint8_t marker[2];
                 
               for (int i = 0; i < FRAME_LOOKAHEAD; i++)
               {
-                Drop[i] = 0;
                 Done[i] = 0;
-}
+              }
 
                 // TODO : here 1st and 2nd arguments are not used.
                 // TODO : pthread_create now!
@@ -425,7 +447,7 @@ uint8_t marker[2];
               //if (screen_refresh() == 1) {
               //  end_of_file = 1;
               //}
-              printed++;
+              __sync_fetch_and_sub(&nb_ftp, 1);
             }
             for (HT_index = 0; HT_index < 4; HT_index++) {
               free_huffman_tables(tables[HUFF_DC][HT_index]);
@@ -556,6 +578,14 @@ clean_end:/*
 
   printf ("Main end\n");
 
+}
+
+void fetch ()
+{
+#ifdef _FETCH_DEBUG
+  printf ("Fetch component - frame to process : %d, adding 1 frame to process\n", nb_ftp);
+#endif
+  __sync_fetch_and_add(&nb_ftp, 1);
 }
 
 // resize_init is not in resize component to avoid blocking call :

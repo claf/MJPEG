@@ -4,49 +4,16 @@
 
 #include "MJPEG.h"
 
-#define _RESIZE_DEBUG
+//#define _RESIZE_DEBUG
 
 /* Passing frame_chunk_t as a full frame for internal infos only. */
 void resize(frame_chunk_t* chunk)
 {
 
-  //printf ("Resize start\n");
-
-  /* Lors de l'arrivée d'une frame :
-   * si bit == 1
-   *   si effetive_frame <= frame->frame_id (premier ou dernière frame de numéro X?)
-   *     pop (correspondance_resized_buf)
-   *   sinon
-   *     reuse old buff without need to pop?
-   *   finsi
-   * sinon
-   *   reuse old buff without need to pop?
-   * finsi
-   */
-
-  /************************
-   * Actual resizing work *
-   ************************/
-
-  /* Lors d'un appel à render :
-   * si bit == 1 && frame->frame == effetive_frame
-   *   bit = 0
-   */
-
-  //CALL (REQUIRED.render, render);
-
-  /* Dans le cas d'un render "autonome" :
-   * si last_frame_id == effective_frame
-   *   bit = 0
-   */
-
-
-  /* IMPLANTATION : */
-
   int stream_id = chunk->stream_id;
   int frame_id = chunk->frame_id % FRAME_LOOKAHEAD;
 
-  if (Drop[frame_id] == 1)
+  if (chunk->frame_id <= last_frame_id)
   {
     Done[frame_id] ++;
 
@@ -54,7 +21,7 @@ void resize(frame_chunk_t* chunk)
 #ifdef _RESIZE_DEBUG
     printf ("Resize component - Droped frame %d for good!\n", frame_id);
 #endif
-      Drop[frame_id] = 0;
+      Done[frame_id] = -1;
     }
 
     /* TODO : here we could call fetch component to start decoding next frame,
@@ -63,7 +30,7 @@ void resize(frame_chunk_t* chunk)
      * but render is waiting for frame 14 ...
      */
 
-    exit (1);
+    return 0;
   }
 
   int x_factor = resize_Factors[position[stream_id]].x;

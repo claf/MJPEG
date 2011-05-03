@@ -11,6 +11,8 @@
 #include "screen.h"
 #include "upsampler.h"
 
+//#define _DECODE_DEBUG
+
 /* Internal functions : */
 
 void screen2surface_cpyrect(uint32_t x, uint32_t y, uint32_t w, uint32_t h, void *ptr, SDL_Surface* screen);
@@ -30,9 +32,11 @@ void decode(frame_chunk_t* chunk)
   int stream_id = chunk->stream_id;
   int frame_id = chunk->frame_id;
 
-  if (Drop[frame_id % FRAME_LOOKAHEAD] == 1)
+  if (frame_id <= last_frame_id)
   {
-    printf ("\nDecode component droped frame %d\n", frame_id);
+#ifdef _DECODE_DEBUG
+    printf ("Decode component - Droped chunk for frame %d\n", frame_id);
+#endif
     goto end;
   }
 
@@ -121,7 +125,7 @@ end:
   if (Achievements[stream_id][frame_id % FRAME_LOOKAHEAD] == streams[stream_id].nb_MCU)
     {
       Achievements[stream_id][frame_id % FRAME_LOOKAHEAD] = 0;
-      printf("\nCall Resize Component for stream %d frame %d\n", stream_id, frame_id);
+      //printf("\nCall Resize Component for stream %d frame %d\n", stream_id, frame_id);
       //printf("\nAchievements[%d][%d] value %d\n", stream_id, frame_id, Achievements[stream_id][frame_id]); 
       resize (chunk);
     }

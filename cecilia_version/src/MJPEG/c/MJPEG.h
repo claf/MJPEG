@@ -47,9 +47,8 @@ typedef struct {
   int y;
 } shift_t;
 
-// Global table for ready and drop frames :
+// Global table for ready frames :
 extern int32_t Done[FRAME_LOOKAHEAD];
-extern int32_t Drop[FRAME_LOOKAHEAD];
 
 // Global number of streams variable :
 extern uint8_t nb_streams;
