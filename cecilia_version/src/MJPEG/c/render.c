@@ -37,12 +37,12 @@ void cpyrect(uint32_t x, uint32_t y, uint32_t w, uint32_t h, void *ptr)
 #ifdef DEBUG
   if ((y) > screen->h) {
     printf("[%s] : block can't be copied, "
-     "not in the screen (too low)\n", __func__);
+        "not in the screen (too low)\n", __func__);
     exit(1);
   }
   if ((x) > screen->w) {
     printf("[%s] : block can't be copied, "
-     "not in the screen (right border)\n", __func__);
+        "not in the screen (right border)\n", __func__);
     exit(1);
   }
 #endif
@@ -53,19 +53,19 @@ void cpyrect(uint32_t x, uint32_t y, uint32_t w, uint32_t h, void *ptr)
     h_internal = screen->h -y; 
   }
   for(line = 0; line < h_internal ; line++)
-    {   
-      // Positionning src and dest pointers
-      //  _ src : must be placed at the beginning of line "line"
-      //  _ dest : must be placed at the beginning
-      //          of the corresponding block :
-      //(line offset + current line + position on the current line)
-      // We assume that RGB is 4 bytes
+  {   
+    // Positionning src and dest pointers
+    //  _ src : must be placed at the beginning of line "line"
+    //  _ dest : must be placed at the beginning
+    //          of the corresponding block :
+    //(line offset + current line + position on the current line)
+    // We assume that RGB is 4 bytes
 
-      dest_ptr = (void*)((uint32_t *)(screen->pixels) +
-       ((y+line)*w_length) + x); 
-      src_ptr = (void*)((uint32_t *)ptr + ((line * w)));
-      memcpy(dest_ptr,src_ptr,w_internal * sizeof(uint32_t));
-    }   
+    dest_ptr = (void*)((uint32_t *)(screen->pixels) +
+        ((y+line)*w_length) + x); 
+    src_ptr = (void*)((uint32_t *)ptr + ((line * w)));
+    memcpy(dest_ptr,src_ptr,w_internal * sizeof(uint32_t));
+  }   
 
   SDL_UnlockSurface(screen);
 }
@@ -96,7 +96,7 @@ void render_init(int width, int height, int framerate)
   screen = SDL_SetVideoMode(width_int, height_int, 32, SDL_SWSURFACE);
   if (screen == NULL) {
     fprintf(stderr, "Couldn't set %dx%dx32 video mode for screen: %s\n",
-	    width, height, SDL_GetError());
+        width, height, SDL_GetError());
     exit(1);
   }
 
@@ -139,22 +139,22 @@ void render(void* nothing)
   uint64_t finish_time;
   SDL_Event event;
 
-/* TODO auto init?
-  if (last_frame_id == -1)
-    render_init ();
-*/
+  /* TODO auto init?
+     if (last_frame_id == -1)
+     render_init ();
+     */
 
   sleep(1);
 
   /* Because now it's a thread. */
   while (1) {
 
-  
 
-  compute:
+
+compute:
 
     finish_time = SDL_GetTicks();
-  
+
     // Check if we can actually copy frame with Done[frame_id] table
     // filed by resize component et RAZ by render component.
     frame_id = last_frame_id + 1;
@@ -162,27 +162,27 @@ void render(void* nothing)
     while (Done[frame_id % FRAME_LOOKAHEAD] != nb_streams) {
 #ifdef _RENDER_DEBUG
       printf("\nRENDER_DEBUG :: frame %d not ready yet (Done = %d\n",
-	     frame_id, Done[frame_id % FRAME_LOOKAHEAD]);
+          frame_id, Done[frame_id % FRAME_LOOKAHEAD]);
 #endif
-    delay = (1000/global_framerate) + old_time - SDL_GetTicks();
+      delay = (1000/global_framerate) + old_time - SDL_GetTicks();
       if (delay > 0) {
-	// TODO : Find a better delay?
-	SDL_Delay(10);
+        // TODO : Find a better delay?
+        SDL_Delay(10);
       } else {
-	// TODO : drop frames
-	printf ("should drop frame, already dropped %d\n", dropped);
-  last_frame_id++;
-    frame_id = last_frame_id + 1;
+        // TODO : drop frames
+        printf ("should drop frame, already dropped %d\n", dropped);
+        last_frame_id++;
+        frame_id = last_frame_id + 1;
 
-  if (dropped < FRAME_LOOKAHEAD)
-  {
-    dropped++;
-    Drop[frame_id % FRAME_LOOKAHEAD] = 1;
-	  goto compute;
-  } else {
-    printf ("FRAME_LOOKAHEAD frame to be dropped, aborting");
-    abort();
-  }
+        if (dropped < FRAME_LOOKAHEAD)
+        {
+          dropped++;
+          Drop[frame_id % FRAME_LOOKAHEAD] = 1;
+          goto compute;
+        } else {
+          printf ("FRAME_LOOKAHEAD frame to be dropped, aborting");
+          abort();
+        }
       }
     }
 
@@ -207,7 +207,7 @@ void render(void* nothing)
       // Use this time to compute droped frame.
       SDL_Delay(delay);
     }
-  
+
     if (SDL_Flip(screen) == -1) {
       printf("Could not refresh screen: %s\n.", SDL_GetError() );
     }
@@ -217,26 +217,26 @@ void render(void* nothing)
 
     //\r is required to avoid latency due to screening on terminal
     printf("\r[screen] : framerate is %0.2ffps, "
-	   "computed one image in %0.2fms",
-	   1000.00f / (SDL_GetTicks() - old_time),
-	   (finish_time - old_time) * 1.00f);
+        "computed one image in %0.2fms",
+        1000.00f / (SDL_GetTicks() - old_time),
+        (finish_time - old_time) * 1.00f);
 
     old_time = SDL_GetTicks();
     // Check wether close event was detected, otherwise SDL freezes
     if(SDL_PollEvent(&event)) {
       if (event.type == SDL_KEYDOWN) {
-	if (event.key.keysym.sym == SDLK_q) {
-	  printf("bye bye\n");
-	  initialized = 0;
-	  SDL_Quit();
-	  exit(1);
-	} 
+        if (event.key.keysym.sym == SDLK_q) {
+          printf("bye bye\n");
+          initialized = 0;
+          SDL_Quit();
+          exit(1);
+        } 
       }   
       if (event.type == SDL_QUIT) {
-	printf("\n");
-	initialized = 0;
-	SDL_Quit();
-	exit(1);
+        printf("\n");
+        initialized = 0;
+        SDL_Quit();
+        exit(1);
       }
     }
   }
