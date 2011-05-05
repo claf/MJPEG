@@ -42,6 +42,15 @@
 }
 
 
+#define BLACK   30
+#define RED     31
+#define GREEN   32
+#define YELLOW  33
+#define BLUE    34
+#define MAGENTA 35
+#define CYAN    36
+#define WHITE   37
+
 #ifdef VERBOSE
 #define VPRINTF(format, ...) printf ("[%s] " format, __FUNCTION__, ## __VA_ARGS__)
 #else
@@ -60,6 +69,28 @@
 #define APRINTF(format, ...)
 #endif
 
+#ifdef _RESIZE_DEBUG
+#define PRESIZE(format, ...) printf ("%c[%d;%d;%dm[Resize::%s]%c[%d;%d;%dm " format, 0x1B, 0,GREEN,40,__FUNCTION__, 0x1B, 0, WHITE, 40, ## __VA_ARGS__)
+#else
+#define PRESIZE(format, ...)
+#endif
+
+#ifdef _FETCH_DEBUG
+#define PFETCH(format, ...) printf ("%c[%d;%d;%dm[Fetch::%s]%c[%d;%d;%dm " format, 0x1B, 0,BLUE,40,__FUNCTION__, 0x1B,0, WHITE, 40, ## __VA_ARGS__)
+#else
+#define PFETCH(format, ...)
+#endif
+
+#ifdef _DECODE_DEBUG
+#define PDECODE(format, ...) printf ("%c[%d;%d;%dm[Decode::%s]%c[%d;%d;%dm " format, 0x1B, 0,YELLOW,40,__FUNCTION__, 0x1B, 0, WHITE, 40, ## __VA_ARGS__)
+#else
+#define PDECODE(format, ...)
+#endif
+
+#ifdef _RENDER_DEBUG
+#define PRENDER(format, ...) printf ("%c[%d;%d;%dm[Render::%s]%c[%d;%d;%dm " format, 0x1B, 0,RED,40,__FUNCTION__, 0x1B, 0, WHITE, 40, ## __VA_ARGS__)
+#else
+#define PRENDER(format, ...)
+#endif
+
 #endif //DEFINE_COMMON_H
-
-

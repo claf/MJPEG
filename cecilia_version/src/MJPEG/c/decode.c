@@ -27,29 +27,18 @@ void decode(frame_chunk_t* chunk)
   int index_X = chunk->x;
   int index_Y = chunk->y;
 
-  //printf ("Decoding stream_id : %d, frame_id : %d\n", chunk->stream_id, chunk->frame_id);
-
   int stream_id = chunk->stream_id;
   int frame_id = chunk->frame_id;
 
-  if (frame_id <= last_frame_id)
-  {
-#ifdef _DECODE_DEBUG
-    printf ("Decode component - Droped chunk for frame %d\n", frame_id);
-#endif
+  if (frame_id <= last_frame_id) {
+    PDECODE("Drop chunk for frame %d and stream %d\n", frame_id, stream_id);
     goto end;
+  } else {
+    PDECODE("Decode chunk for frame %d and stream %d\n", frame_id, stream_id);
   }
-
-  //printf ("Decoding max_h : %d, max_v : %d\n", streams[stream_id].max_ss_h, streams[stream_id].max_ss_v);
 
   uint16_t max_ss_h = streams[stream_id].max_ss_h;
   uint16_t max_ss_v = streams[stream_id].max_ss_v;
-
-  /*  
-  uint8_t YCbCr_MCU[3][MCU_sx * MCU_sy * max_ss_h * max_ss_v];
-  uint8_t YCbCr_MCU_ds[3][MCU_sx * MCU_sy * max_ss_h * max_ss_v];
-  uint32_t RGB_MCU[MCU_sx * MCU_sy * max_ss_h * max_ss_v];
-  */
 
   static volatile int is_init = 0;
 
@@ -59,8 +48,6 @@ void decode(frame_chunk_t* chunk)
 
   if (is_init == 0){
     is_init = 1;
-    //printf ("wanted size : %d", MCU_sx * MCU_sy * max_ss_h * max_ss_v);
-    //printf ("MCU_sx = %d, MCU_sy = %d, max_ss_h = %d, max_ss_v = %d\n",  MCU_sx , MCU_sy , max_ss_h , max_ss_v);
     for (int i = 0; i < 3; i++)
     {
       YCbCr_MCU[i] = malloc(MCU_sx * MCU_sy * max_ss_h * max_ss_v);
@@ -74,25 +61,17 @@ void decode(frame_chunk_t* chunk)
       printf("\nmalloc error line %d\n", __LINE__);
   }
 
-  //int nb_MCUz = ((streams[stream_id].HV >> 4) & 0xf) * (streams[stream_id].HV & 0xf);
-
   for (index = 0; index < chunk->index; index++)
   {
     uint32_t component_index = chunk->component_index[index];
     uint8_t nb_MCU = chunk->nb_MCU[index];
-
-    //printf ("MCU used : %d, MCU orig : %d\n", nb_MCU, nb_MCUz);
 
     for (int chroma_ss = 0; chroma_ss < nb_MCU; chroma_ss++)
     {
       MCU = chunk->data + (( (index * 4) + (chroma_ss) ) * 64);
       
       int i = chunk->DQT_index[index][chroma_ss];
-      //printf("\nQT_index %d\n", i);
       iqzz_block(MCU, unZZ_MCU, (uint8_t*)(chunk->DQT_table + i*64));
-
-      //PRINT_DQT ((uint8_t*)(chunk->DQT_table + i*64));
-
       IDCT(unZZ_MCU, YCbCr_MCU_ds[component_index] + (64 * chroma_ss));
     }
 
@@ -119,19 +98,22 @@ void decode(frame_chunk_t* chunk)
      RGB_MCU, Surfaces_normal[stream_id][frame_id % FRAME_LOOKAHEAD]);
   
 end: 
-  //TODO : lock start
-  //  printf ("\tIncrement Achievement for stream %d frame %d value %d\n", stream_id, frame_id, Achievements[stream_id][frame_id]);
-  Achievements[stream_id][frame_id % FRAME_LOOKAHEAD]++;
-  if (Achievements[stream_id][frame_id % FRAME_LOOKAHEAD] == streams[stream_id].nb_MCU)
-    {
-      Achievements[stream_id][frame_id % FRAME_LOOKAHEAD] = 0;
-      //printf("\nCall Resize Component for stream %d frame %d\n", stream_id, frame_id);
-      //printf("\nAchievements[%d][%d] value %d\n", stream_id, frame_id, Achievements[stream_id][frame_id]); 
-      resize (chunk);
-    }
-  //TODO : lock end
+
+  PDECODE("Increment Achievement for stream %d frame %d value %d\n", stream_id,
+      frame_id, Achievements[stream_id][frame_id]);
+
+  __sync_fetch_and_add (&Achievements[stream_id][frame_id % FRAME_LOOKAHEAD], 1);
+
+  if (Achievements[stream_id][frame_id % FRAME_LOOKAHEAD] == streams[stream_id].nb_MCU) {
+    PDECODE("Frame %d from stream %d fully decoded, now send frame to Resize"
+       " component\n", frame_id, stream_id);
+    // TODO : no need to atomically set Achievements back to null?
+    Achievements[stream_id][frame_id % FRAME_LOOKAHEAD] = 0;
+    resize (chunk);
+  }
 }
 
+// TODO : put this code elsewhere, already used by render and maybe resize too :
 void screen2surface_cpyrect(uint32_t x, uint32_t y, uint32_t w, uint32_t h, void *ptr, SDL_Surface* screen)
 {
   void *dest_ptr;

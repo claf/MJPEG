@@ -43,6 +43,7 @@ volatile int32_t nb_ftp; // number of frame to process.
 void fetch();
 void surfaces_init ();
 void factors_init ();
+void skip_frame (FILE* movie);
 
 static void usage(char *progname) {
   printf("Usage : %s [options] <mjpeg_file_1> [<mjpeg_file_2> ...]\n", progname);
@@ -176,27 +177,30 @@ uint8_t marker[2];
 
   //TODO : read begining of every files to find max_X and max_Y
 
+  
+  
+  
+  
+  
   /*---- Actual computation ----*/
   end_of_file = 0;
   int tour_de_perif = 0;
   while (nb_ftp >= 0) {
 
+next_frame:
+
+    // while no frame to process :
     while (nb_ftp == 0) {
       for (int tdp = 0; tdp < 1000; tdp++) {
-        tour_de_perif++;
+        tdp++;
+        tdp--;
         if (tour_de_perif == 1000) {
           tour_de_perif = 0;
         }
       }
     }
 
-    if (frame_id[stream_id] <= last_frame_id)
-    {
-#ifdef _FETCH_DEBUG
-      printf ("Fetch component - fetching frame and drop\n");
-#endif
-    }
-
+    // read next token :
     int elem_read = fread(&marker, 2, 1, movies[stream_id]);
     if (elem_read != 1) {
       if (feof(movies[stream_id])) {
@@ -207,6 +211,18 @@ uint8_t marker[2];
         fprintf(stderr, "Error reading marker from input file\n");
         exit (1);
       }
+    }
+
+    // if it's the first stream (in order to drop a frame for every stream) and
+    // if we need to drop the frame, then drop it for every stream!
+    if ((stream_id == 0) && (frame_id[stream_id] <= last_frame_id)) {
+      for (int s = 0; s < nb_streams; s++) {
+        PFETCH("Skipping frame %d for stream %d\n", frame_id[s], s);  
+        skip_frame (movies[s]);
+        frame_id[s]++;
+      }
+      __sync_fetch_and_sub(&nb_ftp, 1);
+      goto next_frame;
     }
 
     if (marker[0] == M_SMS) {
@@ -363,9 +379,8 @@ uint8_t marker[2];
 
         case M_SOS:
           {
-#ifdef MY_DEBUG
-            printf ("Processing next frame (%d) for stream_id %d\n", frame_id[stream_id], stream_id);
-#endif
+            PFETCH ("Processing next frame (%d) for stream_id %d\n",
+                frame_id[stream_id], stream_id);
 
             IPRINTF("SOS marker found\r\n");
 
@@ -440,13 +455,14 @@ uint8_t marker[2];
                 decode(chunk);
               }
             }
+
+            frame_id[stream_id]++; // next frame for this stream
+
+            // if it's the last stream, decrement number of frame to process
             if (stream_id == nb_streams -1){
-            // now it wont terminate
-              //if (screen_refresh() == 1) {
-              //  end_of_file = 1;
-              //}
               __sync_fetch_and_sub(&nb_ftp, 1);
             }
+
             for (HT_index = 0; HT_index < 4; HT_index++) {
               free_huffman_tables(tables[HUFF_DC][HT_index]);
               free_huffman_tables(tables[HUFF_AC][HT_index]);
@@ -454,16 +470,10 @@ uint8_t marker[2];
               tables[HUFF_AC][HT_index] = NULL;
             }
 
-
-
-            stream_id = (stream_id + 1) % nb_streams;
-            if (stream_id == 0) {
-              for (int s = 0; s < nb_streams; s++)
-                frame_id[s]++;
-            }
-            //printf ("\n\t\tNow gonna process stream %d frame %d\n", stream_id, frame_id[stream_id]);
-
             COPY_SECTION(&marker, 2, movies[stream_id]);
+
+            stream_id = (stream_id + 1) % nb_streams; // next stream
+
             break;
           }
 
@@ -569,7 +579,6 @@ clean_end:/*
 
   // TODO : and now?
   //screen_exit();
-  sleep(20000000);
   return 0;
 
 
@@ -580,9 +589,7 @@ clean_end:/*
 
 void fetch ()
 {
-#ifdef _FETCH_DEBUG
-  printf ("Fetch component - frame to process : %d, adding 1 frame to process\n", nb_ftp);
-#endif
+  PFETCH("Adding 1 frame to process, nb_ftp = %d\n", nb_ftp);
   __sync_fetch_and_add(&nb_ftp, 1);
 }
 
@@ -639,4 +646,40 @@ void factors_init ()
   position[0] = 0;
   position[1] = 1;
   position[2] = 2;
+}
+
+void skip_frame (FILE *movie)
+{
+  int end = 0;
+  uint8_t marker[2];
+
+  while (end == 0) {
+    int elem_read = fread(&marker, 2, 1, movie);
+    if (elem_read != 1) {
+      if (feof(movie)) {
+        // TODO : atomic increment, the if end_of_file == nb_streams ...
+        //end_of_file = 1;
+        break;
+      } else {
+        fprintf(stderr, "Error reading marker from input file\n");
+        exit (1);
+      }   
+    } 
+    if (marker[0] == M_SMS) {
+      switch (marker[1]) {
+        case M_SOS:
+          {
+            skip_segment(movie); 
+            COPY_SECTION(&marker, 2, movie);
+            end = 1;
+            break;
+          };
+        default:
+          {
+            skip_segment(movie);
+            break;
+          };
+      }
+    }
+  }
 }
