@@ -14,8 +14,6 @@
 #include "decode.h"
 #include "render.h"
 
-//#define _FETCH_DEBUG
-
 /* Global definition : */
 uint8_t nb_streams; 
 
