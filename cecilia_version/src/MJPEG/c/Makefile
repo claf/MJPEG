@@ -55,8 +55,7 @@ $(OBJ_DIR)/unpack_block.o : $(SRC_DIR)/unpack_block.c $(INC_DIR)/unpack_block.h
 # END CUT
 
 clean:
-	rm -f mjpeg $(GENERATED_OBJ_FILES) $(NEW_OBJ_FILES)
-	rm -f mire $(OBJ_DIR)/example.o
-# START CUT
-	rm -f $(OBJ_FILES)
-# END CUT
+	rm -f mjpeg $(GENERATED_OBJ_FILES) $(NEW_OBJ_FILES) $(OBJ_FILES)
+
+veryclean:clean
+	rm -f core
