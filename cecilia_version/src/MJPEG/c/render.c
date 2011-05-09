@@ -16,7 +16,7 @@ static int old_time;
 
 // Global timeouted frames table :
 int32_t Done[FRAME_LOOKAHEAD];
-int32_t Drop[FRAME_LOOKAHEAD];
+int32_t Free[FRAME_LOOKAHEAD];
 uint8_t initialized;
 
 // Internal function definition :
@@ -64,6 +64,7 @@ void render(void* nothing)
       SDL_Surface* src = Surfaces_resized[frame_id % FRAME_LOOKAHEAD];
       cpyrect(0,0,WINDOW_H, WINDOW_W, src->pixels);
       Done[frame_id % FRAME_LOOKAHEAD] = 0;
+      Free[frame_id % FRAME_LOOKAHEAD] = 1;
 
       if (SDL_Flip(screen) == -1) {
         printf("Could not refresh screen: %s\n.", SDL_GetError() );
@@ -73,23 +74,24 @@ void render(void* nothing)
       //PRENDER("Dropping frame %d for real (already %d"
       //    " dropped frames)\n", frame_id, dropped);
       PRENDER("Dropping frame %d (Done[%d] = %d)\n", frame_id, frame_id % FRAME_LOOKAHEAD, Done[frame_id % FRAME_LOOKAHEAD]);
-      Drop[frame_id % FRAME_LOOKAHEAD] = 1;
       dropped++;
     }
 
+    last_frame_id++;
 
-    for (int i = 0; i < FRAME_LOOKAHEAD; i++) {
-      if (Done[(last_frame_id+i)%FRAME_LOOKAHEAD] == 0) { // libre
-        Drop[(last_frame_id+i)%FRAME_LOOKAHEAD] = 0; // libre
-        while (frame_fetch_id < (last_frame_id + i)) {
-          PRENDER("Fetching frame %d\n", frame_fetch_id);
-          fetch ();
-          frame_fetch_id++;
-        }
-      } else {
-        break;
-      }
+    while (frame_fetch_id <= last_frame_id) //corresponding test fetch.c:205
+    {
+      fetch();
+      frame_fetch_id++;
     }
+
+    while (Free[frame_fetch_id % FRAME_LOOKAHEAD])
+    {
+      fetch();
+      Free[frame_fetch_id % FRAME_LOOKAHEAD] = 0;
+      frame_fetch_id++;
+    }
+
 
     // Check wether close event was detected, otherwise SDL freezes
     if(SDL_PollEvent(&event)) {
@@ -109,7 +111,6 @@ void render(void* nothing)
       }
     }
 
-    last_frame_id++;
     old_time = SDL_GetTicks();
   } //while(1)
 

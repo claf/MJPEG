@@ -6,7 +6,7 @@
 
 #include "utils.h"
 
-#define FRAME_LOOKAHEAD 30
+#define FRAME_LOOKAHEAD 5
 #define MAX_SAMPLING 4
 #define MAX_STREAM 3
 
@@ -49,6 +49,9 @@ typedef struct {
 
 // Global table for ready frames :
 extern int32_t Done[FRAME_LOOKAHEAD];
+
+// Global table for free structures :
+extern int32_t Free[FRAME_LOOKAHEAD];
 
 // Global number of streams variable :
 extern uint8_t nb_streams;

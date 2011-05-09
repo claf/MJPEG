@@ -13,6 +13,7 @@
 #include "skip_segment.h"
 #include "decode.h"
 #include "render.h"
+#include "fetch.h"
 
 /* Global definition : */
 uint8_t nb_streams; 
@@ -37,6 +38,21 @@ volatile int32_t last_frame_id;
 int32_t MCUs[MAX_STREAM][FRAME_LOOKAHEAD][MAX_MCU_X][MAX_MCU_Y][4][4][64];
 uint8_t DQT_table[MAX_STREAM][FRAME_LOOKAHEAD][4][64];
 volatile int32_t nb_ftp; // number of frame to process.
+uint8_t HT_type = 0;
+uint8_t HT_index = 0;
+int chroma_ss;
+uint16_t nb_MCU = 0, nb_MCU_X = 0, nb_MCU_Y = 0;
+uint8_t component_order[4];
+SOF_component_t SOF_component[3];
+DHT_section_t DHT_section;
+SOF_section_t SOF_section;
+SOS_section_t SOS_section;
+SOS_component_t SOS_component[3];
+scan_desc_t scan_desc = { 0, 0, {}, {} };
+huff_table_t *tables[2][4] = {
+    {NULL , NULL, NULL, NULL} ,
+      {NULL , NULL, NULL, NULL}
+};
 
 /* Intern functions : */
 
@@ -64,29 +80,19 @@ int main(int argc, char** argv)
    */
 
 uint8_t marker[2];
-  uint8_t HT_type = 0;
-  uint8_t HT_index = 0;
   uint8_t QT_index = 0;
-  uint16_t nb_MCU = 0, nb_MCU_X = 0, nb_MCU_Y = 0;
   uint16_t max_ss_h = 0 , max_ss_v = 0;
   uint8_t index = 0, index_X, index_Y, index_SOF;
-  uint8_t component_order[4];
   uint32_t YH = 0, YV = 0;
   uint32_t CrH = 0, CrV = 0, CbH = 0, CbV = 0;
   uint32_t screen_init_needed;
   uint32_t end_of_file;
-  int chroma_ss;
   int args;
   uint32_t framerate = 0;
 
 
   jfif_header_t jfif_header;
   DQT_section_t DQT_section;
-  SOF_section_t SOF_section;
-  SOF_component_t SOF_component[3];
-  DHT_section_t DHT_section;
-  SOS_section_t SOS_section;
-  SOS_component_t SOS_component[3];
 
   frame_chunk_t *chunks;
   nb_streams = 0;
@@ -96,12 +102,6 @@ uint8_t marker[2];
   int32_t *MCU = NULL;
   
   nb_ftp = FRAME_LOOKAHEAD;
-
-  scan_desc_t scan_desc = { 0, 0, {}, {} };
-  huff_table_t *tables[2][4] = {
-    {NULL , NULL, NULL, NULL} ,
-    {NULL , NULL, NULL, NULL}
-  };
 
   screen_init_needed = 1;
   if (argc < 2) {
@@ -200,6 +200,18 @@ next_frame:
       }
     }
 
+    // if it's the first stream (in order to drop a frame for every stream) and
+    // if we need to drop the frame, then drop it for every stream!
+    if ((stream_id == 0) && (frame_id[stream_id] <= last_frame_id)) {
+      for (int s = 0; s < nb_streams; s++) {
+        PFETCH("Skipping frame %d for stream %d\n", frame_id[s], s);  
+        skip_frame (movies[s]);
+        frame_id[s]++;
+      }
+      __sync_fetch_and_sub(&nb_ftp, 1);
+      goto next_frame;
+    }
+    
     // read next token :
     int elem_read = fread(&marker, 2, 1, movies[stream_id]);
     if (elem_read != 1) {
@@ -213,17 +225,6 @@ next_frame:
       }
     }
 
-    // if it's the first stream (in order to drop a frame for every stream) and
-    // if we need to drop the frame, then drop it for every stream!
-    if ((stream_id == 0) && (frame_id[stream_id] <= last_frame_id)) {
-      for (int s = 0; s < nb_streams; s++) {
-        PFETCH("Skipping frame %d for stream %d\n", frame_id[s], s);  
-        skip_frame (movies[s]);
-        frame_id[s]++;
-      }
-      __sync_fetch_and_sub(&nb_ftp, 1);
-      goto next_frame;
-    }
 
     if (marker[0] == M_SMS) {
       switch (marker[1]) {
@@ -285,11 +286,12 @@ next_frame:
               if (screen_init_needed == 1) {
                 screen_init_needed = 0;
 
-                
-              for (int i = 0; i < FRAME_LOOKAHEAD; i++)
-              {
-                Done[i] = 0;
-              }
+                PFETCH ("Init : setting Done and Free tables to 0\n");
+                for (int i = 0; i < FRAME_LOOKAHEAD; i++)
+                {
+                  Done[i] = 0;
+                  Free[i] = 0;
+                }
 
                 // TODO : here 1st and 2nd arguments are not used.
                 // TODO : pthread_create now!
@@ -305,7 +307,7 @@ next_frame:
 
               streams[stream_id].nb_MCU = nb_MCU;
 
-//#ifdef MY_DEBUG
+              //#ifdef MY_DEBUG
               //printf ("Read and Set nb_MCU :  %d\n",nb_MCU);
 //#endif
 
@@ -647,7 +649,7 @@ void factors_init ()
   position[1] = 1;
   position[2] = 2;
 }
-
+/*
 void skip_frame (FILE *movie)
 {
   int end = 0;
@@ -682,4 +684,298 @@ void skip_frame (FILE *movie)
       }
     }
   }
+}
+*/
+
+/*
+ * Read the initial marker, which should be SOI.
+ * For a JFIF file, the first two bytes of the file should be literally
+ * 0xFF M_SOI.  To be more general, we could use next_marker, but if the
+ * input file weren't actually JPEG at all, next_marker might read the whole
+ * file and then return a misleading error message...
+ */
+
+static int 
+first_marker (FILE* movie)
+{
+  int c1, c2; 
+
+  c1 = NEXTBYTE(movie);
+  c2 = NEXTBYTE(movie);
+  if (c1 != 0xFF || c2 != M_SOI)
+    ERREXIT("Not a JPEG file");
+  return c2; 
+}
+
+/*
+ * Find the next JPEG marker and return its marker code.
+ * We expect at least one FF byte, possibly more if the compressor used FFs
+ * to pad the file.
+ * There could also be non-FF garbage between markers.  The treatment of such
+ * garbage is unspecified; we choose to skip over it but emit a warning msg.
+ * NB: this routine must not be used after seeing SOS marker, since it will
+ * not deal correctly with FF/00 sequences in the compressed image data...
+ */
+
+static int
+next_marker (FILE* movie)
+{
+  int c;
+  int discarded_bytes = 0;
+
+  /* Find 0xFF byte; count and skip any non-FFs. */
+  c = read_1_byte(movie);
+  while (c != 0xFF) {
+    discarded_bytes++;
+    c = read_1_byte(movie);
+  }
+  /* Get marker code byte, swallowing any duplicate FF bytes.  Extra FFs
+   * are legal as pad bytes, so don't count them in discarded_bytes.
+   */
+  do {
+    c = read_1_byte(movie);
+  } while (c == 0xFF);
+
+  if (discarded_bytes != 0) {
+    fprintf(stderr, "Warning: garbage data found in JPEG file\n");
+  }
+
+  return c;
+}
+
+/*
+ * Most types of marker are followed by a variable-length parameter segment.
+ * This routine skips over the parameters for any marker we don't otherwise
+ * want to process.
+ * Note that we MUST skip the parameter segment explicitly in order not to
+ * be fooled by 0xFF bytes that might appear within the parameter segment;
+ * such bytes do NOT introduce new markers.
+ */
+
+static void
+skip_variable (FILE* movie)
+/* Skip over an unknown or uninteresting variable-length marker */
+{
+  unsigned int length;
+
+  /* Get the marker parameter length count */
+  length = read_2_bytes(movie);
+  /* Length includes itself, so must be at least 2 */
+  if (length < 2)
+    ERREXIT("Erroneous JPEG marker length");
+  length -= 2;
+  /* Skip over the remaining bytes */
+  printf ("skipping %d bytes\n", length);
+  while (length > 0) {
+    (void) read_1_byte(movie);
+    length--;
+  }
+}
+
+/*
+ * Process a SOFn marker.
+ * This code is only needed if you want to know the image dimensions...
+ */
+
+static void
+process_SOFn (int marker, FILE* movie)
+{
+  unsigned int length;
+  unsigned int image_height, image_width;
+  int data_precision, num_components;
+  const char * process;
+  int ci;
+
+  length = read_2_bytes(movie);      /* usual parameter length count */
+
+  data_precision = read_1_byte(movie);
+  image_height = read_2_bytes(movie);
+  image_width = read_2_bytes(movie);
+  num_components = read_1_byte(movie);
+
+  switch (marker) {
+  case M_SOF0:  process = "Baseline";  break;
+  case M_SOF1:  process = "Extended sequential";  break;
+  case M_SOF2:  process = "Progressive";  break;
+  case M_SOF3:  process = "Lossless";  break;
+  case M_SOF5:  process = "Differential sequential";  break;
+  case M_SOF6:  process = "Differential progressive";  break;
+  case M_SOF7:  process = "Differential lossless";  break;
+  case M_SOF9:  process = "Extended sequential, arithmetic coding";  break;
+  case M_SOF10: process = "Progressive, arithmetic coding";  break;
+  case M_SOF11: process = "Lossless, arithmetic coding";  break;
+  case M_SOF13: process = "Differential sequential, arithmetic coding";  break;
+  case M_SOF14: process = "Differential progressive, arithmetic coding"; break;
+  case M_SOF15: process = "Differential lossless, arithmetic coding";  break;
+  default:      process = "Unknown";  break;
+  }
+
+  printf("JPEG image is %uw * %uh, %d color components, %d bits per sample\n",
+         image_width, image_height, num_components, data_precision);
+  printf("JPEG process: %s\n", process);
+
+  if (length != (unsigned int) (8 + num_components * 3))
+    ERREXIT("Bogus SOF marker length");
+
+  for (ci = 0; ci < num_components; ci++) {
+    (void) read_1_byte(movie);       /* Component ID code */
+    (void) read_1_byte(movie);       /* H, V sampling factors */
+    (void) read_1_byte(movie);       /* Quantization table number */
+  }
+}
+
+void skip_SOS (FILE* movie)
+{
+  int32_t trash[64];
+  COPY_SECTION(&SOS_section, sizeof(SOS_section), movie);
+  CPU_DATA_IS_BIGENDIAN(16, SOS_section.length);
+
+  COPY_SECTION(&SOS_component,
+      sizeof(SOS_component_t) * SOS_section.n, movie);
+
+  SKIP(3, movie);
+
+  scan_desc.bit_count = 0;
+  for (int index = 0; index < SOS_section.n; index++) {
+    for(int index_SOF=0 ; index_SOF < SOF_section.n; index_SOF++) {
+      if(SOF_component[index_SOF].index==SOS_component[index].index){
+        component_order[index]=index_SOF;
+        break;
+      }
+      if(index_SOF==SOF_section.n-1)
+        VPRINTF("Invalid component label in SOS section");
+    }
+
+
+    scan_desc.pred[index] = 0;
+    scan_desc.table[HUFF_AC][index] =
+      tables[HUFF_AC][(SOS_component[index].acdc >> 4) & 0x0f];
+    scan_desc.table[HUFF_DC][index] =
+      tables[HUFF_DC][SOS_component[index].acdc & 0x0f];
+  }
+
+  for (int index_X = 0; index_X < nb_MCU_X; index_X++) {
+    for (int index_Y = 0; index_Y < nb_MCU_Y; index_Y++) {
+      for (int index = 0; index < SOS_section.n; index++) {
+        uint32_t component_index = component_order[index];
+        //avoiding unneeded computation
+        int nb_MCU = ((SOF_component[component_index].HV>> 4) & 0xf) * (SOF_component[component_index].HV & 0x0f);
+
+        for (chroma_ss = 0; chroma_ss < nb_MCU; chroma_ss++) {
+          unpack_block(movie, &scan_desc,index, trash);
+        }
+      }
+
+    }
+  }
+
+  COPY_SECTION(&trash, 2, movie);
+}
+
+/*
+ * Parse the marker stream until SOS or EOI is seen;
+ * display any COM markers.
+ * While the companion program wrjpgcom will always insert COM markers before
+ * SOFn, other implementations might not, so we scan to SOS before stopping.
+ * If we were only interested in the image dimensions, we would stop at SOFn.
+ * (Conversely, if we only cared about COM markers, there would be no need
+ * for special code to handle SOFn; we could treat it like other markers.)
+ */
+
+void skip_frame (FILE* movie)
+{
+  int marker;
+  
+  /* Expect SOI at start of file */
+  if (first_marker(movie) != M_SOI)
+    ERREXIT("Expected SOI marker first");
+    
+  /* Scan miscellaneous markers until we reach SOS. */
+  for (;;) {
+    marker = next_marker(movie);
+    switch (marker) {
+      /* Note that marker codes 0xC4, 0xC8, 0xCC are not, and must not be,
+       * treated as SOFn.  C4 in particular is actually DHT.
+       */
+    case M_SOF0:                /* Baseline */
+    case M_SOF1:                /* Extended sequential, Huffman */
+    case M_SOF2:                /* Progressive, Huffman */
+    case M_SOF3:                /* Lossless, Huffman */
+    case M_SOF5:                /* Differential sequential, Huffman */
+    case M_SOF6:                /* Differential progressive, Huffman */
+    case M_SOF7:                /* Differential lossless, Huffman */
+    case M_SOF9:                /* Extended sequential, arithmetic */
+    case M_SOF10:               /* Progressive, arithmetic */
+    case M_SOF11:               /* Lossless, arithmetic */
+    case M_SOF13:               /* Differential sequential, arithmetic */
+    case M_SOF14:               /* Differential progressive, arithmetic */
+    case M_SOF15:               /* Differential lossless, arithmetic */
+      process_SOFn(marker, movie);
+      //skip_variable(movie);
+      break;
+      
+    case M_SOS:                 /* stop before hitting compressed data */
+      skip_SOS (movie);         
+      printf("M_SOS reached\n");
+      
+      return;
+      
+    case M_EOI:                 /* in case it's a tables-only JPEG stream */
+      return;
+      
+    case M_DHT:
+      {
+        // Depending on how the JPEG is encoded, DHT marker may not be
+        // repeated for each DHT. We need to take care of the general
+        // state where all the tables are stored sequentially
+        // DHT size represent the currently read data... it starts as a
+        // zero value
+        volatile int DHT_size = 0;
+        IPRINTF("DHT marker found\r\n");
+
+        COPY_SECTION(&DHT_section.length, 2, movie);
+        CPU_DATA_IS_BIGENDIAN(16, DHT_section.length);
+        // We've read the size : DHT_size is now 2
+        DHT_size += 2;
+
+        //We loop while we've not read all the data of DHT section
+        while (DHT_size < DHT_section.length) {
+
+          int loaded_size = 0;
+          // read huffman info, DHT size ++
+          NEXT_TOKEN(DHT_section.huff_info, movie);
+          DHT_size++;
+
+          // load the current huffman table
+          HT_index = DHT_section.huff_info & 0x0f;
+          HT_type = (DHT_section.huff_info >> 4) & 0x01;
+
+          IPRINTF("Huffman table index is %d\r\n", HT_index);
+          IPRINTF("Huffman table type is %s\r\n",
+              HT_type ? "AC" : "DC");
+
+          VPRINTF("Loading Huffman table\r\n");
+          tables[HT_type][HT_index] = (huff_table_t *) malloc(sizeof(huff_table_t));
+          loaded_size = load_huffman_table_size(movie,
+              DHT_section.length,
+              DHT_section.huff_info,
+              tables[HT_type][HT_index]);
+          if (loaded_size < 0) {
+            VPRINTF("Failed to load Huffman table\n");
+
+            abort();//goto clean_end;
+          }
+          DHT_size += loaded_size;
+
+          IPRINTF("Huffman table length is %d, read %d\r\n", DHT_section.length, DHT_size);
+        }
+
+        break;
+      }
+
+    default:                    /* Anything else just gets skipped */
+      skip_variable(movie);             /* we assume it has a parameter count... */
+      break;
+    }
+  } /* end loop */
 }

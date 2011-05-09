@@ -1,18 +1,30 @@
 <?xml version="1.0"?>
 <todo version="0.1.20">
+    <note priority="veryhigh" time="1304459159" done="1304929189">
+        make avec flag RENDER_DEBUG et observation du point de blocage et de la réinjection des frames
+        <comment>
+            old
+        </comment>
+    </note>
     <note priority="high" time="1304633241" done="1304633688">
         test skip_frame code in seq version
         <comment>
             does not work
         </comment>
     </note>
-    <note priority="veryhigh" time="1304459159">
-        make avec flag RENDER_DEBUG et observation du point de blocage et de la réinjection des frames
-    </note>
-    <note priority="veryhigh" time="1304530720">
-        dans Fetch, faire une fonction qui skip une image dans chacun des trois flux!
-    </note>
-    <note priority="high" time="1304633730">
+    <note priority="high" time="1304633730" done="1304886341">
         debug skip_frame code by having a look to the skip_segment function, does it work for every marker ...
+        <comment>
+            skip_frame now working (in the tima_seq directory)
+        </comment>
+    </note>
+    <note priority="veryhigh" time="1304530720" done="1304930007">
+        dans Fetch, faire une fonction qui skip une image dans chacun des trois flux!
+        <comment>
+            done plus qu'a testé en grandeur nature
+        </comment>
+    </note>
+    <note priority="veryhigh" time="1304886382">
+        need to add skip_frame from tima_seq into fetch (nice way) and check again with a working dropping frame system
     </note>
 </todo>

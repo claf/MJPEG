@@ -20,7 +20,8 @@ void resize(frame_chunk_t* chunk)
     if (nb_frame == nb_streams) {
       PRESIZE ("Droped frame %d (last printed frame was %d!)\n",
           chunk->frame_id, last_frame_id);
-      Done[frame_id] = -1;
+      Done[frame_id] = 0;
+      Free[frame_id] = 1;
     }
 
     /* TODO : here we could call fetch component to start decoding next frame,
