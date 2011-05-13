@@ -8,7 +8,7 @@
 #include "idct.h"
 #include "iqzz.h"
 #include "resize.h"
-#include "screen.h"
+//#include "screen.h"
 #include "upsampler.h"
 
 DECLARE_DATA{
@@ -117,7 +117,7 @@ end:
        " component\n", frame_id, stream_id);
     // TODO : no need to atomically set Achievements back to null?
     Achievements[stream_id][frame_id % FRAME_LOOKAHEAD] = 0;
-    resize (chunk);
+    CALL (resize, resize, chunk);
   }
 }
 

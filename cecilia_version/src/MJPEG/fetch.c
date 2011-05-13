@@ -15,6 +15,12 @@
 #include "render.h"
 #include "fetch.h"
 
+DECLARE_DATA{
+  //int foo;
+};
+
+#include "cecilia.h"
+
 /* Global definition : */
 uint8_t nb_streams; 
 
@@ -69,7 +75,7 @@ static void usage(char *progname) {
   printf("\t-h : display this help and exit\n");
 }
 
-int main(int argc, char** argv)
+int METHOD(entry, main)(void *_this, int argc, char** argv)
 {
   printf ("Main start\n");
 
@@ -301,9 +307,7 @@ noskip:
                 // TODO : here 1st and 2nd arguments are not used.
                 // TODO : pthread_create now!
                 //render_init(SOF_section.width, SOF_section.height, framerate);
-                render_init(WINDOW_H, WINDOW_W, framerate);
-                pthread_t tid;
-                pthread_create(&tid, NULL, (void*(*)(void*)) &render, NULL);
+                CALL (render, render, WINDOW_H, WINDOW_W, framerate);
               }
 
               nb_MCU_X = intceil(SOF_section.height, MCU_sx * max_ss_v);
@@ -459,7 +463,7 @@ noskip:
                 chunk->data = (int32_t*) MCUs [stream_id] [frame_id[stream_id] % FRAME_LOOKAHEAD] [index_X] [index_Y];
                 chunk->DQT_table = (uint8_t*) &(DQT_table[stream_id][frame_id[stream_id] % FRAME_LOOKAHEAD]);/*[SOF_component[component_index].q_table];*/
                 //printf("\tCalling decode for stream %d frame %d\n", stream_id, frame_id[stream_id]);
-                decode(chunk);
+                CALL (decode, decode, chunk);
               }
             }
 
@@ -594,7 +598,7 @@ clean_end:/*
 
 }
 
-void fetch ()
+void METHOD (fetch, fetch)(void *_this)
 {
   PFETCH("Adding 1 frame to process, nb_ftp = %d\n", nb_ftp);
   __sync_fetch_and_add(&nb_ftp, 1);

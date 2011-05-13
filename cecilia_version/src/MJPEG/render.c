@@ -35,10 +35,8 @@ int dropped;
 
 
 //void render_init(int width, int height, int framerate)
-void METHOD(render, render_init)(void *_this)
+void render_init(int width, int height, int framerate)
 {
-
-
   int width_int = width , height_int = height;
 
   /* Initialize the SDL library */
@@ -69,7 +67,7 @@ void METHOD(render, render_init)(void *_this)
   initialized = 1;
 }
 
-void METHOD(render, render)(void *_this)
+void METHOD(render, render)(void *_this, int width, int height, int framerate)
 {
   int delay;
   int frame_id;
@@ -78,10 +76,7 @@ void METHOD(render, render)(void *_this)
   uint64_t finish_time;
   SDL_Event event;
 
-  /* TODO auto init?
-     if (last_frame_id == -1)
-     render_init ();
-     */
+  render_init (width, height, framerate);
 
   sleep(1);
 
@@ -120,14 +115,14 @@ void METHOD(render, render)(void *_this)
     if (frame_fetch_id <= last_frame_id) {
       while (frame_fetch_id <= last_frame_id + 2) //corresponding test fetch.c:205
       {
-        fetch();
+        CALL (fetch, fetch);
         frame_fetch_id++;
       }
     }
 
     while (Free[frame_fetch_id % FRAME_LOOKAHEAD])
     {
-      fetch();
+      CALL (fetch, fetch);
       Free[frame_fetch_id % FRAME_LOOKAHEAD] = 0;
       frame_fetch_id++;
     }
