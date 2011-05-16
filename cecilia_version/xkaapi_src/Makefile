@@ -1,5 +1,5 @@
 CC=gcc #-Wall
-CFLAGS=-std=c99 -g -I../include/ $(shell pkg-config --cflags kaapi)
+CFLAGS+=-std=c99 -g -I../include/ $(shell pkg-config --cflags kaapi)
 #CFLAGS=-std=c99 -O3 -I../include/ $(shell pkg-config --cflags kaapi)
 LDFLAGS=$(shell pkg-config --libs kaapi) -lpthread -lSDL -lSGE
 LDLIB=$(shell pkg-config --libs-only-L kaapi | sed 's/^-L//')
