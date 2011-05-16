@@ -18,6 +18,9 @@
 #define WINDOW_H 512
 #define WINDOW_W 432
 
+#define likely(x)   __builtin_expect(!!(x), 1)
+#define unlikely(x) __builtin_expect(!!(x), 0)
+
 typedef struct {
   int x;
   int y;

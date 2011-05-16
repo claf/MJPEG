@@ -79,10 +79,12 @@ void render(void* nothing)
 
     last_frame_id++;
 
-    while (frame_fetch_id <= last_frame_id) //corresponding test fetch.c:205
-    {
-      fetch();
-      frame_fetch_id++;
+    if (frame_fetch_id <= last_frame_id) {
+      while (frame_fetch_id <= last_frame_id + 2) //corresponding test fetch.c:205
+      {
+        fetch();
+        frame_fetch_id++;
+      }
     }
 
     while (Free[frame_fetch_id % FRAME_LOOKAHEAD])

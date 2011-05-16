@@ -185,9 +185,8 @@ uint8_t marker[2];
   /*---- Actual computation ----*/
   end_of_file = 0;
   int tour_de_perif = 0;
+  int elem_read;
   while (nb_ftp >= 0) {
-
-next_frame:
 
     // while no frame to process :
     while (nb_ftp == 0) {
@@ -200,20 +199,26 @@ next_frame:
       }
     }
 
+    if (unlikely (frame_id[stream_id] == 0))
+      goto noskip;
+
     // if it's the first stream (in order to drop a frame for every stream) and
     // if we need to drop the frame, then drop it for every stream!
     if ((stream_id == 0) && (frame_id[stream_id] <= last_frame_id)) {
-      for (int s = 0; s < nb_streams; s++) {
-        PFETCH("Skipping frame %d for stream %d\n", frame_id[s], s);  
-        skip_frame (movies[s]);
-        frame_id[s]++;
+      while(frame_id[stream_id] <= last_frame_id + 2) {
+        for (int s = 0; s < nb_streams; s++) {
+          PFETCH("Skipping frame %d for stream %d\n", frame_id[s], s);  
+          skip_frame (movies[s]);
+          frame_id[s]++;
+        }
+        __sync_fetch_and_sub(&nb_ftp, 1);
       }
-      __sync_fetch_and_sub(&nb_ftp, 1);
-      goto next_frame;
     }
-    
+
+noskip:
+
     // read next token :
-    int elem_read = fread(&marker, 2, 1, movies[stream_id]);
+    elem_read = fread(&marker, 2, 1, movies[stream_id]);
     if (elem_read != 1) {
       if (feof(movies[stream_id])) {
         // TODO : atomic increment, the if end_of_file == nb_streams ...
@@ -703,7 +708,8 @@ first_marker (FILE* movie)
   c1 = NEXTBYTE(movie);
   c2 = NEXTBYTE(movie);
   if (c1 != 0xFF || c2 != M_SOI)
-    ERREXIT("Not a JPEG file");
+    abort();
+    //ERREXIT("Not a JPEG file");
   return c2; 
 }
 
@@ -765,7 +771,9 @@ skip_variable (FILE* movie)
     ERREXIT("Erroneous JPEG marker length");
   length -= 2;
   /* Skip over the remaining bytes */
-  printf ("skipping %d bytes\n", length);
+#ifdef VFETCH
+  PFETCH ("Skipping %d bytes\n", length);
+#endif
   while (length > 0) {
     (void) read_1_byte(movie);
     length--;
@@ -810,9 +818,11 @@ process_SOFn (int marker, FILE* movie)
   default:      process = "Unknown";  break;
   }
 
-  printf("JPEG image is %uw * %uh, %d color components, %d bits per sample\n",
+#ifdef VFETCH
+  PFETCH("JPEG image is %uw * %uh, %d color components, %d bits per sample\n",
          image_width, image_height, num_components, data_precision);
-  printf("JPEG process: %s\n", process);
+  PFETCH("JPEG process: %s\n", process);
+#endif
 
   if (length != (unsigned int) (8 + num_components * 3))
     ERREXIT("Bogus SOF marker length");
@@ -916,8 +926,6 @@ void skip_frame (FILE* movie)
       
     case M_SOS:                 /* stop before hitting compressed data */
       skip_SOS (movie);         
-      printf("M_SOS reached\n");
-      
       return;
       
     case M_EOI:                 /* in case it's a tables-only JPEG stream */
