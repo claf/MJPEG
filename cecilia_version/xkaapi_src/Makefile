@@ -1,4 +1,4 @@
-CC=gcc #-Wall
+CC=gcc -Wall
 CFLAGS+=-std=c99 -g -I../include/ $(shell pkg-config --cflags kaapi)
 #CFLAGS=-std=c99 -O3 -I../include/ $(shell pkg-config --cflags kaapi)
 LDFLAGS=$(shell pkg-config --libs kaapi) -lpthread -lSDL -lSGE
@@ -20,7 +20,7 @@ $(OUT):$(OBJ)
 
 $(TMPFILE):$(wildcard $(ORI)/*.c)
 	c2x -i MJPEG.h ./ $(ORI) 
-	touch .Generated
+	touch $(TMPFILE)
 
 $(SRC):$(TMPFILE)
 
@@ -28,7 +28,7 @@ run: $(OUT)
 	LD_LIBRARY_PATH=$(LDLIB) ./mjpeg ~/toto.mjpeg
 
 clean:
-	rm -rf $(OUT) *.o $(TMPFILE)
+	rm -rf $(OUT) *.o
 
 veryclean:
 	rm -rf $(OUT) *.o *.h $(SRC) $(TMPFILE) 
