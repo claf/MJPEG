@@ -51,16 +51,17 @@ typedef struct {
 } shift_t;
 
 // Global table for ready frames :
+// possibles values are : 0..N
+// when Done[i] == x, it means frame i has been decoded for x different
+// streams.
 extern int32_t Done[FRAME_LOOKAHEAD];
 
 // Global table for free structures :
+// if Free[i] == 0 then a frame currently use this place (i).
 extern int32_t Free[FRAME_LOOKAHEAD];
 
 // Global number of streams variable :
 extern uint8_t nb_streams;
-
-// Global stream_id <=> position correspondance table :
-extern uint8_t position[MAX_STREAM];
 
 // Global Surfaces structures :
 extern SDL_Surface *Surfaces_normal[MAX_STREAM][FRAME_LOOKAHEAD];
@@ -71,6 +72,9 @@ extern shift_t* decalage;
 
 // Global resizing factors table :
 extern shift_t* resize_Factors;
+
+// Global stream_id <=> position correspondance table :
+extern uint8_t position[MAX_STREAM];
 
 // Global stream table :
 extern stream_info_t* streams;
