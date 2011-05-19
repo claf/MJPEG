@@ -69,6 +69,12 @@
 #define APRINTF(format, ...)
 #endif
 
+#ifdef _XKAAPI_DEBUG
+#define PXKAAPI(format, ...) printf ("%c[%d;%d;%dm[XKaapi::%s]%c[%d;%d;%dm " format, 0x1B, 0,CYAN,40,__FUNCTION__, 0x1B, 0, WHITE, 40, ## __VA_ARGS__)
+#else
+#define PXKAAPI(format, ...)
+#endif
+
 #ifdef _RESIZE_DEBUG
 #define PRESIZE(format, ...) printf ("%c[%d;%d;%dm[Resize::%s]%c[%d;%d;%dm " format, 0x1B, 0,GREEN,40,__FUNCTION__, 0x1B, 0, WHITE, 40, ## __VA_ARGS__)
 #else
