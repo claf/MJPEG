@@ -1,11 +1,9 @@
 #ifndef __FETCH_H
 #define __FETCH_H
 #include "MJPEG.h"
+#include "define_common.h"
 
 #define READ_BINARY     "r"
-
-/* Return next input byte, or EOF if no more */
-#define NEXTBYTE(movie)  getc(movie)
 
 /* Error exit handler */
 #define ERREXIT(msg)  (fprintf(stderr, "%s\n", msg), exit(EXIT_FAILURE))
@@ -16,7 +14,7 @@ read_1_byte (FILE* movie)
 {
   int c;
 
-  c = NEXTBYTE(movie);
+  NEXT_TOKEN(c, movie);
   if (c == EOF)
     ERREXIT("Premature EOF in JPEG file");
   return c;
@@ -29,10 +27,10 @@ read_2_bytes (FILE* movie)
 {
   int c1, c2; 
 
-  c1 = NEXTBYTE(movie);
+  NEXT_TOKEN(c1, movie);
   if (c1 == EOF)
     ERREXIT("Premature EOF in JPEG file");
-  c2 = NEXTBYTE(movie);
+  NEXT_TOKEN(c2, movie);
   if (c2 == EOF)
     ERREXIT("Premature EOF in JPEG file");
   return (((unsigned int) c1) << 8) + ((unsigned int) c2);
