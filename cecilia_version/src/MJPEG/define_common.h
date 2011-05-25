@@ -16,11 +16,18 @@
         if (feof(file)) fprintf(stderr, "(end of file)\n"); \
         /* exit(1) */
 
-#define NEXT_TOKEN(res, movie) {					\
+/* getc seems to work better than fread on this one, don't ask me why... */
+#define NEXT_TOKEN(res, movie)  res = getc(movie)
+
+/* original NEXT_TOKEN version, not used anymore : */
+/*
+#define NEXT_TOKEN(res, movie) {			      	\
+        PREAD("Reading 1 bytes\n");                             \
 	if (fread ((void *) & res, 1, 1, movie) != 1) {         \
 		FILE_ERROR(movie, "in NEXT_TOKEN", 1, 1);       \
 	}                                                       \
 }
+*/
 
 #define COPY_SECTION(to, size, movie) {			    \
 	int elem_read = fread ((void *)to, size, 1, movie); \
