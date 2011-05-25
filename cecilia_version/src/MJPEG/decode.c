@@ -28,6 +28,7 @@ void METHOD(decode, decode_init)(void *_this)
 void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk)
 {
   /* to get ((SOF_component[component_index].HV >> 4) & 0xf) now use Streams[video_id].HV */
+  double t0, t1;
   uint8_t index;
   int32_t *MCU;
   int32_t unZZ_MCU[64];
@@ -38,24 +39,26 @@ void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk)
   int stream_id = chunk->stream_id;
   int frame_id = chunk->frame_id;
 
+  t0 = kaapi_get_elapsedns();
+
   if (frame_id <= last_frame_id) {
     PDECODE("Drop chunk for frame %d and stream %d\n", frame_id, stream_id);
-    goto end;
   } else {
     PDECODE("Decode chunk for frame %d and stream %d\n", frame_id, stream_id);
-  }
+
 
   uint16_t max_ss_h = streams[stream_id].max_ss_h;
   uint16_t max_ss_v = streams[stream_id].max_ss_v;
 
   static volatile int is_init = 0;
 
-  static uint8_t *YCbCr_MCU[3] = { NULL, NULL, NULL};
-  static uint8_t *YCbCr_MCU_ds[3] = { NULL, NULL, NULL};
-  static uint32_t *RGB_MCU = NULL;
+  uint8_t *YCbCr_MCU[3] = { NULL, NULL, NULL};
+  uint8_t *YCbCr_MCU_ds[3] = { NULL, NULL, NULL};
+  uint32_t *RGB_MCU = NULL;
 
   if (is_init == 0){
-    is_init = 1;
+       PDECODE("Initialization of YCbCr and RGB struct\n");
+    //is_init = 1;
     for (int i = 0; i < 3; i++)
     {
       YCbCr_MCU[i] = malloc(MCU_sx * MCU_sy * max_ss_h * max_ss_v);
@@ -91,7 +94,7 @@ void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk)
 
   // TODO : replace RGB_MCU by the right place for display
   if (color && (chunk->index > 1)) {
-    YCbCr_to_ARGB (YCbCr_MCU, RGB_MCU, max_ss_h, max_ss_v);
+      YCbCr_to_ARGB (&YCbCr_MCU, RGB_MCU, max_ss_h, max_ss_v);
   } else {
     to_NB(YCbCr_MCU, RGB_MCU, max_ss_h, max_ss_v);
   }
@@ -104,13 +107,12 @@ void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk)
      MCU_sy * max_ss_h,
      MCU_sx * max_ss_v,
      RGB_MCU, Surfaces_normal[stream_id][frame_id % FRAME_LOOKAHEAD]);
-  
-end: 
+  } 
 
   PDECODE("Increment Achievement for stream %d frame %d value %d\n", stream_id,
-      frame_id, Achievements[stream_id][frame_id]);
+      frame_id, Achievements[stream_id][frame_id % FRAME_LOOKAHEAD]);
 
-  __sync_fetch_and_add (&Achievements[stream_id][frame_id % FRAME_LOOKAHEAD], 1);
+  __sync_add_and_fetch (&Achievements[stream_id][frame_id % FRAME_LOOKAHEAD], 1);
 
   if (Achievements[stream_id][frame_id % FRAME_LOOKAHEAD] == streams[stream_id].nb_MCU) {
     PDECODE("Frame %d from stream %d fully decoded, now send frame to Resize"
@@ -119,6 +121,8 @@ end:
     Achievements[stream_id][frame_id % FRAME_LOOKAHEAD] = 0;
     CALL (resize, resize, chunk);
   }
+  t1 = kaapi_get_elapsedns();
+  printf ("%lf\n", ((t1-t0)/1000)/1000);
 }
 
 // TODO : put this code elsewhere, already used by render and maybe resize too :
