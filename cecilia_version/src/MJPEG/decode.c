@@ -47,66 +47,71 @@ void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk)
     PDECODE("Decode chunk for frame %d and stream %d\n", frame_id, stream_id);
 
 
-  uint16_t max_ss_h = streams[stream_id].max_ss_h;
-  uint16_t max_ss_v = streams[stream_id].max_ss_v;
+    uint16_t max_ss_h = streams[stream_id].max_ss_h;
+    uint16_t max_ss_v = streams[stream_id].max_ss_v;
 
-  static volatile int is_init = 0;
+    static volatile int is_init = 0;
 
-  uint8_t *YCbCr_MCU[3] = { NULL, NULL, NULL};
-  uint8_t *YCbCr_MCU_ds[3] = { NULL, NULL, NULL};
-  uint32_t *RGB_MCU = NULL;
+    uint8_t *YCbCr_MCU[3] = { NULL, NULL, NULL};
+    uint8_t *YCbCr_MCU_ds[3] = { NULL, NULL, NULL};
+    uint32_t *RGB_MCU = NULL;
 
-  if (is_init == 0){
-       PDECODE("Initialization of YCbCr and RGB struct\n");
-    //is_init = 1;
-    for (int i = 0; i < 3; i++)
-    {
-      YCbCr_MCU[i] = malloc(MCU_sx * MCU_sy * max_ss_h * max_ss_v);
-      YCbCr_MCU_ds[i] = malloc(MCU_sx * MCU_sy * max_ss_h * max_ss_v);
-      if ((YCbCr_MCU_ds[i] == NULL) || (YCbCr_MCU[i] == NULL))
+    if (is_init == 0){
+      PDECODE("Initialization of YCbCr and RGB struct\n");
+      //is_init = 1;
+      for (int i = 0; i < 3; i++)
+      {
+        YCbCr_MCU[i] = malloc(MCU_sx * MCU_sy * max_ss_h * max_ss_v);
+        YCbCr_MCU_ds[i] = malloc(MCU_sx * MCU_sy * max_ss_h * max_ss_v);
+        if ((YCbCr_MCU_ds[i] == NULL) || (YCbCr_MCU[i] == NULL))
+          printf("\nmalloc error line %d\n", __LINE__);
+      }
+
+      RGB_MCU = malloc (MCU_sx * MCU_sy * max_ss_h * max_ss_v * sizeof(int32_t));
+      if (RGB_MCU == NULL)
         printf("\nmalloc error line %d\n", __LINE__);
     }
 
-    RGB_MCU = malloc (MCU_sx * MCU_sy * max_ss_h * max_ss_v * sizeof(int32_t));
-    if (RGB_MCU == NULL)
-      printf("\nmalloc error line %d\n", __LINE__);
-  }
-
-  for (index = 0; index < chunk->index; index++)
-  {
-    uint32_t component_index = chunk->component_index[index];
-    uint8_t nb_MCU = chunk->nb_MCU[index];
-
-    for (int chroma_ss = 0; chroma_ss < nb_MCU; chroma_ss++)
+    for (index = 0; index < chunk->index; index++)
     {
-      MCU = chunk->data + (( (index * 4) + (chroma_ss) ) * 64);
-      
-      int i = chunk->DQT_index[index][chroma_ss];
-      iqzz_block(MCU, unZZ_MCU, (uint8_t*)(chunk->DQT_table + i*64));
-      IDCT(unZZ_MCU, YCbCr_MCU_ds[component_index] + (64 * chroma_ss));
+      uint32_t component_index = chunk->component_index[index];
+      uint8_t nb_MCU = chunk->nb_MCU[index];
+
+      for (int chroma_ss = 0; chroma_ss < nb_MCU; chroma_ss++)
+      {
+        MCU = chunk->data + (( (index * 4) + (chroma_ss) ) * 64);
+
+        int i = chunk->DQT_index[index][chroma_ss];
+        iqzz_block(MCU, unZZ_MCU, (uint8_t*)(chunk->DQT_table + i*64));
+        /* In case it happen again ...
+        if ((YCbCr_MCU_ds[component_index] + (64 * chroma_ss)) == NULL){
+          abort();
+        }
+        */
+        IDCT(unZZ_MCU, YCbCr_MCU_ds[component_index] + (64 * chroma_ss));
+      }
+
+      upsampler(YCbCr_MCU_ds[component_index], YCbCr_MCU[component_index],
+          max_ss_h / ((streams[stream_id].HV >> 4) & 0xf),
+          max_ss_v / ((streams[stream_id].HV) & 0xf),
+          max_ss_h, max_ss_v);
     }
 
-    upsampler(YCbCr_MCU_ds[component_index], YCbCr_MCU[component_index],
-        max_ss_h / ((streams[stream_id].HV >> 4) & 0xf),
-        max_ss_v / ((streams[stream_id].HV) & 0xf),
-        max_ss_h, max_ss_v);
-  }
-
-  // TODO : replace RGB_MCU by the right place for display
-  if (color && (chunk->index > 1)) {
+    // TODO : replace RGB_MCU by the right place for display
+    if (color && (chunk->index > 1)) {
       YCbCr_to_ARGB (&YCbCr_MCU, RGB_MCU, max_ss_h, max_ss_v);
-  } else {
-    to_NB(YCbCr_MCU, RGB_MCU, max_ss_h, max_ss_v);
-  }
+    } else {
+      to_NB(YCbCr_MCU, RGB_MCU, max_ss_h, max_ss_v);
+    }
 
-  /* TODO : adress access problem to position[stream_id] table (which
-     will be modified by click function */
-  screen2surface_cpyrect
-    (index_Y * MCU_sy * max_ss_h,// + decalage[position[stream_id]].x,
-     index_X * MCU_sx * max_ss_v,// + decalage[position[stream_id]].y,
-     MCU_sy * max_ss_h,
-     MCU_sx * max_ss_v,
-     RGB_MCU, Surfaces_normal[stream_id][frame_id % FRAME_LOOKAHEAD]);
+    /* TODO : adress access problem to position[stream_id] table (which
+       will be modified by click function */
+    screen2surface_cpyrect
+      (index_Y * MCU_sy * max_ss_h,// + decalage[position[stream_id]].x,
+       index_X * MCU_sx * max_ss_v,// + decalage[position[stream_id]].y,
+       MCU_sy * max_ss_h,
+       MCU_sx * max_ss_v,
+       RGB_MCU, Surfaces_normal[stream_id][frame_id % FRAME_LOOKAHEAD]);
   } 
 
   PDECODE("Increment Achievement for stream %d frame %d value %d\n", stream_id,
@@ -116,7 +121,7 @@ void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk)
 
   if (Achievements[stream_id][frame_id % FRAME_LOOKAHEAD] == streams[stream_id].nb_MCU) {
     PDECODE("Frame %d from stream %d fully decoded, now send frame to Resize"
-       " component\n", frame_id, stream_id);
+        " component\n", frame_id, stream_id);
     // TODO : no need to atomically set Achievements back to null?
     Achievements[stream_id][frame_id % FRAME_LOOKAHEAD] = 0;
     CALL (resize, resize, chunk);
@@ -140,12 +145,12 @@ void screen2surface_cpyrect(uint32_t x, uint32_t y, uint32_t w, uint32_t h, void
 #ifdef DEBUG
   if ((y) > screen->h) {
     printf("[%s] : block can't be copied, "
-	   "not in the screen (too low)\n", __func__);
+        "not in the screen (too low)\n", __func__);
     exit(1);
   }
   if ((x) > screen->w) {
     printf("[%s] : block can't be copied, "
-	   "not in the screen (right border)\n", __func__);
+        "not in the screen (right border)\n", __func__);
     exit(1);
   }
 #endif
@@ -156,19 +161,19 @@ void screen2surface_cpyrect(uint32_t x, uint32_t y, uint32_t w, uint32_t h, void
     h_internal = screen->h -y; 
   }
   for(line = 0; line < h_internal ; line++)
-    {
-      // Positionning src and dest pointers
-      //  _ src : must be placed at the beginning of line "line"
-      //  _ dest : must be placed at the beginning
-      //          of the corresponding block :
-      //(line offset + current line + position on the current line)
-      // We assume that RGB is 4 bytes
+  {
+    // Positionning src and dest pointers
+    //  _ src : must be placed at the beginning of line "line"
+    //  _ dest : must be placed at the beginning
+    //          of the corresponding block :
+    //(line offset + current line + position on the current line)
+    // We assume that RGB is 4 bytes
 
-      dest_ptr = (void*)((uint32_t *)(screen->pixels) +
-			 ((y+line)*w_length) + x); 
-      src_ptr = (void*)((uint32_t *)ptr + ((line * w)));
-      memcpy(dest_ptr,src_ptr,w_internal * sizeof(uint32_t));
-    }
+    dest_ptr = (void*)((uint32_t *)(screen->pixels) +
+        ((y+line)*w_length) + x); 
+    src_ptr = (void*)((uint32_t *)ptr + ((line * w)));
+    memcpy(dest_ptr,src_ptr,w_internal * sizeof(uint32_t));
+  }
 
   SDL_UnlockSurface(screen);
 }
