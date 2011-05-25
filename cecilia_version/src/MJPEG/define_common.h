@@ -31,6 +31,7 @@
 
 #define COPY_SECTION(to, size, movie) {			    \
 	int elem_read = fread ((void *)to, size, 1, movie); \
+        PREAD("Reading %d bytes\n", size); \
 	if (elem_read != 1) {			\
 		FILE_ERROR(movie, "in COPY_SECTION", elem_read, 1); \
                 abort();\
@@ -40,6 +41,7 @@
 #define SKIP(n, movie) {							\
 	uint8_t * waste=(uint8_t *)malloc(n);                           \
 	if (n != 0) {                                                   \
+                PREAD("Reading %d bytes\n", n);                         \
                 int elem_read = fread ((void *) waste, n, 1, movie);    \
 		if (elem_read != 1) {                                   \
 			FILE_ERROR(movie, "in SKIP", elem_read, n);     \
