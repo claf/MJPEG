@@ -1,10 +1,10 @@
+#include <errno.h>
+#include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <errno.h>
 #include <string.h>
+#include <sys/time.h>
 #include <unistd.h>
-
-#include <pthread.h>
 
 #include "MJPEG.h"
 #include "huffman.h"
@@ -22,7 +22,7 @@ DECLARE_DATA{
 #include "cecilia.h"
 
 /* Global definition : */
-uint8_t nb_streams; 
+uint8_t nb_streams = 0; 
 
 // Global Surfaces structures :
 SDL_Surface *Surfaces_normal[MAX_STREAM][FRAME_LOOKAHEAD];
@@ -30,13 +30,19 @@ SDL_Surface *Surfaces_resized[FRAME_LOOKAHEAD];
 
 // Global stream table :
 stream_info_t* streams;
+
+// Global info for SDL_Surface resizing :
 shift_t* decalage;
 shift_t* resize_Factors;
 uint8_t position[MAX_STREAM];
 
 // Global frame achievement table (nb_chunk already treated) :
 uint32_t Achievements[MAX_STREAM][FRAME_LOOKAHEAD];
+
+// Global black & white or color decode :
 uint32_t color = 1;
+
+// Global last frame that has been (or should have been) printed on screen :
 volatile int32_t last_frame_id;
 
 /* Intern declarations : */
@@ -49,6 +55,11 @@ uint8_t HT_index = 0;
 int chroma_ss;
 uint16_t nb_MCU = 0, nb_MCU_X = 0, nb_MCU_Y = 0;
 uint8_t component_order[4];
+int *frame_id;
+FILE **movies;
+uint8_t *stream_init;
+uint32_t framerate = 0;
+frame_chunk_t *chunks;
 SOF_component_t SOF_component[3];
 DHT_section_t DHT_section;
 SOF_section_t SOF_section;
@@ -61,7 +72,7 @@ huff_table_t *tables[2][4] = {
 };
 
 /* Intern functions : */
-
+void options(int argc, char** argv);
 void fetch();
 void surfaces_init ();
 void factors_init ();
@@ -75,46 +86,13 @@ static void usage(char *progname) {
   printf("\t-h : display this help and exit\n");
 }
 
-int METHOD(entry, main)(void *_this, int argc, char** argv)
-{
-  printf ("Main start\n");
+void options(int argc, char** argv) {
+  int args = 1;
 
-  /* TODO : dynamic alloc :
-   * Streams 
-   * Achievements
-   * MCUs
-   */
-
-uint8_t marker[2];
-  uint8_t QT_index = 0;
-  uint16_t max_ss_h = 0 , max_ss_v = 0;
-  uint8_t index = 0, index_X, index_Y, index_SOF;
-  uint32_t YH = 0, YV = 0;
-  uint32_t CrH = 0, CrV = 0, CbH = 0, CbV = 0;
-  uint32_t screen_init_needed;
-  uint32_t end_of_file;
-  int args;
-  uint32_t framerate = 0;
-
-
-  jfif_header_t jfif_header;
-  DQT_section_t DQT_section;
-
-  frame_chunk_t *chunks;
-  nb_streams = 0;
-  last_frame_id = -1;
-  int stream_id = 0;
-  int *frame_id;
-  int32_t *MCU = NULL;
-  
-  nb_ftp = FRAME_LOOKAHEAD;
-
-  screen_init_needed = 1;
   if (argc < 2) {
     usage(argv[0]);
     exit(1);
   }
-  args = 1;
 
   while (args < argc) {
     if (argv[args][0] ==  '-') {
@@ -145,64 +123,81 @@ uint8_t marker[2];
     }
   }
 
-  // Some initialisation :
   if ((argc - args) < 1) {
     usage(argv[0]);
     exit(1);
-  } else {
-    nb_streams = argc - args;
-
-    chunks = malloc (sizeof(frame_chunk_t) * nb_streams * FRAME_LOOKAHEAD * MAX_MCU_X * MAX_MCU_Y);
-
-    frame_id = malloc (sizeof(int) * nb_streams);
-
-    streams = (stream_info_t*) malloc (sizeof(stream_info_t) * nb_streams);
-
-
-    surfaces_init ();
-    factors_init ();
   }
 
-  // Allocation for streams FILE table :
-  FILE *movies[nb_streams];
-  uint8_t stream_init[nb_streams];
+  nb_streams = argc - args;
+  
+  frame_id    = malloc (nb_streams * sizeof (int));
+  movies      = malloc (nb_streams * sizeof (FILE*));
+  stream_init = malloc (nb_streams * sizeof (uint8_t));
+  streams     = malloc (nb_streams * sizeof (stream_info_t));
+  chunks      = malloc (nb_streams * FRAME_LOOKAHEAD * MAX_MCU_X * MAX_MCU_Y
+      * sizeof (frame_chunk_t));
 
+  // Allocation for streams FILE table :
   for (int i = 0; i < nb_streams; i++)
   {
     frame_id[i] = 0;
     movies[i] = NULL;
     stream_init[i] = 1;
-    if ((movies[i] = fopen(argv[args], "r")) == NULL)
-    {
+    if ((movies[i] = fopen(argv[args], "r")) == NULL) {
       perror(strerror(errno));
       exit(-1);
     }
     args++;
   }
-  stream_id = 0;
+}
 
-  //TODO : read begining of every files to find max_X and max_Y
+int METHOD(entry, main)(void *_this, int argc, char** argv)
+{
+  PXKAAPI("Fetch start\n");
 
+  /* TODO : dynamic alloc :
+   * Streams 
+   * Achievements
+   * MCUs
+   */
+
+  uint8_t marker[2];
+  uint8_t QT_index = 0;
+  uint16_t max_ss_h = 0 , max_ss_v = 0;
+  uint8_t index = 0, index_X, index_Y, index_SOF;
+  uint32_t YH = 0, YV = 0;
+  uint32_t CrH = 0, CrV = 0, CbH = 0, CbV = 0;
+  uint32_t screen_init_needed;
+  uint32_t end_of_file = 0;
+  jfif_header_t jfif_header;
+  DQT_section_t DQT_section;
+  int stream_id = 0;
+  int32_t *MCU = NULL;
+  struct timespec time;
+
+  time.tv_sec = 0;
+  time.tv_nsec = 200; 
+  last_frame_id = -1;
+  nb_ftp = FRAME_LOOKAHEAD;
+  screen_init_needed = 1;
+
+  /* Options and init management : */
+  options(argc, argv);
+  surfaces_init ();
+  factors_init ();
+
+  /* TODO : read begining of every files to find max_X and max_Y use
+   * skip_frame to obtain movies sizes and fill position, decalage and
+   * resize tables. */
   
-  
-  
-  
-  
-  /*---- Actual computation ----*/
-  end_of_file = 0;
-  int tour_de_perif = 0;
+  /* Actual computation : */
   int elem_read;
-  while (nb_ftp >= 0) {
+  while (end_of_file == 0) {
 
     // while no frame to process :
-    while (nb_ftp == 0) {
-      for (int tdp = 0; tdp < 1000; tdp++) {
-        tdp++;
-        tdp--;
-        if (tour_de_perif == 1000) {
-          tour_de_perif = 0;
-        }
-      }
+    // find a better way!
+    while (nb_ftp <= 0) {
+      nanosleep (&time, NULL); 
     }
 
     if (unlikely (frame_id[stream_id] == 0))
@@ -432,7 +427,12 @@ noskip:
                 // TODO : allocate chunks with nb_stream, FRAME_LOOKAHEAD, max_X and max_Y
                 // max_X and max_Y are largest dimension of streams.
                 // TODO : add stream_id and frame_id infos!
-                frame_chunk_t *chunk = chunks + (stream_id * (frame_id[stream_id] % FRAME_LOOKAHEAD) * index_X * index_Y);
+                //chunks = malloc (sizeof(frame_chunk_t) * nb_streams * FRAME_LOOKAHEAD * MAX_MCU_X * MAX_MCU_Y);
+                frame_chunk_t *chunk = chunks + (stream_id * FRAME_LOOKAHEAD * MAX_MCU_X * MAX_MCU_Y)
+                  + ((frame_id[stream_id] % FRAME_LOOKAHEAD) * MAX_MCU_X * MAX_MCU_Y) 
+                  + (index_X * MAX_MCU_Y)
+                  + index_Y;
+
                 chunk->index = SOS_section.n;
                 chunk->x = index_X;
                 chunk->y = index_Y;
@@ -590,9 +590,6 @@ clean_end:/*
 
   // TODO : and now?
   //screen_exit();
-  return 0;
-
-
 
   printf ("Main end\n");
 
@@ -658,43 +655,6 @@ void factors_init ()
   position[1] = 1;
   position[2] = 2;
 }
-/*
-void skip_frame (FILE *movie)
-{
-  int end = 0;
-  uint8_t marker[2];
-
-  while (end == 0) {
-    int elem_read = fread(&marker, 2, 1, movie);
-    if (elem_read != 1) {
-      if (feof(movie)) {
-        // TODO : atomic increment, the if end_of_file == nb_streams ...
-        //end_of_file = 1;
-        break;
-      } else {
-        fprintf(stderr, "Error reading marker from input file\n");
-        exit (1);
-      }   
-    } 
-    if (marker[0] == M_SMS) {
-      switch (marker[1]) {
-        case M_SOS:
-          {
-            skip_segment(movie); 
-            COPY_SECTION(&marker, 2, movie);
-            end = 1;
-            break;
-          };
-        default:
-          {
-            skip_segment(movie);
-            break;
-          };
-      }
-    }
-  }
-}
-*/
 
 /*
  * Read the initial marker, which should be SOI.
@@ -709,11 +669,14 @@ first_marker (FILE* movie)
 {
   int c1, c2; 
 
-  c1 = NEXTBYTE(movie);
-  c2 = NEXTBYTE(movie);
-  if (c1 != 0xFF || c2 != M_SOI)
+  NEXT_TOKEN(c1, movie);
+  NEXT_TOKEN(c2, movie);
+  if (c1 != 0xFF)
     abort();
-    //ERREXIT("Not a JPEG file");
+  if (c2 != M_SOI){
+    PSKIP("Wrong marker found avec M_SMS : %d\n", c2);
+    //abort();
+  }
   return c2; 
 }
 
@@ -736,6 +699,7 @@ next_marker (FILE* movie)
   /* Find 0xFF byte; count and skip any non-FFs. */
   c = read_1_byte(movie);
   while (c != 0xFF) {
+    PSKIP ("M_SMS : Found non matching byte !!! byte found : %d\tdiscrded_bytes : %d\n", c, discarded_bytes);
     discarded_bytes++;
     c = read_1_byte(movie);
   }
@@ -744,6 +708,7 @@ next_marker (FILE* movie)
    */
   do {
     c = read_1_byte(movie);
+    PSKIP ("M_SMS : Found M_SMS matching byte !!! getting next byte  : %d\n", c);
   } while (c == 0xFF);
 
   if (discarded_bytes != 0) {
@@ -840,6 +805,7 @@ process_SOFn (int marker, FILE* movie)
 
 void skip_SOS (FILE* movie)
 {
+  uint8_t marker[2];
   int32_t trash[64];
   COPY_SECTION(&SOS_section, sizeof(SOS_section), movie);
   CPU_DATA_IS_BIGENDIAN(16, SOS_section.length);
@@ -883,7 +849,7 @@ void skip_SOS (FILE* movie)
     }
   }
 
-  COPY_SECTION(&trash, 2, movie);
+  COPY_SECTION(&marker, 2, movie);
 }
 
 /*
@@ -901,9 +867,10 @@ void skip_frame (FILE* movie)
   int marker;
   
   /* Expect SOI at start of file */
+  /*
   if (first_marker(movie) != M_SOI)
     ERREXIT("Expected SOI marker first");
-    
+  */
   /* Scan miscellaneous markers until we reach SOS. */
   for (;;) {
     marker = next_marker(movie);
@@ -911,7 +878,8 @@ void skip_frame (FILE* movie)
       /* Note that marker codes 0xC4, 0xC8, 0xCC are not, and must not be,
        * treated as SOFn.  C4 in particular is actually DHT.
        */
-    case M_SOF0:                /* Baseline */
+      case M_SOI: break;
+      case M_SOF0:                /* Baseline */
     case M_SOF1:                /* Extended sequential, Huffman */
     case M_SOF2:                /* Progressive, Huffman */
     case M_SOF3:                /* Lossless, Huffman */
@@ -924,8 +892,8 @@ void skip_frame (FILE* movie)
     case M_SOF13:               /* Differential sequential, arithmetic */
     case M_SOF14:               /* Differential progressive, arithmetic */
     case M_SOF15:               /* Differential lossless, arithmetic */
-      process_SOFn(marker, movie);
-      //skip_variable(movie);
+      //process_SOFn(marker, movie);
+      skip_variable(movie);
       break;
       
     case M_SOS:                 /* stop before hitting compressed data */
