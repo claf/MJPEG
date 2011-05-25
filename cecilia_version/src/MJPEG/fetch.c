@@ -67,8 +67,8 @@ SOS_section_t SOS_section;
 SOS_component_t SOS_component[3];
 scan_desc_t scan_desc = { 0, 0, {}, {} };
 huff_table_t *tables[2][4] = {
-    {NULL , NULL, NULL, NULL} ,
-      {NULL , NULL, NULL, NULL}
+  {NULL , NULL, NULL, NULL} ,
+  {NULL , NULL, NULL, NULL}
 };
 
 /* Intern functions : */
@@ -129,7 +129,7 @@ void options(int argc, char** argv) {
   }
 
   nb_streams = argc - args;
-  
+
   frame_id    = malloc (nb_streams * sizeof (int));
   movies      = malloc (nb_streams * sizeof (FILE*));
   stream_init = malloc (nb_streams * sizeof (uint8_t));
@@ -189,7 +189,7 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
   /* TODO : read begining of every files to find max_X and max_Y use
    * skip_frame to obtain movies sizes and fill position, decalage and
    * resize tables. */
-  
+
   /* Actual computation : */
   int elem_read;
   while (end_of_file == 0) {
@@ -316,7 +316,7 @@ noskip:
 
               //#ifdef MY_DEBUG
               //printf ("Read and Set nb_MCU :  %d\n",nb_MCU);
-//#endif
+              //#endif
 
             }
 
@@ -454,7 +454,7 @@ noskip:
                   chunk->nb_MCU[index] = nb_MCUz;
 
                   //printf("MCU used %d MCU orig %d\n", nb_MCUz, nb_MCU);
-                  
+
                   for (chroma_ss = 0; chroma_ss < nb_MCUz; chroma_ss++)
                   {
                     MCU = MCUs [stream_id] [frame_id[stream_id] % FRAME_LOOKAHEAD] [index_X] [index_Y] [index] [chroma_ss];
@@ -513,7 +513,7 @@ noskip:
               IPRINTF("Quantization table index is %d\r\n", QT_index);
 
               IPRINTF("Reading quantization table\r\n");
-             // printf("\nQT_index = %d\n", QT_index);
+              // printf("\nQT_index = %d\n", QT_index);
               COPY_SECTION(DQT_table[stream_id][frame_id[stream_id] % FRAME_LOOKAHEAD][QT_index], 64, movies[stream_id]);
               DQT_size += 64;
               //PRINT_DQT(DQT_table[stream_id][frame_id[stream_id] % FRAME_LOOKAHEAD][QT_index]);
@@ -667,7 +667,7 @@ void factors_init ()
  * file and then return a misleading error message...
  */
 
-static int 
+  static int 
 first_marker (FILE* movie)
 {
   int c1, c2; 
@@ -693,7 +693,7 @@ first_marker (FILE* movie)
  * not deal correctly with FF/00 sequences in the compressed image data...
  */
 
-static int
+  static int
 next_marker (FILE* movie)
 {
   int c;
@@ -730,9 +730,9 @@ next_marker (FILE* movie)
  * such bytes do NOT introduce new markers.
  */
 
-static void
+  static void
 skip_variable (FILE* movie)
-/* Skip over an unknown or uninteresting variable-length marker */
+  /* Skip over an unknown or uninteresting variable-length marker */
 {
   unsigned int length;
 
@@ -757,7 +757,7 @@ skip_variable (FILE* movie)
  * This code is only needed if you want to know the image dimensions...
  */
 
-static void
+  static void
 process_SOFn (int marker, FILE* movie)
 {
   unsigned int length;
@@ -774,25 +774,25 @@ process_SOFn (int marker, FILE* movie)
   num_components = read_1_byte(movie);
 
   switch (marker) {
-  case M_SOF0:  process = "Baseline";  break;
-  case M_SOF1:  process = "Extended sequential";  break;
-  case M_SOF2:  process = "Progressive";  break;
-  case M_SOF3:  process = "Lossless";  break;
-  case M_SOF5:  process = "Differential sequential";  break;
-  case M_SOF6:  process = "Differential progressive";  break;
-  case M_SOF7:  process = "Differential lossless";  break;
-  case M_SOF9:  process = "Extended sequential, arithmetic coding";  break;
-  case M_SOF10: process = "Progressive, arithmetic coding";  break;
-  case M_SOF11: process = "Lossless, arithmetic coding";  break;
-  case M_SOF13: process = "Differential sequential, arithmetic coding";  break;
-  case M_SOF14: process = "Differential progressive, arithmetic coding"; break;
-  case M_SOF15: process = "Differential lossless, arithmetic coding";  break;
-  default:      process = "Unknown";  break;
+    case M_SOF0:  process = "Baseline";  break;
+    case M_SOF1:  process = "Extended sequential";  break;
+    case M_SOF2:  process = "Progressive";  break;
+    case M_SOF3:  process = "Lossless";  break;
+    case M_SOF5:  process = "Differential sequential";  break;
+    case M_SOF6:  process = "Differential progressive";  break;
+    case M_SOF7:  process = "Differential lossless";  break;
+    case M_SOF9:  process = "Extended sequential, arithmetic coding";  break;
+    case M_SOF10: process = "Progressive, arithmetic coding";  break;
+    case M_SOF11: process = "Lossless, arithmetic coding";  break;
+    case M_SOF13: process = "Differential sequential, arithmetic coding";  break;
+    case M_SOF14: process = "Differential progressive, arithmetic coding"; break;
+    case M_SOF15: process = "Differential lossless, arithmetic coding";  break;
+    default:      process = "Unknown";  break;
   }
 
 #ifdef VFETCH
   PFETCH("JPEG image is %uw * %uh, %d color components, %d bits per sample\n",
-         image_width, image_height, num_components, data_precision);
+      image_width, image_height, num_components, data_precision);
   PFETCH("JPEG process: %s\n", process);
 #endif
 
@@ -868,12 +868,12 @@ void skip_SOS (FILE* movie)
 void skip_frame (FILE* movie)
 {
   int marker;
-  
+
   /* Expect SOI at start of file */
   /*
-  if (first_marker(movie) != M_SOI)
-    ERREXIT("Expected SOI marker first");
-  */
+     if (first_marker(movie) != M_SOI)
+     ERREXIT("Expected SOI marker first");
+     */
   /* Scan miscellaneous markers until we reach SOS. */
   for (;;) {
     marker = next_marker(movie);
@@ -883,82 +883,82 @@ void skip_frame (FILE* movie)
        */
       case M_SOI: break;
       case M_SOF0:                /* Baseline */
-    case M_SOF1:                /* Extended sequential, Huffman */
-    case M_SOF2:                /* Progressive, Huffman */
-    case M_SOF3:                /* Lossless, Huffman */
-    case M_SOF5:                /* Differential sequential, Huffman */
-    case M_SOF6:                /* Differential progressive, Huffman */
-    case M_SOF7:                /* Differential lossless, Huffman */
-    case M_SOF9:                /* Extended sequential, arithmetic */
-    case M_SOF10:               /* Progressive, arithmetic */
-    case M_SOF11:               /* Lossless, arithmetic */
-    case M_SOF13:               /* Differential sequential, arithmetic */
-    case M_SOF14:               /* Differential progressive, arithmetic */
-    case M_SOF15:               /* Differential lossless, arithmetic */
-      //process_SOFn(marker, movie);
-      skip_variable(movie);
-      break;
-      
-    case M_SOS:                 /* stop before hitting compressed data */
-      skip_SOS (movie);         
-      return;
-      
-    case M_EOI:                 /* in case it's a tables-only JPEG stream */
-      return;
-      
-    case M_DHT:
-      {
-        // Depending on how the JPEG is encoded, DHT marker may not be
-        // repeated for each DHT. We need to take care of the general
-        // state where all the tables are stored sequentially
-        // DHT size represent the currently read data... it starts as a
-        // zero value
-        volatile int DHT_size = 0;
-        IPRINTF("DHT marker found\r\n");
+      case M_SOF1:                /* Extended sequential, Huffman */
+      case M_SOF2:                /* Progressive, Huffman */
+      case M_SOF3:                /* Lossless, Huffman */
+      case M_SOF5:                /* Differential sequential, Huffman */
+      case M_SOF6:                /* Differential progressive, Huffman */
+      case M_SOF7:                /* Differential lossless, Huffman */
+      case M_SOF9:                /* Extended sequential, arithmetic */
+      case M_SOF10:               /* Progressive, arithmetic */
+      case M_SOF11:               /* Lossless, arithmetic */
+      case M_SOF13:               /* Differential sequential, arithmetic */
+      case M_SOF14:               /* Differential progressive, arithmetic */
+      case M_SOF15:               /* Differential lossless, arithmetic */
+                  //process_SOFn(marker, movie);
+                  skip_variable(movie);
+                  break;
 
-        COPY_SECTION(&DHT_section.length, 2, movie);
-        CPU_DATA_IS_BIGENDIAN(16, DHT_section.length);
-        // We've read the size : DHT_size is now 2
-        DHT_size += 2;
+      case M_SOS:                 /* stop before hitting compressed data */
+                  skip_SOS (movie);         
+                  return;
 
-        //We loop while we've not read all the data of DHT section
-        while (DHT_size < DHT_section.length) {
+      case M_EOI:                 /* in case it's a tables-only JPEG stream */
+                  return;
 
-          int loaded_size = 0;
-          // read huffman info, DHT size ++
-          NEXT_TOKEN(DHT_section.huff_info, movie);
-          DHT_size++;
+      case M_DHT:
+                  {
+                    // Depending on how the JPEG is encoded, DHT marker may not be
+                    // repeated for each DHT. We need to take care of the general
+                    // state where all the tables are stored sequentially
+                    // DHT size represent the currently read data... it starts as a
+                    // zero value
+                    volatile int DHT_size = 0;
+                    IPRINTF("DHT marker found\r\n");
 
-          // load the current huffman table
-          HT_index = DHT_section.huff_info & 0x0f;
-          HT_type = (DHT_section.huff_info >> 4) & 0x01;
+                    COPY_SECTION(&DHT_section.length, 2, movie);
+                    CPU_DATA_IS_BIGENDIAN(16, DHT_section.length);
+                    // We've read the size : DHT_size is now 2
+                    DHT_size += 2;
 
-          IPRINTF("Huffman table index is %d\r\n", HT_index);
-          IPRINTF("Huffman table type is %s\r\n",
-              HT_type ? "AC" : "DC");
+                    //We loop while we've not read all the data of DHT section
+                    while (DHT_size < DHT_section.length) {
 
-          VPRINTF("Loading Huffman table\r\n");
-          tables[HT_type][HT_index] = (huff_table_t *) malloc(sizeof(huff_table_t));
-          loaded_size = load_huffman_table_size(movie,
-              DHT_section.length,
-              DHT_section.huff_info,
-              tables[HT_type][HT_index]);
-          if (loaded_size < 0) {
-            VPRINTF("Failed to load Huffman table\n");
+                      int loaded_size = 0;
+                      // read huffman info, DHT size ++
+                      NEXT_TOKEN(DHT_section.huff_info, movie);
+                      DHT_size++;
 
-            abort();//goto clean_end;
-          }
-          DHT_size += loaded_size;
+                      // load the current huffman table
+                      HT_index = DHT_section.huff_info & 0x0f;
+                      HT_type = (DHT_section.huff_info >> 4) & 0x01;
 
-          IPRINTF("Huffman table length is %d, read %d\r\n", DHT_section.length, DHT_size);
-        }
+                      IPRINTF("Huffman table index is %d\r\n", HT_index);
+                      IPRINTF("Huffman table type is %s\r\n",
+                          HT_type ? "AC" : "DC");
 
-        break;
-      }
+                      VPRINTF("Loading Huffman table\r\n");
+                      tables[HT_type][HT_index] = (huff_table_t *) malloc(sizeof(huff_table_t));
+                      loaded_size = load_huffman_table_size(movie,
+                          DHT_section.length,
+                          DHT_section.huff_info,
+                          tables[HT_type][HT_index]);
+                      if (loaded_size < 0) {
+                        VPRINTF("Failed to load Huffman table\n");
 
-    default:                    /* Anything else just gets skipped */
-      skip_variable(movie);             /* we assume it has a parameter count... */
-      break;
+                        abort();//goto clean_end;
+                      }
+                      DHT_size += loaded_size;
+
+                      IPRINTF("Huffman table length is %d, read %d\r\n", DHT_section.length, DHT_size);
+                    }
+
+                    break;
+                  }
+
+      default:                    /* Anything else just gets skipped */
+                  skip_variable(movie);             /* we assume it has a parameter count... */
+                  break;
     }
   } /* end loop */
 }
