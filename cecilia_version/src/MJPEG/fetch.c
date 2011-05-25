@@ -303,6 +303,9 @@ noskip:
                 // TODO : pthread_create now!
                 //render_init(SOF_section.width, SOF_section.height, framerate);
                 CALL (render, render, WINDOW_H, WINDOW_W, framerate);
+                //pthread_t tid;
+                //pthread_create(&tid, NULL, (void*(*)(void*)) &render, NULL);
+
               }
 
               nb_MCU_X = intceil(SOF_section.height, MCU_sx * max_ss_v);
