@@ -91,7 +91,7 @@
 
 static inline int32_t DESCALE (int32_t x, int32_t n)
 {
-	return (x + (1 << (n - 1)) - (x < 0)) >> n;
+  return (x + (1 << (n - 1)) - (x < 0)) >> n;
 }
 
 /*
@@ -100,28 +100,28 @@ static inline int32_t DESCALE (int32_t x, int32_t n)
 
 static inline int32_t ADD(int32_t x, int32_t y)
 {
-	int32_t r = x + y;
+  int32_t r = x + y;
 
-	return r;         /* in effect: & 0x0000FFFF */
+  return r;         /* in effect: & 0x0000FFFF */
 }
 
 static inline int32_t SUB(int32_t x, int32_t y)
 {
-	int32_t r = x - y;
+  int32_t r = x - y;
 
-	return r;         /* in effect: & 0x0000FFFF */
+  return r;         /* in effect: & 0x0000FFFF */
 }
 
 static inline int32_t CMUL(int32_t c, int32_t x)
 {
-	int32_t r = c * x;
+  int32_t r = c * x;
 
-	/*
-	 * Less accurate rounding here also works fine:
-	 */
+  /*
+   * Less accurate rounding here also works fine:
+   */
 
-	r = (r + (1 << (C_BITS - 1))) >> C_BITS;
-	return r;
+  r = (r + (1 << (C_BITS - 1))) >> C_BITS;
+  return r;
 }
 
 /*
@@ -129,13 +129,13 @@ static inline int32_t CMUL(int32_t c, int32_t x)
  */
 
 static inline void rot(int32_t f, int32_t k, int32_t x, int32_t y, int32_t *rx, int32_t *ry) {
-	int32_t COS[2][8] = {
-		{c0_1, c1_1, c2_1, c3_1, c4_1, c5_1, c6_1, c7_1},
-		{c0_s2, c1_s2, c2_s2, c3_s2, c4_s2, c5_s2, c6_s2, c7_s2}
-	};
+  int32_t COS[2][8] = {
+    {c0_1, c1_1, c2_1, c3_1, c4_1, c5_1, c6_1, c7_1},
+    {c0_s2, c1_s2, c2_s2, c3_s2, c4_s2, c5_s2, c6_s2, c7_s2}
+  };
 
-	*rx = SUB(CMUL(COS[f][k], x), CMUL(COS[f][8 - k], y));
-	*ry = ADD(CMUL(COS[f][8 - k], x), CMUL(COS[f][k], y));
+  *rx = SUB(CMUL(COS[f][k], x), CMUL(COS[f][8 - k], y));
+  *ry = ADD(CMUL(COS[f][8 - k], x), CMUL(COS[f][k], y));
 }
 
 /*
@@ -144,43 +144,43 @@ static inline void rot(int32_t f, int32_t k, int32_t x, int32_t y, int32_t *rx, 
  */
 
 static inline void idct_1d(int32_t *Y) {
-	int32_t z1[8], z2[8], z3[8];
+  int32_t z1[8], z2[8], z3[8];
 
-	/*
-	 * Stage 1:
-	 */
+  /*
+   * Stage 1:
+   */
 
-	but(Y[0], Y[4], z1[1], z1[0]);
-	rot(1, 6, Y[2], Y[6], &z1[2], &z1[3]);
-	but(Y[1], Y[7], z1[4], z1[7]);
-	z1[5] = CMUL(sqrt2, Y[3]);
-	z1[6] = CMUL(sqrt2, Y[5]);
+  but(Y[0], Y[4], z1[1], z1[0]);
+  rot(1, 6, Y[2], Y[6], &z1[2], &z1[3]);
+  but(Y[1], Y[7], z1[4], z1[7]);
+  z1[5] = CMUL(sqrt2, Y[3]);
+  z1[6] = CMUL(sqrt2, Y[5]);
 
-	/*
-	 * Stage 2:
-	 */
-	but(z1[0], z1[3], z2[3], z2[0]);
-	but(z1[1], z1[2], z2[2], z2[1]);
-	but(z1[4], z1[6], z2[6], z2[4]);
-	but(z1[7], z1[5], z2[5], z2[7]);
+  /*
+   * Stage 2:
+   */
+  but(z1[0], z1[3], z2[3], z2[0]);
+  but(z1[1], z1[2], z2[2], z2[1]);
+  but(z1[4], z1[6], z2[6], z2[4]);
+  but(z1[7], z1[5], z2[5], z2[7]);
 
-	/*
-	 * Stage 3:
-	 */
-	z3[0] = z2[0];
-	z3[1] = z2[1];
-	z3[2] = z2[2];
-	z3[3] = z2[3];
-	rot(0, 3, z2[4], z2[7], &z3[4], &z3[7]);
-	rot(0, 1, z2[5], z2[6], &z3[5], &z3[6]);
+  /*
+   * Stage 3:
+   */
+  z3[0] = z2[0];
+  z3[1] = z2[1];
+  z3[2] = z2[2];
+  z3[3] = z2[3];
+  rot(0, 3, z2[4], z2[7], &z3[4], &z3[7]);
+  rot(0, 1, z2[5], z2[6], &z3[5], &z3[6]);
 
-	/*
-	 * Final stage 4:
-	 */
-	but(z3[0], z3[7], Y[7], Y[0]);
-	but(z3[1], z3[6], Y[6], Y[1]);
-	but(z3[2], z3[5], Y[5], Y[2]);
-	but(z3[3], z3[4], Y[4], Y[3]);
+  /*
+   * Final stage 4:
+   */
+  but(z3[0], z3[7], Y[7], Y[0]);
+  but(z3[1], z3[6], Y[6], Y[1]);
+  but(z3[2], z3[5], Y[5], Y[2]);
+  but(z3[3], z3[4], Y[4], Y[3]);
 }
 
 /*
@@ -188,26 +188,26 @@ static inline void idct_1d(int32_t *Y) {
  */
 
 void IDCT(int32_t *input, uint8_t *output) {
-	int32_t Y[64];
-	int32_t k, l;
+  int32_t Y[64];
+  int32_t k, l;
 
-	for (k = 0; k < 8; k++) {
-		for (l = 0; l < 8; l++) Y(k, l) = SCALE(input[(k << 3) + l], S_BITS);
-		idct_1d(&Y(k, 0));
-	}
+  for (k = 0; k < 8; k++) {
+    for (l = 0; l < 8; l++) Y(k, l) = SCALE(input[(k << 3) + l], S_BITS);
+    idct_1d(&Y(k, 0));
+  }
 
-	for (l = 0; l < 8; l++) {
-		int32_t Yc[8];
+  for (l = 0; l < 8; l++) {
+    int32_t Yc[8];
 
-		for (k = 0; k < 8; k++) Yc[k] = Y(k, l);
+    for (k = 0; k < 8; k++) Yc[k] = Y(k, l);
 
-		idct_1d(Yc);
+    idct_1d(Yc);
 
-		for (k = 0; k < 8; k++) {
-			int32_t r = 128 + DESCALE(Yc[k], S_BITS + 3);
-			r = r > 0 ? (r < 255 ? r : 255) : 0;
-			X(k, l) = r;
-		}
-	}
+    for (k = 0; k < 8; k++) {
+      int32_t r = 128 + DESCALE(Yc[k], S_BITS + 3);
+      r = r > 0 ? (r < 255 ? r : 255) : 0;
+      X(k, l) = r;
+    }
+  }
 }
 

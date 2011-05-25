@@ -71,14 +71,14 @@ void METHOD(resize, resize)(void *_this, frame_chunk_t* chunk)
   SDL_SetClipRect(Surfaces_resized[frame_id], &rect_dest);
 
   result_rect = sge_transform(Surfaces_normal[stream_id][frame_id], // src surface
-                              Surfaces_resized[frame_id], // dest surface
-                              0, // angle
-                              x_factor, y_factor, // x and y factors
-                              0, 0,
-                              decalage[position[stream_id]].x,
-                              decalage[position[stream_id]].y,
-                              SGE_TAA);
-                              //SGE_TTMAP);
+      Surfaces_resized[frame_id], // dest surface
+      0, // angle
+      x_factor, y_factor, // x and y factors
+      0, 0,
+      decalage[position[stream_id]].x,
+      decalage[position[stream_id]].y,
+      SGE_TAA);
+  //SGE_TTMAP);
 
   //PRESIZE("Cliping rectangle result : (%d;%d) H:%d ; W:%d\n", result_rect.x,
   //    result_rect.y, result_rect.h, result_rect.w);

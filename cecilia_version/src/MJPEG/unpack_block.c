@@ -21,99 +21,99 @@
 
 /* Read the file bit-per-bit (while NEXT_TOKEN gives _bytes_). */
 uint32_t get_bits(FILE * movie, scan_desc_t * scan_desc,
-                                uint8_t number)
+    uint8_t number)
 {
-   int32_t i = 0, newbit = 0;
-   uint32_t result = 0;
-   uint8_t wwindow = 0, aux = 0;
+  int32_t i = 0, newbit = 0;
+  uint32_t result = 0;
+  uint8_t wwindow = 0, aux = 0;
 
-   if (number == 0)
-      return 0;
+  if (number == 0)
+    return 0;
 
-   for (i = 0; i < number; i++) {
-      if (scan_desc->bit_count == 0) {
-         NEXT_TOKEN(wwindow, movie);
-         scan_desc->bit_count = 8;
-         if (wwindow == 0xFF)
-            NEXT_TOKEN(aux, movie);
-      } else
-         wwindow = scan_desc->window;
+  for (i = 0; i < number; i++) {
+    if (scan_desc->bit_count == 0) {
+      NEXT_TOKEN(wwindow, movie);
+      scan_desc->bit_count = 8;
+      if (wwindow == 0xFF)
+        NEXT_TOKEN(aux, movie);
+    } else
+      wwindow = scan_desc->window;
 
-      newbit = (wwindow >> 7) & 1;
-      scan_desc->window = wwindow << 1;
-      scan_desc->bit_count -= 1;
-      result = (result << 1) | newbit;
-   }
+    newbit = (wwindow >> 7) & 1;
+    scan_desc->window = wwindow << 1;
+    scan_desc->bit_count -= 1;
+    result = (result << 1) | newbit;
+  }
 
-   return result;
+  return result;
 }
 
 uint8_t get_symbol(FILE * movie, scan_desc_t * scan_desc,
-                                 uint32_t acdc, uint32_t component)
+    uint32_t acdc, uint32_t component)
 {
-   uint8_t temp = 0;
-   uint32_t length = 0;
-   huff_table_t *HT = scan_desc->table[acdc][component];
+  uint8_t temp = 0;
+  uint32_t length = 0;
+  huff_table_t *HT = scan_desc->table[acdc][component];
 
-   for (length = 0; length < 16; length++) {
-      temp = get_bits(movie, scan_desc, 1);
- //     code = (2 * code) | (temp & 0x1);
-		if ((temp & 0x1) == 0x0) {
-			HT = HT->left;
-		} else {
-			HT = HT->right;
-		}
-		if (HT == NULL) {
-			fprintf(stderr, "Found unrecognized code word, application will segfault...\n");
-			return 0;
-		}
-		if (HT->is_elt == 1) {
-//			if (HT->code == code) {
-				return HT->value;
-//			} else {
-//				break;
-//			}
-		}
+  for (length = 0; length < 16; length++) {
+    temp = get_bits(movie, scan_desc, 1);
+    //     code = (2 * code) | (temp & 0x1);
+    if ((temp & 0x1) == 0x0) {
+      HT = HT->left;
+    } else {
+      HT = HT->right;
+    }
+    if (HT == NULL) {
+      fprintf(stderr, "Found unrecognized code word, application will segfault...\n");
+      return 0;
+    }
+    if (HT->is_elt == 1) {
+      //			if (HT->code == code) {
+      return HT->value;
+      //			} else {
+      //				break;
+      //			}
+    }
 
-	}
+  }
 
-   return 0;
+  return 0;
 }
 
 void unpack_block(FILE * movie, scan_desc_t * scan_desc,
-                                uint32_t index, int32_t T[64])
+    uint32_t index, int32_t T[64])
 {
-   uint32_t temp = 0, i = 0, run = 0, cat = 0;
-   int32_t value = 0;
-   uint8_t symbol = 0;
+  uint32_t temp = 0, i = 0, run = 0, cat = 0;
+  int32_t value = 0;
+  uint8_t symbol = 0;
 
-   memset((void *) T, 0, 64 * sizeof(int32_t));
-   symbol = get_symbol(movie, scan_desc, HUFF_DC, index);
-   temp = get_bits(movie, scan_desc, symbol);
+  memset((void *) T, 0, 64 * sizeof(int32_t));
+  symbol = get_symbol(movie, scan_desc, HUFF_DC, index);
+  temp = get_bits(movie, scan_desc, symbol);
 
-   value = reformat(temp, symbol);
-   value += scan_desc->pred[index];
-   scan_desc->pred[index] = value;
+  value = reformat(temp, symbol);
+  value += scan_desc->pred[index];
+  scan_desc->pred[index] = value;
 
-   T[0] = value;
+  T[0] = value;
 
-   for (i = 1; i < 64; i++) {
-      symbol = get_symbol(movie, scan_desc, HUFF_AC, index);
+  for (i = 1; i < 64; i++) {
+    symbol = get_symbol(movie, scan_desc, HUFF_AC, index);
 
-      if (symbol == HUFF_EOB) {
-         break;
-      }
-      if (symbol == HUFF_ZRL) {
-			i += 15;
-         continue;
-      }
+    if (symbol == HUFF_EOB) {
+      break;
+    }
+    if (symbol == HUFF_ZRL) {
+      i += 15;
+      continue;
+    }
 
-      cat = symbol & 0xf;
-      run = (symbol >> 4) & 0xf;
-      i += run;
-      temp = get_bits(movie, scan_desc, cat);
-      value = reformat(temp, cat);
-      T[i] = value;
-   }
+    cat = symbol & 0xf;
+    run = (symbol >> 4) & 0xf;
+    i += run;
+    temp = get_bits(movie, scan_desc, cat);
+    value = reformat(temp, cat);
+    T[i] = value;
+  }
 }
 
