@@ -51,6 +51,18 @@
 #define CYAN    36
 #define WHITE   37
 
+#ifdef _SKIP_DEBUG
+#define PSKIP(format, ...) printf ("[Skip::%s] " format, __FUNCTION__, ## __VA_ARGS__)
+#else
+#define PSKIP(format, ...)
+#endif
+
+#ifdef _READ_DEBUG
+#define PREAD(format, ...) printf ("[Read::%s] " format, __FUNCTION__, ## __VA_ARGS__)
+#else
+#define PREAD(format, ...)
+#endif
+
 #ifdef VERBOSE
 #define VPRINTF(format, ...) printf ("[%s] " format, __FUNCTION__, ## __VA_ARGS__)
 #else
