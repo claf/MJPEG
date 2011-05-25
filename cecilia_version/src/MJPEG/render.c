@@ -34,7 +34,6 @@ void cpyrect(uint32_t x, uint32_t y, uint32_t w, uint32_t h, void *ptr);
 int dropped;
 
 
-//void render_init(int width, int height, int framerate)
 void render_init(int width, int height, int framerate)
 {
   int width_int = width , height_int = height;
@@ -103,6 +102,13 @@ void METHOD(render, render)(void *_this, int width, int height, int framerate)
         printf("Could not refresh screen: %s\n.", SDL_GetError() );
       }
 
+      /* Added framerate printing but is it right now ... */
+      /*
+      printf("\r[screen] : framerate is %0.2ffps, "
+          "computed one image in %0.2fms",
+          1000.00f / (SDL_GetTicks() - old_time),
+          (finish_time - old_time) * 1.00f);
+      */
     } else { // Else, the frame is no longer usefull, drop it
       //PRENDER("Dropping frame %d for real (already %d"
       //    " dropped frames)\n", frame_id, dropped);
