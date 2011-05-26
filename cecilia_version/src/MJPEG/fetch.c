@@ -13,7 +13,6 @@
 #include "skip_segment.h"
 #include "decode.h"
 #include "render.h"
-#include "fetch.h"
 
 DECLARE_DATA{
   //int foo;
@@ -72,11 +71,12 @@ huff_table_t *tables[2][4] = {
 };
 
 /* Intern functions : */
-void options(int argc, char** argv);
-void fetch();
-void surfaces_init ();
-void factors_init ();
-void skip_frame (FILE* movie);
+static void options(int argc, char** argv);
+static void surfaces_init ();
+static void factors_init ();
+static void skip_frame (FILE* movie);
+static int read_1_byte (FILE* movie);
+static unsigned int read_2_bytes (FILE* movie);
 
 static void usage(char *progname) {
   printf("Usage : %s [options] <mjpeg_file_1> [<mjpeg_file_2> ...]\n", progname);
@@ -604,8 +604,8 @@ void METHOD (fetch, fetch)(void *_this)
   __sync_fetch_and_add(&nb_ftp, 1);
 }
 
-// resize_init is not in resize component to avoid blocking call :
-void surfaces_init ()
+
+static void surfaces_init ()
 {
   for (int frame = 0; frame < FRAME_LOOKAHEAD; frame++)
   {
@@ -622,7 +622,7 @@ void surfaces_init ()
   }
 }
 
-void factors_init ()
+static void factors_init ()
 {
   // TODO : open every stream, read first SOF0 marker to know h and w
   // and calculate resizing factors, then close every filehandlers.
@@ -666,9 +666,8 @@ void factors_init ()
  * input file weren't actually JPEG at all, next_marker might read the whole
  * file and then return a misleading error message...
  */
-
-  static int 
-first_marker (FILE* movie)
+/*
+static int first_marker (FILE* movie)
 {
   int c1, c2; 
 
@@ -682,7 +681,7 @@ first_marker (FILE* movie)
   }
   return c2; 
 }
-
+*/
 /*
  * Find the next JPEG marker and return its marker code.
  * We expect at least one FF byte, possibly more if the compressor used FFs
@@ -693,8 +692,7 @@ first_marker (FILE* movie)
  * not deal correctly with FF/00 sequences in the compressed image data...
  */
 
-  static int
-next_marker (FILE* movie)
+static int next_marker (FILE* movie)
 {
   int c;
   int discarded_bytes = 0;
@@ -730,9 +728,8 @@ next_marker (FILE* movie)
  * such bytes do NOT introduce new markers.
  */
 
-  static void
-skip_variable (FILE* movie)
-  /* Skip over an unknown or uninteresting variable-length marker */
+/* Skip over an unknown or uninteresting variable-length marker */
+static void skip_variable (FILE* movie)
 {
   unsigned int length;
 
@@ -757,8 +754,8 @@ skip_variable (FILE* movie)
  * This code is only needed if you want to know the image dimensions...
  */
 
-  static void
-process_SOFn (int marker, FILE* movie)
+/*
+static void process_SOFn (int marker, FILE* movie)
 {
   unsigned int length;
   unsigned int image_height, image_width;
@@ -766,7 +763,7 @@ process_SOFn (int marker, FILE* movie)
   const char * process;
   int ci;
 
-  length = read_2_bytes(movie);      /* usual parameter length count */
+  length = read_2_bytes(movie);      // usual parameter length count
 
   data_precision = read_1_byte(movie);
   image_height = read_2_bytes(movie);
@@ -800,13 +797,14 @@ process_SOFn (int marker, FILE* movie)
     ERREXIT("Bogus SOF marker length");
 
   for (ci = 0; ci < num_components; ci++) {
-    (void) read_1_byte(movie);       /* Component ID code */
-    (void) read_1_byte(movie);       /* H, V sampling factors */
-    (void) read_1_byte(movie);       /* Quantization table number */
+    (void) read_1_byte(movie);       // Component ID code
+    (void) read_1_byte(movie);       // H, V sampling factors
+    (void) read_1_byte(movie);       // Quantization table number
   }
 }
+*/
 
-void skip_SOS (FILE* movie)
+static void skip_SOS (FILE* movie)
 {
   uint8_t marker[2];
   int32_t trash[64];
@@ -865,7 +863,7 @@ void skip_SOS (FILE* movie)
  * for special code to handle SOFn; we could treat it like other markers.)
  */
 
-void skip_frame (FILE* movie)
+static void skip_frame (FILE* movie)
 {
   int marker;
 
@@ -961,4 +959,32 @@ void skip_frame (FILE* movie)
                   break;
     }
   } /* end loop */
+}
+
+/* Read one byte, testing for EOF */
+static int 
+read_1_byte (FILE* movie)
+{
+  int c;
+
+  NEXT_TOKEN(c, movie);
+  if (c == EOF)
+    ERREXIT("Premature EOF in JPEG file");
+  return c;
+}
+
+/* Read 2 bytes, convert to unsigned int */
+/* All 2-byte quantities in JPEG markers are MSB first */
+static unsigned int 
+read_2_bytes (FILE* movie)
+{
+  int c1, c2; 
+
+  NEXT_TOKEN(c1, movie);
+  if (c1 == EOF)
+    ERREXIT("Premature EOF in JPEG file");
+  NEXT_TOKEN(c2, movie);
+  if (c2 == EOF)
+    ERREXIT("Premature EOF in JPEG file");
+  return (((unsigned int) c1) << 8) + ((unsigned int) c2);
 }

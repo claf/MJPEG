@@ -99,7 +99,7 @@ void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk)
 
     // TODO : replace RGB_MCU by the right place for display
     if (color && (chunk->index > 1)) {
-      YCbCr_to_ARGB (&YCbCr_MCU, RGB_MCU, max_ss_h, max_ss_v);
+      YCbCr_to_ARGB (YCbCr_MCU, RGB_MCU, max_ss_h, max_ss_v);
     } else {
       to_NB(YCbCr_MCU, RGB_MCU, max_ss_h, max_ss_v);
     }

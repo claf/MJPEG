@@ -1,6 +1,11 @@
 #ifndef DEFINE_COMMON_H
 #define DEFINE_COMMON_H
 
+#define READ_BINARY     "r"
+
+/* Error exit handler */
+#define ERREXIT(msg)  (fprintf(stderr, "%s\n", msg), exit(EXIT_FAILURE))
+
 #define SWITCH_ENDIAN_32(x)   \
 	x = ((x & 0x000000ff) << 24) | ((x & 0x0000ff00) << 8)  |  \
 ((x & 0x00ff0000) >> 8)  | ((x & 0xff000000) >> 24)
