@@ -4,11 +4,11 @@
 #include "MJPEG.h"
 
 #include "conv.h"
+#include "decode.h"
 #include "define_common.h"
 #include "idct.h"
 #include "iqzz.h"
 #include "resize.h"
-//#include "screen.h"
 #include "upsampler.h"
 
 DECLARE_DATA{
@@ -17,18 +17,15 @@ DECLARE_DATA{
 
 #include "cecilia.h"
 
-void screen2surface_cpyrect(uint32_t x, uint32_t y, uint32_t w, uint32_t h, void *ptr, SDL_Surface* screen);
-
-
 void METHOD(decode, decode_init)(void *_this)
 {
 
 }
 
-void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk)
+void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk, double t0)
 {
   /* to get ((SOF_component[component_index].HV >> 4) & 0xf) now use Streams[video_id].HV */
-  double t0, t1;
+  double t1, t2;
   uint8_t index;
   int32_t *MCU;
   int32_t unZZ_MCU[64];
@@ -39,7 +36,7 @@ void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk)
   int stream_id = chunk->stream_id;
   int frame_id = chunk->frame_id;
 
-  t0 = kaapi_get_elapsedns();
+  t1 = kaapi_get_elapsedns();
 
   if (frame_id <= last_frame_id) {
     PDECODE("Drop chunk for frame %d and stream %d\n", frame_id, stream_id);
@@ -106,7 +103,7 @@ void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk)
 
     /* TODO : adress access problem to position[stream_id] table (which
        will be modified by click function */
-    screen2surface_cpyrect
+    cpyrect2dest
       (index_Y * MCU_sy * max_ss_h,// + decalage[position[stream_id]].x,
        index_X * MCU_sx * max_ss_v,// + decalage[position[stream_id]].y,
        MCU_sy * max_ss_h,
@@ -119,19 +116,21 @@ void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk)
 
   __sync_add_and_fetch (&Achievements[stream_id][frame_id % FRAME_LOOKAHEAD], 1);
 
+  t2 = kaapi_get_elapsedns();
+  PDECODE ("Time (s[%d]-f[%d]) exec : %lf/%lf\n", stream_id, frame_id, ((t2-t1)/1000)/1000);
+
   if (Achievements[stream_id][frame_id % FRAME_LOOKAHEAD] == streams[stream_id].nb_MCU) {
     PDECODE("Frame %d from stream %d fully decoded, now send frame to Resize"
         " component\n", frame_id, stream_id);
     // TODO : no need to atomically set Achievements back to null?
     Achievements[stream_id][frame_id % FRAME_LOOKAHEAD] = 0;
+
+    PFRAME ("Frame %d decoded in %lf\n", frame_id, ((t2-t0)/1000)/1000);
     CALL (resize, resize, chunk);
   }
-  t1 = kaapi_get_elapsedns();
-  printf ("%lf\n", ((t1-t0)/1000)/1000);
 }
 
-// TODO : put this code elsewhere, already used by render and maybe resize too :
-void screen2surface_cpyrect(uint32_t x, uint32_t y, uint32_t w, uint32_t h, void *ptr, SDL_Surface* screen)
+void cpyrect2dest (uint32_t x, uint32_t y, uint32_t w, uint32_t h, void *ptr, SDL_Surface* screen)
 {
   void *dest_ptr;
   void *src_ptr;

@@ -2,6 +2,6 @@
 #define __DECODE_H
 #include "MJPEG.h"
 
-void decode(frame_chunk_t* chunk);
+void cpyrect2dest (uint32_t x, uint32_t y, uint32_t w, uint32_t h, void *ptr, SDL_Surface* screen);
 
 #endif

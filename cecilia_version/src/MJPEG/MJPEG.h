@@ -63,6 +63,9 @@ extern int32_t Free[FRAME_LOOKAHEAD];
 // Global number of streams variable :
 extern uint8_t nb_streams;
 
+// Global termination variable :
+extern uint8_t end_of_file;
+
 // Global Surfaces structures :
 extern SDL_Surface *Surfaces_normal[MAX_STREAM][FRAME_LOOKAHEAD];
 extern SDL_Surface *Surfaces_resized[FRAME_LOOKAHEAD];

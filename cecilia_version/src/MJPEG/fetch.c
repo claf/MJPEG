@@ -22,6 +22,7 @@ DECLARE_DATA{
 
 /* Global definition : */
 uint8_t nb_streams = 0; 
+uint8_t end_of_file = 0;
 
 // Global Surfaces structures :
 SDL_Surface *Surfaces_normal[MAX_STREAM][FRAME_LOOKAHEAD];
@@ -86,71 +87,6 @@ static void usage(char *progname) {
   printf("\t-h : display this help and exit\n");
 }
 
-void options(int argc, char** argv) {
-  int args = 1;
-
-  if (argc < 2) {
-    usage(argv[0]);
-    exit(1);
-  }
-
-  while (args < argc) {
-    if (argv[args][0] ==  '-') {
-      switch(argv[args][1]) {
-        case 'f':
-          if ((argc - args) < 1) {
-            usage(argv[0]);
-            exit(1);
-          }
-          framerate = atoi(argv[args+1]);
-          args +=2;
-          break;
-        case 'h':
-          usage(argv[0]);
-          exit(0);
-          break;
-        case 'c':
-          color=0;
-          args++;
-          break;
-        default :
-          usage(argv[0]);
-          exit(1);
-          break;
-      }
-    } else {
-      break;
-    }
-  }
-
-  if ((argc - args) < 1) {
-    usage(argv[0]);
-    exit(1);
-  }
-
-  nb_streams = argc - args;
-
-  frame_id    = malloc (nb_streams * sizeof (int));
-  movies      = malloc (nb_streams * sizeof (FILE*));
-  stream_init = malloc (nb_streams * sizeof (uint8_t));
-  streams     = malloc (nb_streams * sizeof (stream_info_t));
-  chunks      = malloc (nb_streams * FRAME_LOOKAHEAD * MAX_MCU_X * MAX_MCU_Y
-      * sizeof (frame_chunk_t));
-
-  // Allocation for streams FILE table :
-  for (int i = 0; i < nb_streams; i++)
-  {
-    frame_id[i] = 0;
-    movies[i] = NULL;
-    stream_init[i] = 1;
-    if ((movies[i] = fopen(argv[args], "r")) == NULL) {
-      perror(strerror(errno));
-      exit(-1);
-    }
-    args++;
-  }
-}
-
 int METHOD(entry, main)(void *_this, int argc, char** argv)
 {
   PXKAAPI("Fetch start\n");
@@ -168,7 +104,6 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
   uint32_t YH = 0, YV = 0;
   uint32_t CrH = 0, CrV = 0, CbH = 0, CbV = 0;
   uint32_t screen_init_needed;
-  uint32_t end_of_file = 0;
   jfif_header_t jfif_header;
   DQT_section_t DQT_section;
   int stream_id = 0;
@@ -198,8 +133,11 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
     // find a better way!
     while (nb_ftp <= 0) {
       nanosleep (&time, NULL); 
+      if (end_of_file != 0)
+        goto clean_end;
     }
 
+    /* Don't skip first frame because of SDL init : */
     if (unlikely (frame_id[stream_id] == 0))
       goto noskip;
 
@@ -208,6 +146,7 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
     if ((stream_id == 0) && (frame_id[stream_id] <= last_frame_id)) {
       while(frame_id[stream_id] <= last_frame_id + 2) {
         for (int s = 0; s < nb_streams; s++) {
+          printf("Skipping frame %d for stream %d\n", frame_id[s], s);  
           PFETCH("Skipping frame %d for stream %d\n", frame_id[s], s);  
           skip_frame (movies[s]);
           frame_id[s]++;
@@ -231,6 +170,7 @@ noskip:
       }
     }
 
+    printf("Start decoding of frame %d for stream %d\n", frame_id[stream_id], stream_id);  
 
     if (marker[0] == M_SMS) {
       switch (marker[1]) {
@@ -388,6 +328,8 @@ noskip:
 
         case M_SOS:
           {
+            double t0 = kaapi_get_elapsedns();
+
             PFETCH ("Processing next frame (%d) for stream_id %d\n",
                 frame_id[stream_id], stream_id);
 
@@ -466,7 +408,7 @@ noskip:
                 chunk->data = (int32_t*) MCUs [stream_id] [frame_id[stream_id] % FRAME_LOOKAHEAD] [index_X] [index_Y];
                 chunk->DQT_table = (uint8_t*) &(DQT_table[stream_id][frame_id[stream_id] % FRAME_LOOKAHEAD]);/*[SOF_component[component_index].q_table];*/
                 //printf("\tCalling decode for stream %d frame %d\n", stream_id, frame_id[stream_id]);
-                CALL (decode, decode, chunk);
+                CALL (decode, decode, chunk, t0);
               }
             }
 
@@ -571,31 +513,22 @@ noskip:
     }
   }
 
-clean_end:/*
-             for (int i = 0 ; i < 3 ; i++) {
-             if (YCbCr_MCU[i] != NULL) {
-             free(YCbCr_MCU[i]);
-             YCbCr_MCU[i] = NULL;
-             }
-             if (YCbCr_MCU_ds[i] != NULL) {
-             free(YCbCr_MCU_ds[i]);
-             YCbCr_MCU_ds[i] = NULL;
-             }
-             }
-             if (RGB_MCU != NULL) {
-             free(RGB_MCU);
-             RGB_MCU = NULL;
-             }*/
+clean_end:
+  /* Free malloc'ed stuff : */
   for (HT_index = 0; HT_index < 4; HT_index++) {
     free_huffman_tables(tables[HUFF_DC][HT_index]);
     free_huffman_tables(tables[HUFF_AC][HT_index]);
   }
 
-  // TODO : and now?
-  //screen_exit();
+  free (frame_id);
+  free (movies);
+  free (stream_init);
+  free (chunks);
+  free (decalage);
+  free (resize_Factors);
 
-  printf ("Main end\n");
-
+  PFETCH ("End\n");
+  return;
 }
 
 void METHOD (fetch, fetch)(void *_this)
@@ -604,6 +537,72 @@ void METHOD (fetch, fetch)(void *_this)
   __sync_fetch_and_add(&nb_ftp, 1);
 }
 
+
+static void options(int argc, char** argv)
+{
+  int args = 1;
+
+  if (argc < 2) {
+    usage(argv[0]);
+    exit(1);
+  }
+
+  while (args < argc) {
+    if (argv[args][0] ==  '-') {
+      switch(argv[args][1]) {
+        case 'f':
+          if ((argc - args) < 1) {
+            usage(argv[0]);
+            exit(1);
+          }
+          framerate = atoi(argv[args+1]);
+          args +=2;
+          break;
+        case 'h':
+          usage(argv[0]);
+          exit(0);
+          break;
+        case 'c':
+          color=0;
+          args++;
+          break;
+        default :
+          usage(argv[0]);
+          exit(1);
+          break;
+      }
+    } else {
+      break;
+    }
+  }
+
+  if ((argc - args) < 1) {
+    usage(argv[0]);
+    exit(1);
+  }
+
+  nb_streams = argc - args;
+
+  frame_id    = malloc (nb_streams * sizeof (int));
+  movies      = malloc (nb_streams * sizeof (FILE*));
+  stream_init = malloc (nb_streams * sizeof (uint8_t));
+  streams     = malloc (nb_streams * sizeof (stream_info_t));
+  chunks      = malloc (nb_streams * FRAME_LOOKAHEAD * MAX_MCU_X * MAX_MCU_Y
+      * sizeof (frame_chunk_t));
+
+  // Allocation for streams FILE table :
+  for (int i = 0; i < nb_streams; i++)
+  {
+    frame_id[i] = 0;
+    movies[i] = NULL;
+    stream_init[i] = 1;
+    if ((movies[i] = fopen(argv[args], "r")) == NULL) {
+      perror(strerror(errno));
+      exit(-1);
+    }
+    args++;
+  }
+}
 
 static void surfaces_init ()
 {

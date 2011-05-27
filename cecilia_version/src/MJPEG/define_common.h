@@ -65,6 +65,12 @@
 #define CYAN    36
 #define WHITE   37
 
+#ifdef _FRAME_DEBUG
+#define PFRAME(format, ...) printf ("[Frame::%s] " format, __FUNCTION__, ## __VA_ARGS__)
+#else
+#define PFRAME(format, ...)
+#endif
+
 #ifdef _SKIP_DEBUG
 #define PSKIP(format, ...) printf ("[Skip::%s] " format, __FUNCTION__, ## __VA_ARGS__)
 #else

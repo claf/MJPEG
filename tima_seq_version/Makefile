@@ -20,6 +20,9 @@ NEW_OBJ_FILES =
 
 all : mjpeg mire
 
+run: mjpeg
+	./mjpeg ~/toto.mjpeg
+
 # Real compilation
 
 mire : $(OBJ_DIR)/example.o $(OBJ_DIR)/screen.o

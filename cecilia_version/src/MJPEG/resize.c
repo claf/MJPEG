@@ -22,7 +22,7 @@ void METHOD(resize, resize)(void *_this, frame_chunk_t* chunk)
   int stream_id = chunk->stream_id;
   int frame_id = chunk->frame_id % FRAME_LOOKAHEAD;
 
-  PRESIZE("Called for frame %d from stream %d!\n", chunk->frame_id, stream_id);
+  //PRESIZE("Called for frame %d from stream %d!\n", chunk->frame_id, stream_id);
 
   if (chunk->frame_id <= last_frame_id)
   {
@@ -34,12 +34,6 @@ void METHOD(resize, resize)(void *_this, frame_chunk_t* chunk)
       Done[frame_id] = 0;
       Free[frame_id] = 1;
     }
-
-    /* TODO : here we could call fetch component to start decoding next frame,
-     * but what about multiples frames to drop ...
-     * For example, frame 5 has been dropped, fetch would start decoding frame 8
-     * but render is waiting for frame 14 ...
-     */
 
     return;
   }
