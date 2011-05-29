@@ -17,7 +17,7 @@ void METHOD(resize, resize_init)(void *_this)
 }
 
 /* Passing frame_chunk_t as a full frame for internal infos only. */
-void METHOD(resize, resize)(void *_this, frame_chunk_t* chunk)
+void METHOD(resize, resize)(void *_this, frame_chunk_t* chunk, double t0)
 {
   int stream_id = chunk->stream_id;
   int frame_id = chunk->frame_id % FRAME_LOOKAHEAD;
@@ -80,6 +80,11 @@ void METHOD(resize, resize)(void *_this, frame_chunk_t* chunk)
   int nb_frames = __sync_add_and_fetch (&Done[frame_id], 1);
 
   if (nb_frames == nb_streams) {
+#ifdef _FRAME_DEBUG
+    double t1 = kaapi_get_elapsedns ();
+#endif
+    PFRAME("Frame %d resized in %lf\n", 3, chunk->frame_id, ((t1-t0)/1000)/1000);
+
     PRESIZE("Frame %d ready to print (Done[%d] = %d)\n", chunk->frame_id,
         frame_id, Done[frame_id]);
   }

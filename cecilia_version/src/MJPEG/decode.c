@@ -125,8 +125,9 @@ void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk, double t0)
     // TODO : no need to atomically set Achievements back to null?
     Achievements[stream_id][frame_id % FRAME_LOOKAHEAD] = 0;
 
-    PFRAME ("Frame %d decoded in %lf\n", frame_id, ((t2-t0)/1000)/1000);
-    CALL (resize, resize, chunk);
+    PFRAME ("Frame %d decoded in %lf\n", 2, frame_id, ((t2-t0)/1000)/1000);
+    double tt = kaapi_get_elapsedns ();
+    CALL (resize, resize, chunk, tt);
   }
 }
 

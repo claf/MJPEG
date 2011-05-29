@@ -66,7 +66,8 @@
 #define WHITE   37
 
 #ifdef _FRAME_DEBUG
-#define PFRAME(format, ...) printf ("[Frame::%s] " format, __FUNCTION__, ## __VA_ARGS__)
+#define NORMAL "[0;37;40m"
+#define PFRAME(format, comp, ...) printf ("%c[%d;3%d;%dm[Frame::%s]%c%s\t" format, 0x1B, 0, comp, 40, __FUNCTION__, 0x1B, NORMAL, ## __VA_ARGS__)
 #else
 #define PFRAME(format, ...)
 #endif

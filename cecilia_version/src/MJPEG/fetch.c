@@ -107,6 +107,7 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
   jfif_header_t jfif_header;
   DQT_section_t DQT_section;
   int stream_id = 0;
+  int noskip = 1;
   int32_t *MCU = NULL;
   struct timespec time;
 
@@ -138,7 +139,7 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
     }
 
     /* Don't skip first frame because of SDL init : */
-    if (unlikely (frame_id[stream_id] == 0))
+    if (noskip == 1)
       goto noskip;
 
     // if it's the first stream (in order to drop a frame for every stream) and
@@ -146,7 +147,7 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
     if ((stream_id == 0) && (frame_id[stream_id] <= last_frame_id)) {
       while(frame_id[stream_id] <= last_frame_id + 2) {
         for (int s = 0; s < nb_streams; s++) {
-          printf("Skipping frame %d for stream %d\n", frame_id[s], s);  
+          PFRAME("Skipping frame %d for stream %d\n", 1, frame_id[s], s);  
           PFETCH("Skipping frame %d for stream %d\n", frame_id[s], s);  
           skip_frame (movies[s]);
           frame_id[s]++;
@@ -170,9 +171,11 @@ noskip:
       }
     }
 
-    printf("Start decoding of frame %d for stream %d\n", frame_id[stream_id], stream_id);  
 
     if (marker[0] == M_SMS) {
+      // Don't skip a frame we started to decode :
+      noskip = 1;
+
       switch (marker[1]) {
         case M_SOF0:
           {
@@ -315,6 +318,8 @@ noskip:
 
         case M_SOI:
           {
+            PFRAME("Start decoding of frame %d for stream %d\n", 1, frame_id[stream_id], stream_id);  
+
             IPRINTF("SOI marker found\r\n");
             break;
           }
@@ -329,6 +334,8 @@ noskip:
         case M_SOS:
           {
             double t0 = kaapi_get_elapsedns();
+            // If you want to skip next ...
+            noskip = 0
 
             PFETCH ("Processing next frame (%d) for stream_id %d\n",
                 frame_id[stream_id], stream_id);
@@ -531,8 +538,10 @@ clean_end:
   return;
 }
 
-void METHOD (fetch, fetch)(void *_this)
+void METHOD (fetch, fetch)(void *_this, double t0)
 {
+  double t1 = kaapi_get_elapsedns ();
+  PFRAME ("Received skip of decode command in %lf\n", 1, ((t1-t0)/1000)/1000)
   PFETCH("Adding 1 frame to process, nb_ftp = %d\n", nb_ftp);
   __sync_fetch_and_add(&nb_ftp, 1);
 }

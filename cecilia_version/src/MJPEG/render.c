@@ -70,6 +70,7 @@ void render()
 
     if (Done[frame_id % FRAME_LOOKAHEAD] == nb_streams)
     {
+      PFRAME ("Frame %d ready at %d ... printing\n", 4, frame_id, SDL_GetTicks());
       PRENDER("Printing frame %d\n", frame_id);
       SDL_Surface* src = Surfaces_resized[frame_id % FRAME_LOOKAHEAD];
       cpyrect(0,0,WINDOW_H, WINDOW_W, src->pixels);
@@ -90,8 +91,10 @@ void render()
     } else { // Else, the frame is no longer usefull, drop it
       //PRENDER("Dropping frame %d for real (already %d"
       //    " dropped frames)\n", frame_id, dropped);
+
       PRENDER("Dropping frame %d (Done[%d] = %d)\n", frame_id, frame_id % FRAME_LOOKAHEAD, Done[frame_id % FRAME_LOOKAHEAD]);
       dropped++;
+      PFRAME ("Frame %d needed at %d but not done ... already %d dropped frames\n", 4, frame_id, SDL_GetTicks (), dropped);
     }
 
     last_frame_id++;
@@ -100,7 +103,10 @@ void render()
     if (frame_fetch_id <= last_frame_id) {
       while (frame_fetch_id <= last_frame_id + 2) //corresponding test fetch.c:205
       {
-        CALL (fetch, fetch);
+        PFRAME ("Call to fetch component to skip frame %d\n", 4, frame_fetch_id);
+        double t0 = kaapi_get_elapsedns ();
+
+        CALL (fetch, fetch, t0);
         frame_fetch_id++;
       }
     }
@@ -108,7 +114,10 @@ void render()
     /* If we have free places : */
     while (Free[frame_fetch_id % FRAME_LOOKAHEAD])
     {
-      CALL (fetch, fetch);
+      PFRAME ("Call to fetch component to decode frame %d\n", 4, frame_fetch_id);
+      double t0 = kaapi_get_elapsedns ();
+
+      CALL (fetch, fetch, t0);
       Free[frame_fetch_id % FRAME_LOOKAHEAD] = 0;
       frame_fetch_id++;
     }
