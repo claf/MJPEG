@@ -102,7 +102,7 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
   uint16_t max_ss_h = 0 , max_ss_v = 0;
   uint8_t index = 0, index_X, index_Y, index_SOF;
   uint32_t YH = 0, YV = 0;
-  uint32_t CrH = 0, CrV = 0, CbH = 0, CbV = 0;
+  //uint32_t CrH = 0, CrV = 0, CbH = 0, CbV = 0;
   uint32_t screen_init_needed;
   jfif_header_t jfif_header;
   DQT_section_t DQT_section;
@@ -215,6 +215,7 @@ noskip:
             streams[stream_id].max_ss_h = max_ss_h;
             streams[stream_id].max_ss_v = max_ss_v;
 
+            /*
             if (SOF_section.n > 1) {
               CrV = SOF_component[1].HV & 0x0f;
               CrH = (SOF_component[1].HV >> 4) & 0x0f;
@@ -223,6 +224,7 @@ noskip:
             }
             IPRINTF("Subsampling factor = %ux%u, %ux%u, %ux%u\r\n",
                 YH, YV, CrH, CrV, CbH, CbV);
+            */
 
             if (stream_init[stream_id] == 1){
               stream_init[stream_id] = 0;
@@ -334,8 +336,11 @@ noskip:
         case M_SOS:
           {
             double t0 = kaapi_get_elapsedns();
+            struct timeval time;
+            gettimeofday(&time, NULL);
+
             // If you want to skip next ...
-            noskip = 0
+            noskip = 0;
 
             PFETCH ("Processing next frame (%d) for stream_id %d\n",
                 frame_id[stream_id], stream_id);
@@ -415,7 +420,8 @@ noskip:
                 chunk->data = (int32_t*) MCUs [stream_id] [frame_id[stream_id] % FRAME_LOOKAHEAD] [index_X] [index_Y];
                 chunk->DQT_table = (uint8_t*) &(DQT_table[stream_id][frame_id[stream_id] % FRAME_LOOKAHEAD]);/*[SOF_component[component_index].q_table];*/
                 //printf("\tCalling decode for stream %d frame %d\n", stream_id, frame_id[stream_id]);
-                CALL (decode, decode, chunk, t0);
+                //CALL (decode, decode, chunk, t0);
+                CALL (decode, decode, chunk, time);
               }
             }
 
@@ -527,12 +533,14 @@ clean_end:
     free_huffman_tables(tables[HUFF_AC][HT_index]);
   }
 
+  /* TODO : currently segfault ...
   free (frame_id);
   free (movies);
   free (stream_init);
   free (chunks);
   free (decalage);
   free (resize_Factors);
+  */
 
   PFETCH ("End\n");
   return;
@@ -541,7 +549,7 @@ clean_end:
 void METHOD (fetch, fetch)(void *_this, double t0)
 {
   double t1 = kaapi_get_elapsedns ();
-  PFRAME ("Received skip of decode command in %lf\n", 1, ((t1-t0)/1000)/1000)
+  PFRAME ("Received skip of decode command in %lf\n", 1, ((t1-t0)/1000)/1000);
   PFETCH("Adding 1 frame to process, nb_ftp = %d\n", nb_ftp);
   __sync_fetch_and_add(&nb_ftp, 1);
 }

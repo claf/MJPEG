@@ -17,7 +17,7 @@ void METHOD(resize, resize_init)(void *_this)
 }
 
 /* Passing frame_chunk_t as a full frame for internal infos only. */
-void METHOD(resize, resize)(void *_this, frame_chunk_t* chunk, double t0)
+void METHOD(resize, resize)(void *_this, frame_chunk_t* chunk, /*double t0*/ struct timeval time)
 {
   int stream_id = chunk->stream_id;
   int frame_id = chunk->frame_id % FRAME_LOOKAHEAD;
@@ -83,7 +83,12 @@ void METHOD(resize, resize)(void *_this, frame_chunk_t* chunk, double t0)
 #ifdef _FRAME_DEBUG
     double t1 = kaapi_get_elapsedns ();
 #endif
-    PFRAME("Frame %d resized in %lf\n", 3, chunk->frame_id, ((t1-t0)/1000)/1000);
+    struct timeval time2;
+    gettimeofday(&time2, NULL);
+    int tt1 = (time.tv_sec % 60)*1000 + (time.tv_usec/1000);
+    int tt2 = (time2.tv_sec % 60)*1000 + (time2.tv_usec/1000);
+    //PFRAME("Frame %d resized in %lf\n", 3, chunk->frame_id, ((t1-t0)/1000)/1000);
+    PFRAME ("Frame %d resized! start :\t%d end :\t%d duration :\t%d\n", 2, chunk->frame_id, tt1, tt2, tt2-tt1);
 
     PRESIZE("Frame %d ready to print (Done[%d] = %d)\n", chunk->frame_id,
         frame_id, Done[frame_id]);
