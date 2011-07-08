@@ -25,7 +25,7 @@ uint32_t get_bits(FILE * movie, scan_desc_t * scan_desc,
 {
   int32_t i = 0, newbit = 0;
   uint32_t result = 0;
-  uint8_t wwindow = 0, aux = 0;
+  uint8_t wwindow = 0;/*, aux = 0;*/
 
   if (number == 0)
     return 0;
@@ -35,7 +35,10 @@ uint32_t get_bits(FILE * movie, scan_desc_t * scan_desc,
       NEXT_TOKEN(wwindow, movie);
       scan_desc->bit_count = 8;
       if (wwindow == 0xFF)
-        NEXT_TOKEN(aux, movie);
+      {
+        //NEXT_TOKEN(aux, movie);
+        getc(movie);
+      }
     } else
       wwindow = scan_desc->window;
 
