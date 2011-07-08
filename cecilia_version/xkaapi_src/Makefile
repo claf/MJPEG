@@ -5,7 +5,8 @@ LDFLAGS=$(shell pkg-config --libs kaapi) -lpthread -lSDL -lSGE
 LDLIB=$(shell pkg-config --libs-only-L kaapi | sed 's/^-L//')
 
 ORI=../src/MJPEG
-SRC=main.c decode.c fetch.c resize.c render.c conv.c huffman.c idct.c iqzz.c skip_segment.c unpack_block.c upsampler.c
+SRC=main.c decode.c fetch.c resize.c render.c conv.c huffman.c idct.c iqzz.c skip_segment.c unpack_block.c upsampler.c c2x.c
+HEADERS=conv.h decode.h define_common.h huffman.h idct.h iqzz.h main.h MJPEG.h render.h resize.h skip_segment.h unpack_block.h upsampler.h utils.h c2x.h
 OBJ=$(SRC:.c=.o)
 OUT=mjpeg
 TMPFILE=.Generated
@@ -19,7 +20,7 @@ $(OUT):$(OBJ)
 	$(CC) $(CFLAGS) -o $@ -c $^
 
 $(TMPFILE):$(wildcard $(ORI)/*.c)
-	c2x -i MJPEG.h ./ $(ORI) 
+	c2x -V -i MJPEG.h ./ $(ORI) 
 	touch $(TMPFILE)
 
 $(SRC):$(TMPFILE)
@@ -31,12 +32,14 @@ gdb: $(OUT)
 	LD_LIBRARY_PATH=$(LDLIB) cgdb mjpeg core
 
 debug: $(OUT)
-	LD_LIBRARY_PATH=$(LDLIB) cgdb -- --args mjpeg ~/toto.mjpeg
+	LD_LIBRARY_PATH=$(LDLIB) cgdb -- --args mjpeg ~/toto.mjpeg ~/toto.mjpeg ~/toto.mjpeg 
+
+perl:$(TMPFILE)
 
 clean:
 	rm -rf $(OUT) *.o
 
 veryclean:
-	rm -rf $(OUT) *.o *.h $(SRC) $(TMPFILE) 
+	rm -rf $(OUT) *.o $(HEADERS) $(SRC) $(TMPFILE) 
 
 .SILENT: clean veryclean
