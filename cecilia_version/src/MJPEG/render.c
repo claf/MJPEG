@@ -4,7 +4,6 @@
 #include <SDL/SDL.h>
 
 #include "MJPEG.h"
-#include "decode.h"
 #include "define_common.h"
 
 DECLARE_DATA{
