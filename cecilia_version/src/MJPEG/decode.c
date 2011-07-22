@@ -4,11 +4,9 @@
 #include "MJPEG.h"
 
 #include "conv.h"
-#include "decode.h"
 #include "define_common.h"
 #include "idct.h"
 #include "iqzz.h"
-#include "resize.h"
 #include "upsampler.h"
 
 DECLARE_DATA{

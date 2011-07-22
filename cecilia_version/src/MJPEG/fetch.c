@@ -11,8 +11,6 @@
 #include "unpack_block.h"
 #include "define_common.h"
 #include "skip_segment.h"
-#include "decode.h"
-#include "render.h"
 
 DECLARE_DATA{
   //int foo;

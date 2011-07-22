@@ -1,12 +1,13 @@
 CC=gcc -Wall -std=gnu99
 CFLAGS+=-g -O0 -I../include/ $(shell pkg-config --cflags kaapi)
-#CFLAGS=-std=c99 -O3 -I../include/ $(shell pkg-config --cflags kaapi)
+#CFLAGS+=-gdwarf-2 -g3 # Macros debug stuffs
+
 LDFLAGS=$(shell pkg-config --libs kaapi) -lpthread -lSDL -lSGE
 LDLIB=$(shell pkg-config --libs-only-L kaapi | sed 's/^-L//')
 
 ORI=../src/MJPEG
 SRC=main.c decode.c fetch.c resize.c render.c conv.c huffman.c idct.c iqzz.c skip_segment.c unpack_block.c upsampler.c c2x.c
-HEADERS=conv.h decode.h define_common.h huffman.h idct.h iqzz.h main.h MJPEG.h render.h resize.h skip_segment.h unpack_block.h upsampler.h utils.h c2x.h
+HEADERS=conv.h define_common.h huffman.h idct.h iqzz.h main.h MJPEG.h skip_segment.h unpack_block.h upsampler.h utils.h c2x.h
 OBJ=$(SRC:.c=.o)
 OUT=mjpeg
 TMPFILE=.Generated
@@ -32,7 +33,7 @@ gdb: $(OUT)
 	LD_LIBRARY_PATH=$(LDLIB) cgdb mjpeg core
 
 debug: $(OUT)
-	LD_LIBRARY_PATH=$(LDLIB) cgdb -- --args mjpeg ~/toto.mjpeg ~/toto.mjpeg ~/toto.mjpeg 
+	LD_LIBRARY_PATH=$(LDLIB) cgdb -- --args mjpeg ~/toto.mjpeg 
 
 perl:$(TMPFILE)
 
