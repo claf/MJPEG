@@ -1,0 +1,102 @@
+%EventDef PajeDefineContainerType	0 
+% 	  Alias 	string            
+% 	  ContainerType string            
+% 	  Name 		string            
+%EndEventDef                             
+%EventDef PajeDefineStateType		1 
+% 	  Alias 	string            
+% 	  ContainerType string            
+% 	  Name 		string            
+%EndEventDef                             
+%EventDef PajeDefineEventType		84 
+% 	  Alias 	string            
+% 	  ContainerType string            
+% 	  Name 		string            
+%EndEventDef                             
+%EventDef PajeDefineEntityValue	2 
+% 	  Alias         string            
+% 	  EntityType 	string            
+% 	  Name 		string            
+% 	  Color 	color             
+%EndEventDef                             
+%EventDef PajeCreateContainer		4 
+% 	  Time          date              
+% 	  Alias 	string            
+% 	  Type 		string            
+% 	  Container 	string            
+% 	  Name 		string            
+%EndEventDef                             
+%EventDef PajeDestroyContainer		8 
+% 	  Time          date              
+% 	  Name 		string            
+% 	  Type 		string            
+%EndEventDef                             
+%EventDef PajeSetState			5
+% 	  Time          date              
+% 	  Type 		string            
+% 	  Container 	string            
+% 	  Value         string            
+%EndEventDef                             
+%EventDef PajePushState	      	9
+% 	  Time          date              
+% 	  Type 		string            
+% 	  Container 	string            
+% 	  Value         string            
+%EndEventDef                             
+%EventDef PajePopState			10
+% 	  Time          date              
+% 	  Type 		string            
+% 	  Container 	string            
+%EndEventDef                             
+%EventDef PajeNewEvent			20
+% 	  Time          date              
+% 	  Type 		string            
+% 	  Container 	string            
+% 	  Value         string            
+%EndEventDef                             
+%EventDef PajeDefineLinkType		3
+% 	  Alias               string      
+% 	  Name 		      string      
+% 	  ContainerType	      string      
+% 	  SourceContainerType string      
+% 	  DestContainerType   string      
+%EndEventDef                             
+%EventDef PajeStartLink	       	6
+%	  Time 		  date            
+%	  Type 		  string          
+%	  Container 	  string          
+%	  SourceContainer string          
+%	  Value 	  string          
+%	  Key 		  string          
+%EndEventDef                             
+%EventDef PajeEndLink			7
+% 	  Time          date              
+% 	  Type 		string            
+% 	  Container 	string            
+% 	  DestContainer string            
+% 	  Value 	string            
+% 	  Key 		string            
+%EndEventDef                             
+%EventDef PajeDefineVariableType	50
+%	  Alias         string            
+% 	  Name  	string            
+% 	  ContainerType string            
+%EndEventDef                             
+%EventDef PajeSetVariable		51
+% 	  Time          date              
+% 	  Type 		string            
+% 	  Container 	string            
+% 	  Value 	double            
+%EndEventDef                             
+%EventDef PajeAddVariable		52
+% 	  Time          date              
+%	  Type 		string            
+% 	  Container 	string            
+% 	  Value 	double            
+%EndEventDef                             
+%EventDef PajeSubVariable		53
+% 	  Time 		date              
+% 	  Type 		string            
+% 	  Container 	string            
+% 	  Value 	double            
+%EndEventDef 
