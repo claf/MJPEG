@@ -26,13 +26,14 @@ void METHOD(resize, resize)(void *_this, frame_chunk_t* chunk, /*double t0*/ str
 
   if (chunk->frame_id <= last_frame_id)
   {
-    int nb_frame = __sync_add_and_fetch (&Done[frame_id], 1);
-
-    if (nb_frame == nb_streams) {
+    if (Done[frame_id] == nb_streams - 1) {
       PRESIZE ("Droped frame %d (last printed frame was %d!)\n",
           chunk->frame_id, last_frame_id);
       Done[frame_id] = 0;
       Free[frame_id] = 1;
+      in_progress[frame_id] = -1;
+    } else {
+      __sync_add_and_fetch (&Done[frame_id], 1);
     }
 
     return;

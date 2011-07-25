@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <unistd.h>
@@ -12,91 +13,80 @@ DECLARE_DATA{
 
 #include "cecilia.h"
 
-static uint32_t global_framerate;
-static SDL_Surface *screen;
 
-// Frame rate management, stores previous counter value
-static int old_time;
-
-// Global timeouted frames table :
+// Global timeouted frames tables :
 int32_t Done[FRAME_LOOKAHEAD];
 int32_t Free[FRAME_LOOKAHEAD];
-uint8_t initialized;
 
 // Internal function definition :
-void render_init(int width, int height, int framerate);
-int render_exit();
-void clean ();
-void cpyrect(uint32_t x, uint32_t y, uint32_t w, uint32_t h, void *ptr);
+static void render_init(int width, int height, int framerate);
+static int render_exit();
 
 // Internal declaration :
-int dropped = 0;
+static int dropped = 0; // number of frame dropped.
+static int printed = 0; // number of frame printed.
+static uint8_t initialized = 0;
+static uint32_t global_framerate;
+static SDL_Surface *screen;
+// FrameRate management, stores previous counter value
 
 void METHOD(render, render)(void *_this, int width, int height, int framerate)
 {
-/*
-void render()
-{
-
-  int width = WINDOW_W;
-  int height = WINDOW_H;
-  int framerate = 25;
-*/
-  int delay;
+  int delay; // time between two frames.
+  int wait; // time to wait before printing next frame.
   int frame_id; // frame id that should be printed now.
-  int frame_fetch_id = FRAME_LOOKAHEAD; // next fetched frame id
-  uint64_t finish_time;
+  int frame_fetch_id = FRAME_LOOKAHEAD; // next fetched frame id.
+  int old_time;
+  int finish_time;
   SDL_Event event;
+  SDL_Surface* src;
+
+  sleep(1);
 
   /* screen init and stuff : */
   render_init (width, height, framerate);
 
-  sleep(1);
-
+  delay = 1000 / global_framerate;
   old_time = SDL_GetTicks();
 
   /* Because now it's a thread. */
-  while (1) {
+  while (1)
+  {
+    /* Regarding the time since SDL init, get the frame id to print : */
+    frame_id = SDL_GetTicks() / delay;
 
-    delay = (1000/global_framerate) + old_time - SDL_GetTicks();
-    frame_id = last_frame_id + 1;
-    finish_time = SDL_GetTicks();
-
-    if (delay > 0 ) {
-
-      SDL_Delay(delay-1);
-    }
-
-    if (Done[frame_id % FRAME_LOOKAHEAD] == nb_streams)
+    /* If frame_id is ready : */
+    if ((Done[frame_id % FRAME_LOOKAHEAD] == nb_streams) &&
+        (in_progress[frame_id % FRAME_LOOKAHEAD] == frame_id))
     {
+      /* Copy the buffer into the right SDL_Surface : */
+      src = Surfaces_resized[frame_id % FRAME_LOOKAHEAD];
+      cpyrect2dest(0,0,WINDOW_H, WINDOW_W, src->pixels, screen);
+
       PFRAME ("Frame %d ready at %d ... printing\n", 4, frame_id, SDL_GetTicks());
-      PRENDER("Printing frame %d\n", frame_id);
-      SDL_Surface* src = Surfaces_resized[frame_id % FRAME_LOOKAHEAD];
-      cpyrect(0,0,WINDOW_H, WINDOW_W, src->pixels);
+
+      /* Reset Done and Free struct : */
       Done[frame_id % FRAME_LOOKAHEAD] = 0;
       Free[frame_id % FRAME_LOOKAHEAD] = 1;
 
-      if (SDL_Flip(screen) == -1) {
-        printf("Could not refresh screen: %s\n.", SDL_GetError() );
+      /* Now, wait until we have to print the frame : */
+      wait = (delay * (frame_id + 1)) - SDL_GetTicks();
+      if (wait > 0 ) {
+        SDL_Delay(delay-1);
       }
 
-      /* Added framerate printing but is it right now ... */
-      /*
-      printf("\r[screen] : framerate is %0.2ffps, "
-          "computed one image in %0.2fms",
-          1000.00f / (SDL_GetTicks() - old_time),
-          (finish_time - old_time) * 1.00f);
-      */
-    } else { // Else, the frame is no longer usefull, drop it
-      //PRENDER("Dropping frame %d for real (already %d"
-      //    " dropped frames)\n", frame_id, dropped);
-
-      PRENDER("Dropping frame %d (Done[%d] = %d)\n", frame_id, frame_id % FRAME_LOOKAHEAD, Done[frame_id % FRAME_LOOKAHEAD]);
-      dropped++;
-      PFRAME ("Frame %d needed at %d but not done ... already %d dropped frames\n", 4, frame_id, SDL_GetTicks (), dropped);
+      /* And finally print the frame : */
+      PRENDER("Printing frame %d\n", frame_id);
+      if (SDL_Flip(screen) == -1)
+      {
+        printf("Could not refresh screen: %s\n.", SDL_GetError() );
+      }
+      
+      printed++;
     }
 
-    last_frame_id++;
+    /* Update the last known needed frame id (printed or dropped) : */
+    last_frame_id = frame_id;
 
     /* If next fetched frame has to be skipped : */
     if (frame_fetch_id <= last_frame_id) {
@@ -104,7 +94,6 @@ void render()
       {
         PFRAME ("Call to fetch component to skip frame %d\n", 4, frame_fetch_id);
         double t0 = kaapi_get_elapsedns ();
-
         CALL (fetch, fetch, t0);
         frame_fetch_id++;
       }
@@ -144,32 +133,36 @@ void render()
       }
     }
 
+    if (end_of_file == 1)
+    {
+      initialized = 0;
+      SDL_Quit();
+      return;
+    }
+
     old_time = SDL_GetTicks();
   }
 }
 
-void render_init(int width, int height, int framerate)
+static void render_init(int width, int height, int framerate)
 {
-  int width_int = width , height_int = height;
-
   /* Initialize the SDL library */
   if (SDL_Init(SDL_INIT_VIDEO) < 0)  {
     fprintf(stderr, "Couldn't initialize SDL: %s\n", SDL_GetError());
     exit(1);
   }
 
-  /* Clean up on exit */
-  atexit(SDL_Quit);
-
   /* Framerate handling */
-  if (framerate == 0) {
+  if (framerate <= 0) {
     global_framerate = 25; 
   } else {
     global_framerate = framerate;
   }
 
+  PRENDER ("Starting component with framerate %d\n", global_framerate);
+
   /* Screen initialization */
-  screen = SDL_SetVideoMode(width_int, height_int, 32, SDL_SWSURFACE);
+  screen = SDL_SetVideoMode(width, height, 32, SDL_SWSURFACE);
   if (screen == NULL) {
     fprintf(stderr, "Couldn't set %dx%dx32 video mode for screen: %s\n",
         width, height, SDL_GetError());
@@ -179,13 +172,7 @@ void render_init(int width, int height, int framerate)
   initialized = 1;
 }
 
-void cpyrect(uint32_t x, uint32_t y, uint32_t w, uint32_t h, void *ptr)
-{
-  cpyrect2dest (x, y, w, h, ptr, screen);
-}
-
-
-int render_exit()
+static int render_exit()
 {
   /* Shutdown all subsystems */
   SDL_Event event;

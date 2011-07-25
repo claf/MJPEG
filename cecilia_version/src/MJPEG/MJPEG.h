@@ -89,6 +89,9 @@ extern uint32_t Achievements[MAX_STREAM][FRAME_LOOKAHEAD];
 // Global last frame_id on the screen :
 extern volatile int32_t last_frame_id;
 
+// Global frame id table currently being decoded :
+extern int32_t in_progress[FRAME_LOOKAHEAD];
+
 // Global value for color :
 extern uint32_t color;
 

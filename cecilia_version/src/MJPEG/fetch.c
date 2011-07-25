@@ -43,6 +43,9 @@ uint32_t color = 1;
 // Global last frame that has been (or should have been) printed on screen :
 volatile int32_t last_frame_id;
 
+// Global frame id table currently decoding :
+int32_t in_progress[FRAME_LOOKAHEAD];
+
 /* Intern declarations : */
 
 int32_t MCUs[MAX_STREAM][FRAME_LOOKAHEAD][MAX_MCU_X][MAX_MCU_Y][4][4][64];
@@ -148,6 +151,9 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
           PFRAME("Skipping frame %d for stream %d\n", 1, frame_id[s], s);  
           PFETCH("Skipping frame %d for stream %d\n", frame_id[s], s);  
           skip_frame (movies[s]);
+          if (end_of_file == 1)
+            goto clean_end;
+
           frame_id[s]++;
         }
         __sync_fetch_and_sub(&nb_ftp, 1);
@@ -393,6 +399,8 @@ noskip:
                 chunk->y = index_Y;
                 chunk->stream_id = stream_id;
                 chunk->frame_id  = frame_id[stream_id];
+                
+                in_progress[frame_id[stream_id] % FRAME_LOOKAHEAD] = chunk->frame_id;
 
                 // Fill MCU structure :
                 for (index = 0; index < SOS_section.n; index++)
@@ -531,14 +539,12 @@ clean_end:
     free_huffman_tables(tables[HUFF_AC][HT_index]);
   }
 
-  /* TODO : currently segfault ...
   free (frame_id);
   free (movies);
   free (stream_init);
   free (chunks);
   free (decalage);
   free (resize_Factors);
-  */
 
   PFETCH ("End\n");
   return;
@@ -623,6 +629,8 @@ static void surfaces_init ()
 {
   for (int frame = 0; frame < FRAME_LOOKAHEAD; frame++)
   {
+    in_progress[frame] = -1;
+
     Surfaces_resized[frame] = SDL_CreateRGBSurface(SDL_SWSURFACE, WINDOW_H, WINDOW_W, 32, 0, 0, 0, 0);
     if (Surfaces_resized[frame] == NULL)
       printf ("SDL_CreateRGBSurface ERROR %s:%d\n", __FILE__, __LINE__);
@@ -713,6 +721,9 @@ static int next_marker (FILE* movie)
 
   /* Find 0xFF byte; count and skip any non-FFs. */
   c = read_1_byte(movie);
+  if (c == EOF)
+    return c;
+
   while (c != 0xFF) {
     PSKIP ("M_SMS : Found non matching byte !!! byte found : %d\tdiscrded_bytes : %d\n", c, discarded_bytes);
     discarded_bytes++;
@@ -917,6 +928,9 @@ static void skip_frame (FILE* movie)
 
       case M_EOI:                 /* in case it's a tables-only JPEG stream */
                   return;
+      case EOF:
+                  return;
+
 
       case M_DHT:
                   {
@@ -983,7 +997,10 @@ read_1_byte (FILE* movie)
 
   NEXT_TOKEN(c, movie);
   if (c == EOF)
-    ERREXIT("Premature EOF in JPEG file");
+  {
+    end_of_file = 1;
+  }
+    //ERREXIT("Premature EOF in JPEG file");
   return c;
 }
 
