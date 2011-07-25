@@ -318,7 +318,7 @@ noskip:
 
         case M_SOI:
           {
-            PFRAME("Start decoding of frame %d for stream %d\n", 1, frame_id[stream_id], stream_id);  
+            PFETCH("Start decoding of frame %d for stream %d\n", 1, frame_id[stream_id], stream_id);  
 
             IPRINTF("SOI marker found\r\n");
             break;
@@ -547,7 +547,7 @@ clean_end:
 void METHOD (fetch, fetch)(void *_this, double t0)
 {
   double t1 = kaapi_get_elapsedns ();
-  PFRAME ("Received skip of decode command in %lf\n", 1, ((t1-t0)/1000)/1000);
+  PFRAME ("%d\t%lf\t%lf\tFetch\n", iiii + nb_ftp + 1, ((t1-t0)/1000)/1000);
   PFETCH("Adding 1 frame to process, nb_ftp = %d\n", nb_ftp);
   __sync_fetch_and_add(&nb_ftp, 1);
 }
