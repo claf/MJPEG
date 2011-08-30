@@ -12,6 +12,7 @@
 % 	  Alias 	string            
 % 	  ContainerType string            
 % 	  Name 		string            
+%         Color         color
 %EndEventDef                             
 %EventDef PajeDefineEntityValue	2 
 % 	  Alias         string            
