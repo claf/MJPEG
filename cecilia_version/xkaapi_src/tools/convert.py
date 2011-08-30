@@ -29,14 +29,18 @@ def hierarchy ():
    print "84 print F Printed \"1 1 0\""
    print "84 drop F Dropped \"1 0 0\""
    print "84 fetch F Fetch \"0 1 1\""
+   print "84 next F Next \"1 1 1\""
 
 def translate (f):
+   global drop
    for line in f:
       sline = line.replace("[","").replace("]","").split()
       frame_str = sline[0]
       if not frame_str.startswith("Frame"):
         if frame_str.startswith("#drop"):
-          print >> sys.stderr, "drop : ", sline[3]
+          drop = int(sline[3])
+          if drop==-1:
+            drop=0
         continue
       start_str = sline[1]
       if len(sline) == 3:
@@ -53,7 +57,7 @@ def translate (f):
           print "4", start_str, frame_str, "F", "0", frame_str
           created_containers[frame_str] = 1
         # PushState and PopState
-        if op_str == "print":
+        if op_str == "print" or op_str == "next":
           print "20", start_str, op_str, frame_str, "o"
         else:
           print "9", start_str, "S", frame_str, op_str
@@ -66,7 +70,9 @@ if len(sys.argv) == 1:
    sys.exit()
 else:
    f = open (sys.argv[1],'r')
+   drop = 5 * 2
    created_containers = dict()
    header()
    hierarchy ()
    translate (f)
+   sys.exit (drop)
