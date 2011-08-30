@@ -5,8 +5,6 @@ public interface Resize {
   /* ResizeFactor[0][1] = WindowWidth  */
   /* ResizeFactor[x][0] = WindowHeight for stream in position x */
   /* ResizeFactor[x][1] = WindowWidth for stream in position x  */
-  void resize_init (int ResizeFactor[X][2]); // X nombre de flux
   void resize      (int video_id, int frame_id, void* buffer);
-  void click       (int win_click);
 }
 
