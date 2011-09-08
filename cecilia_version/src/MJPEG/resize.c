@@ -11,11 +11,6 @@ DECLARE_DATA{
 
 #include "cecilia.h"
 
-void METHOD(resize, resize_init)(void *_this)
-{
-  printf ("\tResize_init\n");
-}
-
 /* Passing frame_chunk_t as a full frame for internal infos only. */
 void METHOD(resize, resize)(void *_this, frame_chunk_t* chunk, /*double t0*/ struct timeval time)
 {
