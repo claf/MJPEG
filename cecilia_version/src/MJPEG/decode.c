@@ -15,10 +15,6 @@ DECLARE_DATA{
 
 #include "cecilia.h"
 
-void METHOD(decode, decode_init)(void *_this)
-{
-
-}
 
 void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk, /*double t0*/ struct timeval time)
 {
