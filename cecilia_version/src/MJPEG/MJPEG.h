@@ -2,7 +2,12 @@
 #define _MJPEG_HEADER_
 
 #include <GTG.h>
-#include <trace.h>
+
+#ifdef _USE_TRACE
+# include <trace.h>
+#else
+# define TRACE_FRAME(a,b,c,d)
+#endif
 
 #include <stdint.h>
 #include <SDL/SDL.h>
