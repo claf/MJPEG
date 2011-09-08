@@ -1,6 +1,9 @@
 #ifndef _MJPEG_HEADER_
 #define _MJPEG_HEADER_
 
+#include <GTG.h>
+#include <trace.h>
+
 #include <stdint.h>
 #include <SDL/SDL.h>
 #include <sys/time.h>
@@ -21,6 +24,12 @@
 
 #define likely(x)   __builtin_expect(!!(x), 1)
 #define unlikely(x) __builtin_expect(!!(x), 0)
+
+// usefull functions :
+void doState (char* op);
+void linkStart (char* thr, int frame_id);
+void linkEnd (int frame_id);
+void cpyrect2dest (uint32_t x, uint32_t y, uint32_t w, uint32_t h, void *ptr, SDL_Surface* screen);
 
 typedef struct {
   int x;

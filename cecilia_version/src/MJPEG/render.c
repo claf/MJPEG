@@ -18,9 +18,8 @@ DECLARE_DATA{
 int32_t Done[FRAME_LOOKAHEAD];
 int32_t Free[FRAME_LOOKAHEAD];
 
-// Internal function definition :
+// Internal function : 
 static void render_init(int width, int height, int framerate);
-static int render_exit();
 
 // Internal declaration :
 static int dropped = 0; // number of frame dropped.
@@ -36,8 +35,7 @@ void METHOD(render, render)(void *_this, int width, int height, int framerate)
   int wait; // time to wait before printing next frame.
   int frame_id; // frame id that should be printed now.
   int frame_fetch_id = FRAME_LOOKAHEAD; // next fetched frame id.
-  int old_time;
-  int finish_time;
+  struct timeval beg, end;
   SDL_Event event;
   SDL_Surface* src;
 
@@ -47,13 +45,32 @@ void METHOD(render, render)(void *_this, int width, int height, int framerate)
   render_init (width, height, framerate);
 
   delay = 1000 / global_framerate;
-  old_time = SDL_GetTicks();
+  gettimeofday (&beg, NULL);
 
   /* Because now it's a thread. */
   while (1)
   {
     /* Regarding the time since SDL init, get the frame id to print : */
     frame_id = SDL_GetTicks() / delay;
+
+    /* Update the last known needed frame id (printed or dropped) : */
+    if (last_frame_id != frame_id)
+    {
+      /* Store time : */
+      gettimeofday (&end, NULL);
+      TRACE_FRAME (last_frame_id, end, end, "next");
+
+      for (int i = 0; i < FRAME_LOOKAHEAD; i++)
+      {
+        if ((in_progress[i] < frame_id) && (Done[i] == nb_streams))
+        {
+          Free[i] = 1;
+        }
+      }
+      last_frame_id = frame_id;
+      gettimeofday (&beg, NULL);
+      dropped = last_frame_id - printed;
+    }
 
     /* If frame_id is ready : */
     if ((Done[frame_id % FRAME_LOOKAHEAD] == nb_streams) &&
@@ -63,16 +80,18 @@ void METHOD(render, render)(void *_this, int width, int height, int framerate)
       src = Surfaces_resized[frame_id % FRAME_LOOKAHEAD];
       cpyrect2dest(0,0,WINDOW_H, WINDOW_W, src->pixels, screen);
 
-      PFRAME ("Frame %d ready at %d ... printing\n", 4, frame_id, SDL_GetTicks());
+      /* Store time : */
+      gettimeofday (&end, NULL);
+      TRACE_FRAME (frame_id, beg, end, "print");
 
       /* Reset Done and Free struct : */
       Done[frame_id % FRAME_LOOKAHEAD] = 0;
       Free[frame_id % FRAME_LOOKAHEAD] = 1;
 
       /* Now, wait until we have to print the frame : */
-      wait = (delay * (frame_id + 1)) - SDL_GetTicks();
+      wait = (delay * frame_id) - SDL_GetTicks();
       if (wait > 0 ) {
-        SDL_Delay(delay-1);
+        SDL_Delay(wait);
       }
 
       /* And finally print the frame : */
@@ -83,33 +102,43 @@ void METHOD(render, render)(void *_this, int width, int height, int framerate)
       }
       
       printed++;
-    }
+    } 
+    // TODO : else nanosleep?
 
-    /* Update the last known needed frame id (printed or dropped) : */
-    last_frame_id = frame_id;
 
     /* If next fetched frame has to be skipped : */
-    if (frame_fetch_id <= last_frame_id) {
-      while (frame_fetch_id <= last_frame_id + 2) //corresponding test fetch.c:205
+      while (frame_fetch_id <= last_frame_id + 2) //corresponding test fetch.c:150
       {
-        PFRAME ("Call to fetch component to skip frame %d\n", 4, frame_fetch_id);
-        double t0 = kaapi_get_elapsedns ();
-        CALL (fetch, fetch, t0);
+        //PFRAME ("Call to fetch component to skip frame %d\n", 4, frame_fetch_id);
+        gettimeofday (&beg, NULL);
+
+        // TODO TRACE :
+        // traceEventThread FETCH START (event so steps are start, exec and
+        // stop)!
+        linkStart ("R", frame_fetch_id);
+        CALL (fetch, fetch, beg);
         frame_fetch_id++;
       }
-    }
 
     /* If we have free places : */
     while (Free[frame_fetch_id % FRAME_LOOKAHEAD])
     {
-      PFRAME ("Call to fetch component to decode frame %d\n", 4, frame_fetch_id);
-      double t0 = kaapi_get_elapsedns ();
+      //PFRAME ("Call to fetch component to decode frame %d\n", 4, frame_fetch_id);
+      gettimeofday (&beg, NULL);
 
-      CALL (fetch, fetch, t0);
+      // TODO TRACE :
+      // traceEventThread FETCH START (event so steps are start, exec and
+      // stop)!
+      linkStart ("R", frame_fetch_id);
+      CALL (fetch, fetch, beg);
       Free[frame_fetch_id % FRAME_LOOKAHEAD] = 0;
       frame_fetch_id++;
     }
 
+
+    /*****************/
+    /* Termination : */
+    /*****************/
 
     // Check wether close event was detected, otherwise SDL freezes
     if(SDL_PollEvent(&event)) {
@@ -136,11 +165,10 @@ void METHOD(render, render)(void *_this, int width, int height, int framerate)
     if (end_of_file == 1)
     {
       initialized = 0;
+      printf ("#dropped frames : %d\n", dropped);
       SDL_Quit();
       return;
     }
-
-    old_time = SDL_GetTicks();
   }
 }
 
@@ -170,26 +198,4 @@ static void render_init(int width, int height, int framerate)
   }
 
   initialized = 1;
-}
-
-static int render_exit()
-{
-  /* Shutdown all subsystems */
-  SDL_Event event;
-  while(initialized){
-    if (SDL_PollEvent(&event)) {
-      if ((event.type == SDL_QUIT )) {
-        printf("\n");
-        SDL_Quit();
-        return 1;
-      }
-    }
-    /*  
-     * Something cleaner than polling would be nice
-     * but waiting for a better solution, don't
-     * waste all CPU time.
-     */
-    sleep(0);
-  }
-  return 0;
 }

@@ -15,15 +15,20 @@ DECLARE_DATA{
 
 #include "cecilia.h"
 
-
-void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk, /*double t0*/ struct timeval time)
+void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk, struct timeval beg)
 {
-  /* to get ((SOF_component[component_index].HV >> 4) & 0xf) now use Streams[video_id].HV */
+  /* TODO : this is the reason 444 video doesnt work anymore, need to store 1 to
+   * 3 HV instead of just one as this is currently the case : 
+   * to get ((SOF_component[component_index].HV >> 4) & 0xf) now use Streams[video_id].HV */
 #ifdef _DECODE_DEBUG
   double t1, t2;
 #endif
-  struct timeval time2;
-  gettimeofday (&time2, NULL);
+
+  doState ("De"); 
+
+  struct timeval end;
+
+  uint8_t dropped = -1;
   uint8_t index;
   int32_t *MCU;
   int32_t unZZ_MCU[64];
@@ -40,9 +45,15 @@ void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk, /*double t0*/ str
 
   if (frame_id <= last_frame_id) {
     PDECODE("Drop chunk for frame %d and stream %d\n", frame_id, stream_id);
+    if (dropped == -1)
+    {
+      // TODO : here if i use dropped[FRAME_LOOKAHEAD] I can remember the first
+      // chunk to drop so that I can figure out the amount of unused work done!
+      dropped = 1;
+    }
+
   } else {
     PDECODE("Decode chunk for frame %d and stream %d\n", frame_id, stream_id);
-
 
     uint16_t max_ss_h = streams[stream_id].max_ss_h;
     uint16_t max_ss_v = streams[stream_id].max_ss_v;
@@ -118,27 +129,29 @@ void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk, /*double t0*/ str
 
 #ifdef _DECODE_DEBUG
   t2 = kaapi_get_elapsedns();
-#endif
   PDECODE ("Time (s[%d]-f[%d]) exec : %lf/%lf\n", stream_id, frame_id, ((t2-t1)/1000)/1000);
+#endif
 
-  if (Achievements[stream_id][frame_id % FRAME_LOOKAHEAD] == streams[stream_id].nb_MCU) {
+  if (Achievements[stream_id][frame_id % FRAME_LOOKAHEAD] == streams[stream_id].nb_MCU)
+  {
     PDECODE("Frame %d from stream %d fully decoded, now send frame to Resize"
         " component\n", frame_id, stream_id);
     // TODO : no need to atomically set Achievements back to null?
     Achievements[stream_id][frame_id % FRAME_LOOKAHEAD] = 0;
 
-    //PFRAME ("Frame %d decoded in %lf\n", 2, frame_id, ((t2-t0)/1000)/1000);
-#ifdef _FRAME_DEBUG
-    int tt1 = (time.tv_sec % 60)*1000 + (time.tv_usec/1000);
-    int tt2 = (time2.tv_sec % 60)*1000 + (time2.tv_usec/1000);
-#endif
+    gettimeofday (&end, NULL);
+    TRACE_FRAME (frame_id, beg, end, "decode");
 
-    PFRAME ("Frame %d decoded! start :\t%d end :\t%d duration :\t%d\n", 2, frame_id, tt1, tt2, tt2-tt1);
-    //double tt = kaapi_get_elapsedns ();
-    struct timeval time_resize;
-    gettimeofday (&time_resize, NULL);
-    CALL (resize, resize, chunk, time_resize);
+    CALL (resize, resize, chunk, end);
   }
+
+  if (Achievements[stream_id][frame_id % FRAME_LOOKAHEAD] > streams[stream_id].nb_MCU)
+  {
+    printf ("PRB Achievement = %d\n", Achievements[stream_id][frame_id % FRAME_LOOKAHEAD]);
+    abort ();
+  }
+
+  doState ("Xk"); 
 }
 
 void cpyrect2dest (uint32_t x, uint32_t y, uint32_t w, uint32_t h, void *ptr, SDL_Surface* screen)

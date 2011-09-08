@@ -111,6 +111,7 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
   int noskip = 1;
   int32_t *MCU = NULL;
   struct timespec time;
+  struct timeval b, e;
 
   time.tv_sec = 0;
   time.tv_nsec = 200; 
@@ -126,18 +127,30 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
   /* TODO : read begining of every files to find max_X and max_Y use
    * skip_frame to obtain movies sizes and fill position, decalage and
    * resize tables. */
+  // TODO TRACE FRAME :
+  //traceInit ();
 
   /* Actual computation : */
   int elem_read;
   while (end_of_file == 0) {
+    // TODO TRACE :
+    // traceThread WAIT START
+    doState ("Wa");
 
     // while no frame to process :
     // find a better way!
     while (nb_ftp <= 0) {
+      doVar (c2x_workqueue_size(&work.wq));
       nanosleep (&time, NULL); 
       if (end_of_file != 0)
+      {
         goto clean_end;
+      }
+      // TODO TRACE : 
+      // threadEventTrace FETCH STOP (start exec and stop).
+
     }
+    doState ("Re");
 
     /* Don't skip first frame because of SDL init : */
     if (noskip == 1)
@@ -148,7 +161,7 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
     if ((stream_id == 0) && (frame_id[stream_id] <= last_frame_id)) {
       while(frame_id[stream_id] <= last_frame_id + 2) {
         for (int s = 0; s < nb_streams; s++) {
-          PFRAME("Skipping frame %d for stream %d\n", 1, frame_id[s], s);  
+          //PFRAME("Skipping frame %d for stream %d\n", 1, frame_id[s], s);  
           PFETCH("Skipping frame %d for stream %d\n", frame_id[s], s);  
           skip_frame (movies[s]);
           if (end_of_file == 1)
@@ -251,9 +264,14 @@ noskip:
                 // TODO : here 1st and 2nd arguments are not used.
                 // TODO : pthread_create now!
                 //render_init(SOF_section.width, SOF_section.height, framerate);
-                CALL (render, render, WINDOW_H, WINDOW_W, framerate);
-                //pthread_t tid;
-                //pthread_create(&tid, NULL, (void*(*)(void*)) &render, NULL);
+                //CALL (render, render, WINDOW_H, WINDOW_W, framerate);
+                pthread_t tid;
+                render_arg_t* render_args = (render_arg_t*) malloc (sizeof (render_arg_t));
+                render_args->width =  WINDOW_H;
+                render_args->height =  WINDOW_W;
+                render_args->framerate =  framerate;
+
+                pthread_create(&tid, NULL, (void*(*)(void*)) &render_body, render_args);
 
               }
 
@@ -339,9 +357,8 @@ noskip:
 
         case M_SOS:
           {
-            double t0 = kaapi_get_elapsedns();
-            struct timeval time;
-            gettimeofday(&time, NULL);
+            struct timeval tim;
+            gettimeofday(&tim, NULL);
 
             // If you want to skip next ...
             noskip = 0;
@@ -425,12 +442,13 @@ noskip:
                 }
                 chunk->data = (int32_t*) MCUs [stream_id] [frame_id[stream_id] % FRAME_LOOKAHEAD] [index_X] [index_Y];
                 chunk->DQT_table = (uint8_t*) &(DQT_table[stream_id][frame_id[stream_id] % FRAME_LOOKAHEAD]);/*[SOF_component[component_index].q_table];*/
-                //printf("\tCalling decode for stream %d frame %d\n", stream_id, frame_id[stream_id]);
-                //CALL (decode, decode, chunk, t0);
-                CALL (decode, decode, chunk, time);
+                doState ("Fo");
+                CALL (decode, decode, chunk, tim);
+                doState ("Re");
               }
             }
 
+            // TODO : atomic inc?
             frame_id[stream_id]++; // next frame for this stream
 
             // if it's the last stream, decrement number of frame to process
@@ -449,6 +467,8 @@ noskip:
 
             stream_id = (stream_id + 1) % nb_streams; // next stream
 
+            // TODO TRACE :
+            // traceThread FORK STOP
             break;
           }
 
@@ -542,7 +562,7 @@ clean_end:
   free (frame_id);
   free (movies);
   free (stream_init);
-  free (chunks);
+  //free (chunks);
   free (decalage);
   free (resize_Factors);
 
@@ -550,10 +570,16 @@ clean_end:
   return;
 }
 
-void METHOD (fetch, fetch)(void *_this, double t0)
+void METHOD (fetch, fetch)(void *_this, struct timeval beg)
 {
-  double t1 = kaapi_get_elapsedns ();
-  PFRAME ("%d\t%lf\t%lf\tFetch\n", iiii + nb_ftp + 1, ((t1-t0)/1000)/1000);
+  struct timeval end;
+  gettimeofday (&end, NULL);
+
+
+  linkEnd (frame_id[0] + nb_ftp);
+
+  TRACE_FRAME (frame_id[0] + nb_ftp , beg, end, "fetch");
+
   PFETCH("Adding 1 frame to process, nb_ftp = %d\n", nb_ftp);
   __sync_fetch_and_add(&nb_ftp, 1);
 }
@@ -1018,4 +1044,60 @@ read_2_bytes (FILE* movie)
   if (c2 == EOF)
     ERREXIT("Premature EOF in JPEG file");
   return (((unsigned int) c1) << 8) + ((unsigned int) c2);
+}
+
+void doVar(int value)
+{
+  struct timeval time;
+  uint64_t ts;
+
+  gettimeofday (&time, NULL);
+  ts = (time.tv_sec * 1000000 + time.tv_usec) - epoc;
+
+  setVar (ts, "W", "1", value);
+}
+
+void doState(char* state)
+{
+  struct timeval time;
+  char buffer[10];
+  uint64_t ts;
+
+  gettimeofday (&time, NULL);
+  ts = (time.tv_sec * 1000000 + time.tv_usec) - epoc;
+
+  sprintf(buffer,"%d", kaapi_get_self_kid() + 1);
+
+  setState (ts, "S", buffer, state);
+}
+  
+void linkStart(char* thr, int frame_id)
+{
+  struct timeval time;
+  char buffer[10];
+  uint64_t ts;
+
+  gettimeofday (&time, NULL);
+  ts = (time.tv_sec * 1000000 + time.tv_usec) - epoc;
+
+  sprintf(buffer,"%d",frame_id);  /* Now buffer has "20" */
+
+  startLink (ts, "F", "P", thr, "0", buffer, buffer);
+}
+
+void linkEnd(int frame_id)
+{
+  struct timeval time;
+  char buffer[10];
+  char buffer2[10];
+  uint64_t ts;
+
+  gettimeofday (&time, NULL);
+  ts = (time.tv_sec * 1000000 + time.tv_usec) - epoc;
+
+  sprintf(buffer,"%d",frame_id);  /* Now buffer has "20" */
+  sprintf(buffer2,"%d", kaapi_get_self_kid() + 1);
+
+  endLink (ts, "F", "P", "0", buffer2, buffer, buffer);
+  
 }
