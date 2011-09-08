@@ -27,10 +27,13 @@
 #define WINDOW_H 512
 #define WINDOW_W 432
 
-#define likely(x)   __builtin_expect(!!(x), 1)
-#define unlikely(x) __builtin_expect(!!(x), 0)
+#ifndef likely
+# define likely(x)   __builtin_expect(!!(x), 1)
+# define unlikely(x) __builtin_expect(!!(x), 0)
+#endif
 
 // usefull functions :
+void doVar (int value);
 void doState (char* op);
 void linkStart (char* thr, int frame_id);
 void linkEnd (int frame_id);
