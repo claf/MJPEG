@@ -89,16 +89,5 @@ void METHOD(resize, resize)(void *_this, frame_chunk_t* chunk, /*double t0*/ str
     PRESIZE("Frame %d ready to print (Done[%d] = %d)\n", chunk->frame_id,
         frame_id, Done[frame_id]);
   }
-}
 
-void METHOD(resize, click)(void *_this)
-{
-  /*
-   * Lors d'un clic :
-   * si bit == 0
-   *   bit = 1 && effective_frame = last_frame_id + FRAME_LOOKAHEAD
-   * maj du tableau de correspondance
-   *
-   */
-  printf ("\tClick\n");
 }
