@@ -101,6 +101,8 @@ void METHOD(render, render)(void *_this, int width, int height, int framerate)
         printf("Could not refresh screen: %s\n.", SDL_GetError() );
       }
       
+      doEvent ("P", frame_id);
+
       printed++;
     } 
     // TODO : else nanosleep?

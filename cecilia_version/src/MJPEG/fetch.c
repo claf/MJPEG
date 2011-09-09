@@ -1046,6 +1046,20 @@ read_2_bytes (FILE* movie)
   return (((unsigned int) c1) << 8) + ((unsigned int) c2);
 }
 
+void doEvent(char* op, int value)
+{
+  struct timeval time;
+  char buffer[10];
+  uint64_t ts;
+
+  gettimeofday (&time, NULL);
+  ts = (time.tv_sec * 1000000 + time.tv_usec) - epoc;
+
+  sprintf(buffer,"%d", value);
+
+  addEvent (ts, op, "R", buffer);
+}
+
 void doVar(int value)
 {
   struct timeval time;

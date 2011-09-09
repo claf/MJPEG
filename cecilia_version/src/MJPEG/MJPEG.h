@@ -34,6 +34,7 @@
 
 // usefull functions :
 void doVar (int value);
+void doEvent (char* op, int value);
 void doState (char* op);
 void linkStart (char* thr, int frame_id);
 void linkEnd (int frame_id);
