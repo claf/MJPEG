@@ -15,6 +15,8 @@ DECLARE_DATA{
 
 #include "cecilia.h"
 
+__thread int tid = -1;
+
 void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk, struct timeval beg)
 {
   /* TODO : this is the reason 444 video doesnt work anymore, need to store 1 to
@@ -23,6 +25,10 @@ void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk, struct timeval be
 #ifdef _DECODE_DEBUG
   double t1, t2;
 #endif
+
+  // Set a global per thread identifier :
+  if (unlikely (tid == -1))
+    tid = kaapi_get_self_kid ();
 
   doState ("De"); 
 

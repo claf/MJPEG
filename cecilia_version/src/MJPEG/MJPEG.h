@@ -32,6 +32,10 @@
 # define unlikely(x) __builtin_expect(!!(x), 0)
 #endif
 
+
+// global per thread identifier :
+extern __thread int tid;
+
 // usefull functions :
 void doVar (int value);
 void doEvent (char* op, int value);

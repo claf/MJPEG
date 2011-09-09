@@ -17,6 +17,10 @@ void METHOD(resize, resize)(void *_this, frame_chunk_t* chunk, struct timeval be
   int stream_id = chunk->stream_id;
   int frame_id = chunk->frame_id % FRAME_LOOKAHEAD;
 
+  // Set a global per thread identifier :
+  if (unlikely (tid == -1))
+    tid = kaapi_get_self_kid ();
+
   /* TODO : again, that's ugly ... */
   doState ("Rs");
 
