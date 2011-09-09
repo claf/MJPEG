@@ -9,6 +9,8 @@
 #include "iqzz.h"
 #include "upsampler.h"
 
+#include "timing.h"
+
 DECLARE_DATA{
   //int foo;
 };
@@ -25,6 +27,8 @@ void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk, struct timeval be
 #ifdef _DECODE_DEBUG
   double t1, t2;
 #endif
+
+  tick_t t1, t2;
 
   // Set a global per thread identifier :
   if (unlikely (tid == -1))
@@ -148,7 +152,11 @@ void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk, struct timeval be
     gettimeofday (&end, NULL);
     TRACE_FRAME (frame_id, beg, end, "decode");
 
+    GET_TICK (t1);
     CALL (resize, resize, chunk, end);
+    GET_TICK (t2);
+
+    time_table[tid].tpush += TIMING_DELAY (t1,t2);
   }
 
   if (Achievements[stream_id][frame_id % FRAME_LOOKAHEAD] > streams[stream_id].nb_MCU)

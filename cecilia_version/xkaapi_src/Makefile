@@ -2,12 +2,12 @@ CC=gcc -Wall -std=gnu99
 CFLAGS+=-g -O0 -I../include/ -I/home/claferri/opt/include/ $(shell pkg-config --cflags kaapi)
 #CFLAGS+=-gdwarf-2 -g3 # Macros debug stuffs
 
-LDFLAGS=$(shell pkg-config --libs kaapi) -L/home/claferri/opt/lib/ -lpthread -lSDL -lSGE -ltrace -lgtg
+LDFLAGS=$(shell pkg-config --libs kaapi) -L/home/claferri/opt/lib/ -lpthread -lSDL -lSGE -lgtg
 LDLIB=/home/claferri/opt/lib/:$(shell pkg-config --libs-only-L kaapi | sed 's/^-L//')
 
 ORI=../src/MJPEG
-SRC=main.c decode.c fetch.c resize.c render.c conv.c huffman.c idct.c iqzz.c skip_segment.c unpack_block.c upsampler.c c2x.c
-HEADERS=conv.h define_common.h huffman.h idct.h iqzz.h main.h MJPEG.h skip_segment.h unpack_block.h upsampler.h utils.h c2x.h
+SRC=main.c decode.c fetch.c resize.c render.c conv.c huffman.c idct.c iqzz.c skip_segment.c unpack_block.c upsampler.c c2x.c timing.c
+HEADERS=conv.h define_common.h huffman.h idct.h iqzz.h main.h MJPEG.h skip_segment.h unpack_block.h upsampler.h utils.h c2x.h timing.h
 OBJ=$(SRC:.c=.o)
 OUT=mjpeg
 TMPFILE=.Generated

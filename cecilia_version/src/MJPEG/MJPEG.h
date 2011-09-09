@@ -32,9 +32,22 @@
 # define unlikely(x) __builtin_expect(!!(x), 0)
 #endif
 
+/* Fine Timing Stuff : */
+
+// per worker thread structure :
+typedef struct time_wq {
+  long tpop;
+  long tpush;
+  long tsplit;
+} __attribute__((aligned (64))) time_wq_t;
+
+// global time table :
+extern time_wq_t* time_table;
 
 // global per thread identifier :
 extern __thread int tid;
+
+
 
 // usefull functions :
 void doVar (int value);

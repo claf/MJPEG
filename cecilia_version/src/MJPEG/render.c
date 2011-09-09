@@ -7,6 +7,8 @@
 #include "MJPEG.h"
 #include "define_common.h"
 
+#include "timing.h"
+
 DECLARE_DATA{
   //int foo;
 };
@@ -31,6 +33,7 @@ static SDL_Surface *screen;
 
 void METHOD(render, render)(void *_this, int width, int height, int framerate)
 {
+  tick_t t1, t2;
   int delay; // time between two frames.
   int wait; // time to wait before printing next frame.
   int frame_id; // frame id that should be printed now.
@@ -118,7 +121,10 @@ void METHOD(render, render)(void *_this, int width, int height, int framerate)
         // traceEventThread FETCH START (event so steps are start, exec and
         // stop)!
         linkStart ("R", frame_fetch_id);
+        GET_TICK(t1);
         CALL (fetch, fetch, beg);
+        GET_TICK(t2);
+        time_table[kaapi_get_self_kid()].tpush += TIMING_DELAY(t1,t2);
         frame_fetch_id++;
       }
 

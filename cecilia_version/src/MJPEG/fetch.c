@@ -12,6 +12,8 @@
 #include "define_common.h"
 #include "skip_segment.h"
 
+#include "timing.h"
+
 DECLARE_DATA{
   //int foo;
 };
@@ -21,6 +23,7 @@ DECLARE_DATA{
 /* Global definition : */
 uint8_t nb_streams = 0; 
 uint8_t end_of_file = 0;
+time_wq_t* time_table;
 
 // Global Surfaces structures :
 SDL_Surface *Surfaces_normal[MAX_STREAM][FRAME_LOOKAHEAD];
@@ -109,9 +112,11 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
   DQT_section_t DQT_section;
   int stream_id = 0;
   int noskip = 1;
+  int nb_threads = kaapi_getconcurrency() + 1;
   int32_t *MCU = NULL;
   struct timespec time;
   struct timeval b, e;
+  tick_t t1, t2;
 
   time.tv_sec = 0;
   time.tv_nsec = 200; 
@@ -123,10 +128,19 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
   if (unlikely (tid == -1))
     tid = kaapi_get_self_kid ();
 
+  time_table = (time_wq_t*) malloc (sizeof (time_wq_t) * nb_threads);
+  for (int i = 0; i < nb_threads; i++)
+  {
+    time_table[i].tpop   = 0;
+    time_table[i].tpush  = 0;
+    time_table[i].tsplit = 0;
+  }
+
   /* Options and init management : */
   options(argc, argv);
   surfaces_init ();
   factors_init ();
+  timing_init();
 
   /* TODO : read begining of every files to find max_X and max_Y use
    * skip_frame to obtain movies sizes and fill position, decalage and
@@ -269,13 +283,13 @@ noskip:
                 // TODO : pthread_create now!
                 //render_init(SOF_section.width, SOF_section.height, framerate);
                 //CALL (render, render, WINDOW_H, WINDOW_W, framerate);
-                pthread_t tid;
+                pthread_t thid;
                 render_arg_t* render_args = (render_arg_t*) malloc (sizeof (render_arg_t));
                 render_args->width =  WINDOW_H;
                 render_args->height =  WINDOW_W;
                 render_args->framerate =  framerate;
 
-                pthread_create(&tid, NULL, (void*(*)(void*)) &render_body, render_args);
+                pthread_create(&thid, NULL, (void*(*)(void*)) &render_body, render_args);
 
               }
 
@@ -447,7 +461,10 @@ noskip:
                 chunk->data = (int32_t*) MCUs [stream_id] [frame_id[stream_id] % FRAME_LOOKAHEAD] [index_X] [index_Y];
                 chunk->DQT_table = (uint8_t*) &(DQT_table[stream_id][frame_id[stream_id] % FRAME_LOOKAHEAD]);/*[SOF_component[component_index].q_table];*/
                 doState ("Fo");
+                GET_TICK(t1);
                 CALL (decode, decode, chunk, tim);
+                GET_TICK(t2);
+                time_table[tid].tpush += TIMING_DELAY (t1,t2);
                 doState ("Re");
               }
             }
@@ -569,6 +586,16 @@ clean_end:
   //free (chunks);
   free (decalage);
   free (resize_Factors);
+
+
+  for (int i = 0; i < nb_threads; i++)
+  {
+    printf ("\nTime for thread %d :\t pop :%d",i, time_table[i].tpop);
+    printf ("\nTime for thread %d :\t push :%d",i, time_table[i].tpush);
+    printf ("\nTime for thread %d :\t split :%d",i, time_table[i].tsplit);
+  }
+
+  free (time_table);
 
   PFETCH ("End\n");
   return;
