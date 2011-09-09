@@ -42,6 +42,8 @@ void METHOD(render, render)(void *_this, int width, int height, int framerate)
   SDL_Event event;
   SDL_Surface* src;
 
+  tid = kaapi_getconcurrency ();
+
   sleep(1);
 
   /* screen init and stuff : */
@@ -121,10 +123,12 @@ void METHOD(render, render)(void *_this, int width, int height, int framerate)
         // traceEventThread FETCH START (event so steps are start, exec and
         // stop)!
         linkStart ("R", frame_fetch_id);
+
         GET_TICK(t1);
         CALL (fetch, fetch, beg);
         GET_TICK(t2);
-        time_table[kaapi_get_self_kid()].tpush += TIMING_DELAY(t1,t2);
+        time_table[tid].tpush += TIMING_DELAY(t1,t2);
+        
         frame_fetch_id++;
       }
 
@@ -138,7 +142,12 @@ void METHOD(render, render)(void *_this, int width, int height, int framerate)
       // traceEventThread FETCH START (event so steps are start, exec and
       // stop)!
       linkStart ("R", frame_fetch_id);
+
+      GET_TICK(t1);
       CALL (fetch, fetch, beg);
+      GET_TICK(t2);
+      time_table[tid].tpush += TIMING_DELAY(t1,t2);
+
       Free[frame_fetch_id % FRAME_LOOKAHEAD] = 0;
       frame_fetch_id++;
     }
