@@ -141,7 +141,6 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
   options(argc, argv);
   surfaces_init ();
   factors_init ();
-  timing_init();
 
   /* TODO : read begining of every files to find max_X and max_Y use
    * skip_frame to obtain movies sizes and fill position, decalage and
@@ -465,7 +464,7 @@ noskip:
                 GET_TICK(t1);
                 CALL (decode, decode, chunk, tim);
                 GET_TICK(t2);
-                time_table[tid].tpush += TIMING_DELAY (t1,t2);
+                time_table[tid].tpush += TICK_RAW_DIFF(t1,t2);
                 doState ("Re");
               }
             }
@@ -591,10 +590,11 @@ clean_end:
 
   for (int i = 0; i < nb_threads; i++)
   {
-    printf ("\nTime for thread %d :\t pop :%d",i, time_table[i].tpop);
-    printf ("\nTime for thread %d :\t push :%d",i, time_table[i].tpush);
-    printf ("\nTime for thread %d :\t split :%d",i, time_table[i].tsplit);
-    printf ("\nTime for thread %d :\t decode :%d",i, time_table[i].tdec);
+    printf ("\nTime for thread %d :\t pop :%d",i, (long)tick2usec(time_table[i].tpop));
+    printf ("\nTime for thread %d :\t push :%d",i, (long)tick2usec(time_table[i].tpush));
+    printf ("\nTime for thread %d :\t split :%d",i, (long)tick2usec(time_table[i].tsplit));
+    printf ("\nTime for thread %d :\t nb_split :%d",i, time_table[i].nbsplit);
+    printf ("\nTime for thread %d :\t decode :%d",i, (long)tick2usec(time_table[i].tdec));
   }
 
   free (time_table);

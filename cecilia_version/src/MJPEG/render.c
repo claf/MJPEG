@@ -127,7 +127,7 @@ void METHOD(render, render)(void *_this, int width, int height, int framerate)
         GET_TICK(t1);
         CALL (fetch, fetch, beg);
         GET_TICK(t2);
-        time_table[tid].tpush += TIMING_DELAY(t1,t2);
+        time_table[tid].tpush += TICK_RAW_DIFF(t1,t2);
         
         frame_fetch_id++;
       }
@@ -146,7 +146,7 @@ void METHOD(render, render)(void *_this, int width, int height, int framerate)
       GET_TICK(t1);
       CALL (fetch, fetch, beg);
       GET_TICK(t2);
-      time_table[tid].tpush += TIMING_DELAY(t1,t2);
+      time_table[tid].tpush += TICK_RAW_DIFF(t1,t2);
 
       Free[frame_fetch_id % FRAME_LOOKAHEAD] = 0;
       frame_fetch_id++;

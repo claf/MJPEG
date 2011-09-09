@@ -39,6 +39,7 @@ typedef struct time_wq {
   long tpop;
   long tpush;
   long tsplit;
+  long nbsplit;
   long tdec;
 } __attribute__((aligned (64))) time_wq_t;
 

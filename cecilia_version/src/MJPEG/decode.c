@@ -158,7 +158,7 @@ void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk, struct timeval be
     CALL (resize, resize, chunk, end);
     GET_TICK (t2);
 
-    time_table[tid].tpush += TIMING_DELAY (t1,t2);
+    time_table[tid].tpush += TICK_RAW_DIFF(t1,t2);
   }
 
   if (Achievements[stream_id][frame_id % FRAME_LOOKAHEAD] > streams[stream_id].nb_MCU)
@@ -170,7 +170,7 @@ void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk, struct timeval be
   doState ("Xk");
   
   GET_TICK(td2);
-  time_table[tid].tdec += TIMING_DELAY (td1, td2);
+  time_table[tid].tdec += TICK_RAW_DIFF(td1,td2);
 }
 
 void cpyrect2dest (uint32_t x, uint32_t y, uint32_t w, uint32_t h, void *ptr, SDL_Surface* screen)
