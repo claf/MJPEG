@@ -92,10 +92,6 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
 {
   PXKAAPI("Fetch start\n");
 
-  // Set a global per thread identifier :
-  if (unlikely (tid == -1))
-    tid = kaapi_get_self_kid ();
-
   /* TODO : dynamic alloc :
    * Streams 
    * Achievements
@@ -122,6 +118,10 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
   last_frame_id = -1;
   nb_ftp = FRAME_LOOKAHEAD;
   screen_init_needed = 1;
+
+  /* Set a global per thread identifier */
+  if (unlikely (tid == -1))
+    tid = kaapi_get_self_kid ();
 
   /* Options and init management : */
   options(argc, argv);
