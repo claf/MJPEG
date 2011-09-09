@@ -28,7 +28,8 @@ void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk, struct timeval be
   double t1, t2;
 #endif
 
-  tick_t t1, t2;
+  tick_t t1, t2, td1, td2;
+  GET_TICK(td1);
 
   // Set a global per thread identifier :
   if (unlikely (tid == -1))
@@ -142,6 +143,7 @@ void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk, struct timeval be
   PDECODE ("Time (s[%d]-f[%d]) exec : %lf/%lf\n", stream_id, frame_id, ((t2-t1)/1000)/1000);
 #endif
 
+
   if (Achievements[stream_id][frame_id % FRAME_LOOKAHEAD] == streams[stream_id].nb_MCU)
   {
     PDECODE("Frame %d from stream %d fully decoded, now send frame to Resize"
@@ -165,7 +167,10 @@ void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk, struct timeval be
     abort ();
   }
 
-  doState ("Xk"); 
+  doState ("Xk");
+  
+  GET_TICK(td2);
+  time_table[tid].tdec += TIMING_DELAY (td1, td2);
 }
 
 void cpyrect2dest (uint32_t x, uint32_t y, uint32_t w, uint32_t h, void *ptr, SDL_Surface* screen)

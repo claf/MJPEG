@@ -134,6 +134,7 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
     time_table[i].tpop   = 0;
     time_table[i].tpush  = 0;
     time_table[i].tsplit = 0;
+    time_table[i].tdec = 0;
   }
 
   /* Options and init management : */
@@ -593,6 +594,7 @@ clean_end:
     printf ("\nTime for thread %d :\t pop :%d",i, time_table[i].tpop);
     printf ("\nTime for thread %d :\t push :%d",i, time_table[i].tpush);
     printf ("\nTime for thread %d :\t split :%d",i, time_table[i].tsplit);
+    printf ("\nTime for thread %d :\t decode :%d",i, time_table[i].tdec);
   }
 
   free (time_table);
