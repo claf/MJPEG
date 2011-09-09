@@ -23,7 +23,7 @@ DECLARE_DATA{
 /* Global definition : */
 uint8_t nb_streams = 0; 
 uint8_t end_of_file = 0;
-time_wq_t* time_table;
+time_wq_t time_table[6] = {{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}};
 
 // Global Surfaces structures :
 SDL_Surface *Surfaces_normal[MAX_STREAM][FRAME_LOOKAHEAD];
@@ -128,6 +128,7 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
   if (unlikely (tid == -1))
     tid = kaapi_get_self_kid ();
 
+  /*
   time_table = (time_wq_t*) malloc (sizeof (time_wq_t) * nb_threads);
   for (int i = 0; i < nb_threads; i++)
   {
@@ -136,6 +137,7 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
     time_table[i].tsplit = 0;
     time_table[i].tdec = 0;
   }
+  */
 
   /* Options and init management : */
   options(argc, argv);
@@ -597,7 +599,6 @@ clean_end:
     printf ("\nTime for thread %d :\t decode :%d",i, (long)tick2usec(time_table[i].tdec));
   }
 
-  free (time_table);
 
   PFETCH ("End\n");
   return;

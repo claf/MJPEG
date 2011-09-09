@@ -44,7 +44,7 @@ typedef struct time_wq {
 } __attribute__((aligned (64))) time_wq_t;
 
 // global time table :
-extern time_wq_t* time_table;
+extern time_wq_t time_table[6];
 
 // global per thread identifier :
 extern __thread int tid;
