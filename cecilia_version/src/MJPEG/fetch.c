@@ -129,13 +129,14 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
   if (unlikely (tid == -1))
     tid = kaapi_get_self_kid ();
 
-  
+#ifdef MJPEG_USES_TIMING
   mjpeg_time_table = (time_mjpeg_t*) malloc (sizeof (time_mjpeg_t) * nb_threads);
   for (int i = 0; i < nb_threads; i++)
   {
     mjpeg_time_table[i].tdec = 0;
     mjpeg_time_table[i].trsz = 0;
   }
+#endif
 
   /* Options and init management : */
 #ifdef MJPEG_USES_GTG
@@ -606,6 +607,7 @@ clean_end:
     printf ("\nTime for thread %d :\t resize :%ld",i, (long)tick2usec(mjpeg_time_table[i].trsz));
   }
   printf ("\n\n*** END ***\n");
+  free (mjpeg_time_table);
 #endif
 
 
