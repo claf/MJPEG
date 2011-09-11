@@ -1,7 +1,9 @@
 #ifndef _MJPEG_HEADER_
 #define _MJPEG_HEADER_
 
-#include <GTG.h>
+#ifdef MJPEG_USES_GTG
+# include "trace_gtg.h"
+#endif
 
 #ifdef _USE_TRACE
 # include <trace.h>
@@ -48,14 +50,7 @@ extern time_mjpeg_t* mjpeg_time_table;
 // global per thread identifier :
 extern __thread int tid;
 
-
-
 // usefull functions :
-void doVar (int value);
-void doEvent (char* op, int value);
-void doState (char* op);
-void linkStart (char* thr, int frame_id);
-void linkEnd (int frame_id);
 void cpyrect2dest (uint32_t x, uint32_t y, uint32_t w, uint32_t h, void *ptr, SDL_Surface* screen);
 
 typedef struct {

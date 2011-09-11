@@ -30,8 +30,9 @@ void METHOD(resize, resize)(void *_this, frame_chunk_t* chunk, struct timeval be
   if (unlikely (tid == -1))
     tid = kaapi_get_self_kid ();
 
-  /* TODO : again, that's ugly ... */
+#ifdef MJPEG_USES_GTG
   doState ("Rs");
+#endif
 
   struct timeval end;
   //PRESIZE("Called for frame %d from stream %d!\n", chunk->frame_id, stream_id);
@@ -110,7 +111,9 @@ dropping:
         frame_id, Done[frame_id]);
   }
 
+#ifdef MJPEG_USES_GTG
   doState ("Xk");
+#endif
 
 #ifdef MJPEG_USES_TIMING
   GET_TICK(td2);

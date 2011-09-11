@@ -6,8 +6,8 @@ LDFLAGS=$(shell pkg-config --libs kaapi) -L/home/claferri/opt/lib/ -lpthread -lS
 LDLIB=/home/claferri/opt/lib/:$(shell pkg-config --libs-only-L kaapi | sed 's/^-L//')
 
 ORI=../src/MJPEG
-SRC=main.c decode.c fetch.c resize.c render.c conv.c huffman.c idct.c iqzz.c skip_segment.c unpack_block.c upsampler.c c2x.c timing.c
-HEADERS=conv.h define_common.h huffman.h idct.h iqzz.h main.h MJPEG.h skip_segment.h unpack_block.h upsampler.h utils.h c2x.h timing.h
+SRC=main.c decode.c fetch.c resize.c render.c conv.c huffman.c idct.c iqzz.c skip_segment.c unpack_block.c upsampler.c c2x.c timing.c trace_gtg.c
+HEADERS=conv.h define_common.h huffman.h idct.h iqzz.h main.h MJPEG.h skip_segment.h unpack_block.h upsampler.h utils.h c2x.h timing.h trace_gtg.h
 OBJ=$(SRC:.c=.o)
 OUT=mjpeg
 TMPFILE=.Generated

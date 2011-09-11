@@ -105,7 +105,9 @@ void METHOD(render, render)(void *_this, int width, int height, int framerate)
         printf("Could not refresh screen: %s\n.", SDL_GetError() );
       }
       
+#ifdef MJPEG_USES_GTG
       doEvent ("P", frame_id);
+#endif
 
       printed++;
     } 
@@ -121,7 +123,9 @@ void METHOD(render, render)(void *_this, int width, int height, int framerate)
         // TODO TRACE :
         // traceEventThread FETCH START (event so steps are start, exec and
         // stop)!
+#ifdef MJPEG_USES_GTG
         linkStart ("R", frame_fetch_id);
+#endif
 
         CALL (fetch, fetch, beg);
         
@@ -137,7 +141,9 @@ void METHOD(render, render)(void *_this, int width, int height, int framerate)
       // TODO TRACE :
       // traceEventThread FETCH START (event so steps are start, exec and
       // stop)!
+#ifdef MJPEG_USES_GTG
       linkStart ("R", frame_fetch_id);
+#endif
 
       CALL (fetch, fetch, beg);
 

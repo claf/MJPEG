@@ -39,7 +39,9 @@ void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk, struct timeval be
   if (unlikely (tid == -1))
     tid = kaapi_get_self_kid ();
 
+#ifdef MJPEG_USES_GTG
   doState ("De"); 
+#endif
 
   struct timeval end;
 
@@ -167,8 +169,9 @@ void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk, struct timeval be
     abort ();
   }
 
+#ifdef MJPEG_USES_GTG
   doState ("Xk");
-  
+#endif
 
 #ifdef MJPEG_USES_TIMING
   GET_TICK(td2);

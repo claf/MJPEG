@@ -138,6 +138,9 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
   }
 
   /* Options and init management : */
+#ifdef MJPEG_USES_GTG
+  mjpeg_gtg_init ();
+#endif
   options(argc, argv);
   surfaces_init ();
   factors_init ();
@@ -153,12 +156,16 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
   while (end_of_file == 0) {
     // TODO TRACE :
     // traceThread WAIT START
+#ifdef MJPEG_USES_GTG
     doState ("Wa");
+#endif
 
     // while no frame to process :
     // find a better way!
     while (nb_ftp <= 0) {
+#ifdef MJPEG_USES_GTG
       doVar (c2x_workqueue_size(&work.wq));
+#endif
       nanosleep (&time, NULL); 
       if (end_of_file != 0)
       {
@@ -168,7 +175,9 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
       // threadEventTrace FETCH STOP (start exec and stop).
 
     }
+#ifdef MJPEG_USES_GTG
     doState ("Re");
+#endif
 
     /* Don't skip first frame because of SDL init : */
     if (noskip == 1)
@@ -460,9 +469,13 @@ noskip:
                 }
                 chunk->data = (int32_t*) MCUs [stream_id] [frame_id[stream_id] % FRAME_LOOKAHEAD] [index_X] [index_Y];
                 chunk->DQT_table = (uint8_t*) &(DQT_table[stream_id][frame_id[stream_id] % FRAME_LOOKAHEAD]);/*[SOF_component[component_index].q_table];*/
+#ifdef MJPEG_USES_GTG
                 doState ("Fo");
+#endif
                 CALL (decode, decode, chunk, tim);
+#ifdef MJPEG_USES_GTG
                 doState ("Re");
+#endif
               }
             }
 
@@ -606,7 +619,9 @@ void METHOD (fetch, fetch)(void *_this, struct timeval beg)
   gettimeofday (&end, NULL);
 
 
+#ifdef MJPEG_USES_GTG
   linkEnd (frame_id[0] + nb_ftp);
+#endif
 
   TRACE_FRAME (frame_id[0] + nb_ftp , beg, end, "fetch");
 
@@ -1074,74 +1089,4 @@ read_2_bytes (FILE* movie)
   if (c2 == EOF)
     ERREXIT("Premature EOF in JPEG file");
   return (((unsigned int) c1) << 8) + ((unsigned int) c2);
-}
-
-void doEvent(char* op, int value)
-{
-  struct timeval time;
-  char buffer[10];
-  uint64_t ts;
-
-  gettimeofday (&time, NULL);
-  ts = (time.tv_sec * 1000000 + time.tv_usec) - epoc;
-
-  sprintf(buffer,"%d", value);
-
-  addEvent (ts, op, "R", buffer);
-}
-
-void doVar(int value)
-{
-  struct timeval time;
-  uint64_t ts;
-
-  gettimeofday (&time, NULL);
-  ts = (time.tv_sec * 1000000 + time.tv_usec) - epoc;
-
-  setVar (ts, "W", "1", value);
-}
-
-void doState(char* state)
-{
-  struct timeval time;
-  char buffer[10];
-  uint64_t ts;
-
-  gettimeofday (&time, NULL);
-  ts = (time.tv_sec * 1000000 + time.tv_usec) - epoc;
-
-  sprintf(buffer,"%d", kaapi_get_self_kid() + 1);
-
-  setState (ts, "S", buffer, state);
-}
-  
-void linkStart(char* thr, int frame_id)
-{
-  struct timeval time;
-  char buffer[10];
-  uint64_t ts;
-
-  gettimeofday (&time, NULL);
-  ts = (time.tv_sec * 1000000 + time.tv_usec) - epoc;
-
-  sprintf(buffer,"%d",frame_id);  /* Now buffer has "20" */
-
-  startLink (ts, "F", "P", thr, "0", buffer, buffer);
-}
-
-void linkEnd(int frame_id)
-{
-  struct timeval time;
-  char buffer[10];
-  char buffer2[10];
-  uint64_t ts;
-
-  gettimeofday (&time, NULL);
-  ts = (time.tv_sec * 1000000 + time.tv_usec) - epoc;
-
-  sprintf(buffer,"%d",frame_id);  /* Now buffer has "20" */
-  sprintf(buffer2,"%d", kaapi_get_self_kid() + 1);
-
-  endLink (ts, "F", "P", "0", buffer2, buffer, buffer);
-  
 }
