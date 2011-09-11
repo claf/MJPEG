@@ -96,7 +96,7 @@ extern int32_t Free[FRAME_LOOKAHEAD];
 extern uint8_t nb_streams;
 
 // Global termination variable :
-extern uint8_t end_of_file;
+extern volatile uint8_t end_of_file;
 
 // Global Surfaces structures :
 extern SDL_Surface *Surfaces_normal[MAX_STREAM][FRAME_LOOKAHEAD];

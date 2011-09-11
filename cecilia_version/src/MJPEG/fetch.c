@@ -22,7 +22,7 @@ DECLARE_DATA{
 
 /* Global definition : */
 uint8_t nb_streams = 0; 
-uint8_t end_of_file = 0;
+volatile uint8_t end_of_file = 0;
 #ifdef MJPEG_USES_TIMING
 time_mjpeg_t *mjpeg_time_table; //[6] = {{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}};
 #endif
@@ -103,6 +103,7 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
    * MCUs
    */
 
+  pthread_t thid;
   uint8_t marker[2];
   uint8_t QT_index = 0;
   uint16_t max_ss_h = 0 , max_ss_v = 0;
@@ -293,7 +294,6 @@ noskip:
                 // TODO : pthread_create now!
                 //render_init(SOF_section.width, SOF_section.height, framerate);
                 //CALL (render, render, WINDOW_H, WINDOW_W, framerate);
-                pthread_t thid;
                 render_arg_t* render_args = (render_arg_t*) malloc (sizeof (render_arg_t));
                 render_args->width =  WINDOW_H;
                 render_args->height =  WINDOW_W;
@@ -610,6 +610,7 @@ clean_end:
   free (mjpeg_time_table);
 #endif
 
+  pthread_join (thid);
 
   PFETCH ("End\n");
   return;
