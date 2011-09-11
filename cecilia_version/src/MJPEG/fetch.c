@@ -606,11 +606,13 @@ clean_end:
     printf ("\nTime for thread %d :\t decode :%ld",i, (long)tick2usec(mjpeg_time_table[i].tdec));
     printf ("\nTime for thread %d :\t resize :%ld",i, (long)tick2usec(mjpeg_time_table[i].trsz));
   }
-  printf ("\n\n*** END ***\n");
+  printf ("\n#dropped frames : %d\n", dropped);
+  printf ("\n*** END ***\n");
+
   free (mjpeg_time_table);
 #endif
 
-  pthread_join (thid);
+  pthread_join (thid,NULL);
 
   PFETCH ("End\n");
   return;

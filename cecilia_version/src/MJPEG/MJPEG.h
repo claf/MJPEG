@@ -50,6 +50,9 @@ extern time_mjpeg_t* mjpeg_time_table;
 // global per thread identifier :
 extern __thread int tid;
 
+// global dropped frame number :
+extern int dropped;
+
 // usefull functions :
 void cpyrect2dest (uint32_t x, uint32_t y, uint32_t w, uint32_t h, void *ptr, SDL_Surface* screen);
 

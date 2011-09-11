@@ -24,7 +24,7 @@ int32_t Free[FRAME_LOOKAHEAD];
 static void render_init(int width, int height, int framerate);
 
 // Internal declaration :
-static int dropped = 0; // number of frame dropped.
+int dropped = 0; // number of frame dropped.
 static int printed = 0; // number of frame printed.
 static uint8_t initialized = 0;
 static uint32_t global_framerate;
@@ -181,7 +181,7 @@ void METHOD(render, render)(void *_this, int width, int height, int framerate)
     if (end_of_file == 1)
     {
       initialized = 0;
-      printf ("#dropped frames : %d\n", dropped);
+      //printf ("#dropped frames : %d\n", dropped);
       SDL_Quit();
       return;
     }
