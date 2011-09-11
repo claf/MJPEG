@@ -1,0 +1,22 @@
+release mode :
+
+./configure --enable-mode=release
+            --enable-target=mt
+            --with-steal=cas
+            --disable-network
+            --enable-api-kaapixx=no
+            --enable-api-kastl=no
+            --enable-api-atha=no
+            --prefix=/home/claferri/opt/release/
+debug mode :
+
+./configure --enable-mode=debug
+            --enable-target=mt
+            --with-steal=cas
+            --disable-network
+            --with-perfcounter
+            --enable-api-kaapixx=no
+            --enable-api-kastl=no
+            --enable-api-atha=no
+            --prefix=/home/claferri/opt/debug/
+
