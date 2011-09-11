@@ -5,6 +5,10 @@
 #include "MJPEG.h"
 #include "define_common.h"
 
+#ifdef MJPEG_USES_TIMING
+# include "timing.h"
+#endif
+
 DECLARE_DATA{
   //int foo;
 };
@@ -14,6 +18,11 @@ DECLARE_DATA{
 /* Passing frame_chunk_t as a full frame for internal infos only. */
 void METHOD(resize, resize)(void *_this, frame_chunk_t* chunk, struct timeval beg)
 {
+#ifdef MJPEG_USES_TIMING
+  tick_t td1, td2;
+  GET_TICK(td1);
+#endif
+
   int stream_id = chunk->stream_id;
   int frame_id = chunk->frame_id % FRAME_LOOKAHEAD;
 
@@ -41,6 +50,11 @@ dropping:
     } else {
       __sync_add_and_fetch (&Done[frame_id], 1);
     }
+
+#ifdef MJPEG_USES_TIMING
+    GET_TICK(td2);
+    mjpeg_time_table[tid].tdec += TICK_RAW_DIFF(td1,td2);
+#endif
 
     return;
   }
@@ -97,4 +111,9 @@ dropping:
   }
 
   doState ("Xk");
+
+#ifdef MJPEG_USES_TIMING
+  GET_TICK(td2);
+  mjpeg_time_table[tid].trsz += TICK_RAW_DIFF(td1,td2);
+#endif
 }

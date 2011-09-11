@@ -9,7 +9,9 @@
 #include "iqzz.h"
 #include "upsampler.h"
 
-#include "timing.h"
+#ifdef MJPEG_USES_TIMING
+# include "timing.h"
+#endif
 
 DECLARE_DATA{
   //int foo;
@@ -28,8 +30,10 @@ void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk, struct timeval be
   double t1, t2;
 #endif
 
-  tick_t t1, t2, td1, td2;
+#ifdef MJPEG_USES_TIMING
+  tick_t td1, td2;
   GET_TICK(td1);
+#endif
 
   // Set a global per thread identifier :
   if (unlikely (tid == -1))
@@ -154,11 +158,7 @@ void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk, struct timeval be
     gettimeofday (&end, NULL);
     TRACE_FRAME (frame_id, beg, end, "decode");
 
-    GET_TICK (t1);
     CALL (resize, resize, chunk, end);
-    GET_TICK (t2);
-
-    time_table[tid].tpush += TICK_RAW_DIFF(t1,t2);
   }
 
   if (Achievements[stream_id][frame_id % FRAME_LOOKAHEAD] > streams[stream_id].nb_MCU)
@@ -169,8 +169,11 @@ void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk, struct timeval be
 
   doState ("Xk");
   
+
+#ifdef MJPEG_USES_TIMING
   GET_TICK(td2);
-  time_table[tid].tdec += TICK_RAW_DIFF(td1,td2);
+  mjpeg_time_table[tid].tdec += TICK_RAW_DIFF(td1,td2);
+#endif
 }
 
 void cpyrect2dest (uint32_t x, uint32_t y, uint32_t w, uint32_t h, void *ptr, SDL_Surface* screen)

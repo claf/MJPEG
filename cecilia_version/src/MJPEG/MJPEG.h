@@ -32,19 +32,18 @@
 # define unlikely(x) __builtin_expect(!!(x), 0)
 #endif
 
+#ifdef MJPEG_USES_TIMING
 /* Fine Timing Stuff : */
 
 // per worker thread structure :
-typedef struct time_wq {
-  long tpop;
-  long tpush;
-  long tsplit;
-  long nbsplit;
+typedef struct time_mjpeg {
   long tdec;
-} __attribute__((aligned (64))) time_wq_t;
+  long trsz;
+} __attribute__((aligned (64))) time_mjpeg_t;
 
 // global time table :
-extern time_wq_t time_table[6];
+extern time_mjpeg_t* mjpeg_time_table;
+#endif
 
 // global per thread identifier :
 extern __thread int tid;

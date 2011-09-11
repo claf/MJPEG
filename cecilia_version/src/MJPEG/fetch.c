@@ -23,7 +23,9 @@ DECLARE_DATA{
 /* Global definition : */
 uint8_t nb_streams = 0; 
 uint8_t end_of_file = 0;
-time_wq_t time_table[6] = {{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}};
+#ifdef MJPEG_USES_TIMING
+time_mjpeg_t *mjpeg_time_table; //[6] = {{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}};
+#endif
 
 // Global Surfaces structures :
 SDL_Surface *Surfaces_normal[MAX_STREAM][FRAME_LOOKAHEAD];
@@ -116,7 +118,6 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
   int32_t *MCU = NULL;
   struct timespec time;
   struct timeval b, e;
-  tick_t t1, t2;
 
   time.tv_sec = 0;
   time.tv_nsec = 200; 
@@ -128,16 +129,13 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
   if (unlikely (tid == -1))
     tid = kaapi_get_self_kid ();
 
-  /*
-  time_table = (time_wq_t*) malloc (sizeof (time_wq_t) * nb_threads);
+  
+  mjpeg_time_table = (time_mjpeg_t*) malloc (sizeof (time_mjpeg_t) * nb_threads);
   for (int i = 0; i < nb_threads; i++)
   {
-    time_table[i].tpop   = 0;
-    time_table[i].tpush  = 0;
-    time_table[i].tsplit = 0;
-    time_table[i].tdec = 0;
+    mjpeg_time_table[i].tdec = 0;
+    mjpeg_time_table[i].trsz = 0;
   }
-  */
 
   /* Options and init management : */
   options(argc, argv);
@@ -463,10 +461,7 @@ noskip:
                 chunk->data = (int32_t*) MCUs [stream_id] [frame_id[stream_id] % FRAME_LOOKAHEAD] [index_X] [index_Y];
                 chunk->DQT_table = (uint8_t*) &(DQT_table[stream_id][frame_id[stream_id] % FRAME_LOOKAHEAD]);/*[SOF_component[component_index].q_table];*/
                 doState ("Fo");
-                GET_TICK(t1);
                 CALL (decode, decode, chunk, tim);
-                GET_TICK(t2);
-                time_table[tid].tpush += TICK_RAW_DIFF(t1,t2);
                 doState ("Re");
               }
             }
@@ -590,14 +585,15 @@ clean_end:
   free (resize_Factors);
 
 
+#ifdef MJPEG_USES_TIMING
+  printf ("\n*** MJPEG TIMING INFOS ***\n");
   for (int i = 0; i < nb_threads; i++)
   {
-    printf ("\nTime for thread %d :\t pop :%d",i, (long)tick2usec(time_table[i].tpop));
-    printf ("\nTime for thread %d :\t push :%d",i, (long)tick2usec(time_table[i].tpush));
-    printf ("\nTime for thread %d :\t split :%d",i, (long)tick2usec(time_table[i].tsplit));
-    printf ("\nTime for thread %d :\t nb_split :%d",i, time_table[i].nbsplit);
-    printf ("\nTime for thread %d :\t decode :%d",i, (long)tick2usec(time_table[i].tdec));
+    printf ("\nTime for thread %d :\t decode :%ld",i, (long)tick2usec(mjpeg_time_table[i].tdec));
+    printf ("\nTime for thread %d :\t resize :%ld",i, (long)tick2usec(mjpeg_time_table[i].trsz));
   }
+  printf ("\n\n*** END ***\n");
+#endif
 
 
   PFETCH ("End\n");
