@@ -39,6 +39,8 @@
 
 // per worker thread structure :
 typedef struct time_mjpeg {
+  long twait; // for fetch component.
+  long tread; // for fetch component.
   long tdec;
   long trsz;
 } __attribute__((aligned (64))) time_mjpeg_t;
