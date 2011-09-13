@@ -1,9 +1,14 @@
 #!/usr/bin/perl
 
 use Statistics::R;
+
+foreach my $file (@ARGV)
+{
+print "Processing file $file\n";
+
 my $R = Statistics::R->new();
 $R->startR ;
-$R->send(qq`pdf("$ARGV[0].pdf")`);
+$R->send(qq`pdf("$file.pdf")`);
 
 my $read = 0;
 my $wait = 0;
@@ -13,7 +18,7 @@ my $push = 0;
 my $split = 0;
 my $xkaapi = 0;
 
-open (FILE, $ARGV[0]);
+open (FILE, $file);
 
 while (<FILE>) {
   chomp;
@@ -49,17 +54,17 @@ while (<FILE>) {
 
 }
 
-print "read : $read\nwait : $wait\nwork : $work\npop : $pop\npush : $push\nsplit : $split\nxkaapi : $xkaapi\n";
-$R->send(qq`slices <- c($work,$wait,$read,$push+$pop,$split,$xkaapi)`);
-$R->send(q`lbls <- c("Dec+Res", "Wait Fetch", "Read Fetch", "Push + Pop", "Splitter", "XKaapi")`);
+$R->send(qq`slices <- c($work,$push+$pop,$split,$xkaapi)`);
+$R->send(q`lbls <- c("Dec+Res","Push + Pop", "Splitter", "XKaapi")`);
 $R->send(q`pct <- round(slices/sum(slices)*100)`);
 $R->send(q`lbls <- paste(lbls, pct)`);
 $R->send(q`lbls <- paste(lbls,"%",sep="")`);
-$R->send(qq`pie(slices,labels = lbls, col=rainbow(length(lbls)), main="$ARGV[0]")`);
+$R->send(qq`pie(slices,labels = lbls, col=rainbow(length(lbls)), main="$file")`);
 $R->error();
 
 my $ret = $R->read;
 $R->stopR();
 
 close (FILE);
+}
 exit;
