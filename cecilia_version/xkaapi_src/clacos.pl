@@ -3,7 +3,7 @@
 use Statistics::R;
 my $R = Statistics::R->new();
 $R->startR ;
-$R->send(q`pdf("mygraph3.pdf")`);
+$R->send(qq`pdf("$ARGV[0].pdf")`);
 
 my $read = 0;
 my $wait = 0;
@@ -55,7 +55,7 @@ $R->send(q`lbls <- c("Dec+Res", "Wait Fetch", "Read Fetch", "Push + Pop", "Split
 $R->send(q`pct <- round(slices/sum(slices)*100)`);
 $R->send(q`lbls <- paste(lbls, pct)`);
 $R->send(q`lbls <- paste(lbls,"%",sep="")`);
-$R->send(q`pie(slices,labels = lbls, col=rainbow(length(lbls)), main="Pie Chart for 1")`);
+$R->send(qq`pie(slices,labels = lbls, col=rainbow(length(lbls)), main="$ARGV[0]")`);
 $R->error();
 
 my $ret = $R->read;
