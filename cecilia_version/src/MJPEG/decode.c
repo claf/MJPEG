@@ -137,6 +137,16 @@ void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk, struct timeval be
        MCU_sy * max_ss_h,
        MCU_sx * max_ss_v,
        RGB_MCU, Surfaces_normal[stream_id][frame_id % FRAME_LOOKAHEAD]);
+
+
+
+    for (int i = 0; i < 3; i++)
+    {
+      free (YCbCr_MCU[i]);
+      free (YCbCr_MCU_ds[i]);
+    }
+
+    free(RGB_MCU);
   } 
 
   PDECODE("Increment Achievement for stream %d frame %d value %d\n", stream_id,
