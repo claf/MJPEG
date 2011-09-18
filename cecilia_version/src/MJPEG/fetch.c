@@ -142,6 +142,7 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
     mjpeg_time_table[i].twait = 0;
     mjpeg_time_table[i].tread = 0;
     mjpeg_time_table[i].tdec = 0;
+    mjpeg_time_table[i].tcopy = 0;
     mjpeg_time_table[i].trsz = 0;
   }
 #endif
@@ -632,13 +633,17 @@ clean_end:
   printf ("Time for thread %d :\t wait :%ld\n",0, (long)tick2usec(mjpeg_time_table[0].twait));
   printf ("--------------------------------\n");
 
-  for (int i = 1; i < nb_threads; i++)
+  for (int i = 1; i < nb_threads - 1; i++)
   {
     printf ("Time for thread %d :\t decode :%ld\n",i, (long)tick2usec(mjpeg_time_table[i].tdec));
     printf ("Time for thread %d :\t resize :%ld\n",i, (long)tick2usec(mjpeg_time_table[i].trsz));
     twork += (long)tick2usec(mjpeg_time_table[i].tdec) + (long)tick2usec(mjpeg_time_table[i].trsz);
     printf ("--------------------------------\n");
   }
+
+  printf ("Time for thread %d :\t copy :%ld\n",nb_threads - 1, (long)tick2usec(mjpeg_time_table[nb_threads-1].tcopy));
+  printf ("--------------------------------\n");
+
   printf ("\nTotal work : %ld\n", twork);
   printf ("\n*** END ***\n");
 

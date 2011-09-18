@@ -82,6 +82,10 @@ void METHOD(render, render)(void *_this, int width, int height, int framerate)
     {
       /* Copy the buffer into the right SDL_Surface : */
       src = Surfaces_resized[frame_id % FRAME_LOOKAHEAD];
+#ifdef MJPEG_USES_TIMING
+      tick_t td1, td2;
+      GET_TICK(td1);
+#endif
       cpyrect2dest(0,0,WINDOW_H, WINDOW_W, src->pixels, screen);
 
       /* Store time : */
@@ -105,6 +109,11 @@ void METHOD(render, render)(void *_this, int width, int height, int framerate)
         printf("Could not refresh screen: %s\n.", SDL_GetError() );
       }
       
+#ifdef MJPEG_USES_TIMING
+      GET_TICK(td2);
+      mjpeg_time_table[tid].tcopy += TICK_RAW_DIFF(td1,td2);
+#endif
+
 #ifdef MJPEG_USES_GTG
       doEvent ("P", frame_id);
 #endif
