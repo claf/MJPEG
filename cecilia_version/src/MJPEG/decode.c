@@ -20,6 +20,11 @@ DECLARE_DATA{
 #include "cecilia.h"
 
 __thread int tid = -1;
+__thread int is_init = 0;
+__thread uint8_t *YCbCr_MCU[3] = { NULL, NULL, NULL};
+__thread uint8_t *YCbCr_MCU_ds[3] = { NULL, NULL, NULL};
+__thread uint32_t *RGB_MCU = NULL;
+
 
 void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk, struct timeval beg)
 {
@@ -75,15 +80,9 @@ void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk, struct timeval be
     uint16_t max_ss_h = streams[stream_id].max_ss_h;
     uint16_t max_ss_v = streams[stream_id].max_ss_v;
 
-    static volatile int is_init = 0;
-
-    uint8_t *YCbCr_MCU[3] = { NULL, NULL, NULL};
-    uint8_t *YCbCr_MCU_ds[3] = { NULL, NULL, NULL};
-    uint32_t *RGB_MCU = NULL;
-
     if (is_init == 0){
       PDECODE("Initialization of YCbCr and RGB struct\n");
-      //is_init = 1;
+      is_init = 1;
       for (int i = 0; i < 3; i++)
       {
         YCbCr_MCU[i] = malloc(MCU_sx * MCU_sy * max_ss_h * max_ss_v);
@@ -139,14 +138,14 @@ void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk, struct timeval be
        RGB_MCU, Surfaces_normal[stream_id][frame_id % FRAME_LOOKAHEAD]);
 
 
-
+    /* TODO : free theses struct only at the end of the application
     for (int i = 0; i < 3; i++)
     {
       free (YCbCr_MCU[i]);
       free (YCbCr_MCU_ds[i]);
     }
 
-    free(RGB_MCU);
+    free(RGB_MCU);*/
   } 
 
   PDECODE("Increment Achievement for stream %d frame %d value %d\n", stream_id,
