@@ -54,7 +54,7 @@ dropping:
 
 #ifdef MJPEG_USES_TIMING
     GET_TICK(td2);
-    mjpeg_time_table[tid].tdec += TICK_RAW_DIFF(td1,td2);
+    mjpeg_time_table[tid].trsz += TICK_RAW_DIFF(td1,td2);
 #endif
 
     return;
