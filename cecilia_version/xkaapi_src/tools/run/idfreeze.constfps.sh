@@ -20,7 +20,7 @@ cpuset[6]="0,4,8,12,1,5"
 cpuset[7]="0,4,8,12,1,5,9"
 cpuset[8]="0,4,8,12,1,5,9,13"
 
-dir=`date '+%d-%m-%y-%H:%M'`
+dir=`date '+%d-%m-%y-%H%M'`
 mkdir $dir
 
 export export KAAPI_DISPLAY_PERF=1
