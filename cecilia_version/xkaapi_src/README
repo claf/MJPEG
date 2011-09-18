@@ -1,3 +1,5 @@
+Compilation flags for xkaapi :
+
 release mode :
 
 ./configure --enable-mode=release
@@ -19,4 +21,6 @@ debug mode :
             --enable-api-kastl=no
             --enable-api-atha=no
             --prefix=/home/claferri/opt/debug/
+
+***********************************************************
 
