@@ -50,6 +50,9 @@ typedef struct time_mjpeg {
 extern time_mjpeg_t* mjpeg_time_table;
 #endif
 
+// global frame buffer size :
+extern int frame_lookahead;
+
 // global per thread identifier :
 extern __thread int tid;
 
@@ -92,11 +95,11 @@ typedef struct {
 // possibles values are : 0..N
 // when Done[i] == x, it means frame i has been decoded for x different
 // streams.
-extern int32_t Done[FRAME_LOOKAHEAD];
+extern int32_t* Done;
 
 // Global table for free structures :
 // if Free[i] == 0 then a frame currently use this place (i).
-extern int32_t Free[FRAME_LOOKAHEAD];
+extern int32_t* Free;
 
 // Global number of streams variable :
 extern uint8_t nb_streams;
@@ -105,8 +108,8 @@ extern uint8_t nb_streams;
 extern volatile uint8_t end_of_file;
 
 // Global Surfaces structures :
-extern SDL_Surface *Surfaces_normal[MAX_STREAM][FRAME_LOOKAHEAD];
-extern SDL_Surface *Surfaces_resized[FRAME_LOOKAHEAD];
+extern SDL_Surface **Surfaces_normal[MAX_STREAM];
+extern SDL_Surface **Surfaces_resized;
 
 //Global shift table :
 extern shift_t* decalage;
@@ -121,13 +124,13 @@ extern uint8_t position[MAX_STREAM];
 extern stream_info_t* streams;
 
 // Global chunk achievement table :
-extern uint32_t Achievements[MAX_STREAM][FRAME_LOOKAHEAD];
+extern uint32_t* Achievements[MAX_STREAM];
 
 // Global last frame_id on the screen :
 extern volatile int32_t last_frame_id;
 
 // Global frame id table currently being decoded :
-extern int32_t in_progress[FRAME_LOOKAHEAD];
+extern int32_t* in_progress;
 
 // Global value for color :
 extern uint32_t color;

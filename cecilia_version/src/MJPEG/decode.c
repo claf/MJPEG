@@ -69,7 +69,7 @@ void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk, struct timeval be
     PDECODE("Drop chunk for frame %d and stream %d\n", frame_id, stream_id);
     if (dropped == -1)
     {
-      // TODO : here if i use dropped[FRAME_LOOKAHEAD] I can remember the first
+      // TODO : here if i use dropped[frame_lookahead] I can remember the first
       // chunk to drop so that I can figure out the amount of unused work done!
       dropped = 1;
     }
@@ -135,7 +135,7 @@ void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk, struct timeval be
        index_X * MCU_sx * max_ss_v,// + decalage[position[stream_id]].y,
        MCU_sy * max_ss_h,
        MCU_sx * max_ss_v,
-       RGB_MCU, Surfaces_normal[stream_id][frame_id % FRAME_LOOKAHEAD]);
+       RGB_MCU, Surfaces_normal[stream_id][frame_id % frame_lookahead]);
 
 
     /* TODO : free theses struct only at the end of the application
@@ -149,9 +149,9 @@ void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk, struct timeval be
   } 
 
   PDECODE("Increment Achievement for stream %d frame %d value %d\n", stream_id,
-      frame_id, Achievements[stream_id][frame_id % FRAME_LOOKAHEAD]);
+      frame_id, Achievements[stream_id][frame_id % frame_lookahead]);
 
-  __sync_add_and_fetch (&Achievements[stream_id][frame_id % FRAME_LOOKAHEAD], 1);
+  __sync_add_and_fetch (&Achievements[stream_id][frame_id % frame_lookahead], 1);
 
 #ifdef _DECODE_DEBUG
   t2 = kaapi_get_elapsedns();
@@ -159,12 +159,12 @@ void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk, struct timeval be
 #endif
 
 
-  if (Achievements[stream_id][frame_id % FRAME_LOOKAHEAD] == streams[stream_id].nb_MCU)
+  if (Achievements[stream_id][frame_id % frame_lookahead] == streams[stream_id].nb_MCU)
   {
     PDECODE("Frame %d from stream %d fully decoded, now send frame to Resize"
         " component\n", frame_id, stream_id);
     // TODO : no need to atomically set Achievements back to null?
-    Achievements[stream_id][frame_id % FRAME_LOOKAHEAD] = 0;
+    Achievements[stream_id][frame_id % frame_lookahead] = 0;
 
     gettimeofday (&end, NULL);
     TRACE_FRAME (frame_id, beg, end, "decode");
@@ -172,9 +172,9 @@ void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk, struct timeval be
     CALL (resize, resize, chunk, end);
   }
 
-  if (Achievements[stream_id][frame_id % FRAME_LOOKAHEAD] > streams[stream_id].nb_MCU)
+  if (Achievements[stream_id][frame_id % frame_lookahead] > streams[stream_id].nb_MCU)
   {
-    printf ("PRB Achievement = %d\n", Achievements[stream_id][frame_id % FRAME_LOOKAHEAD]);
+    printf ("PRB Achievement = %d\n", Achievements[stream_id][frame_id % frame_lookahead]);
     abort ();
   }
 

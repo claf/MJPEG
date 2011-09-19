@@ -24,7 +24,7 @@ void METHOD(resize, resize)(void *_this, frame_chunk_t* chunk, struct timeval be
 #endif
 
   int stream_id = chunk->stream_id;
-  int frame_id = chunk->frame_id % FRAME_LOOKAHEAD;
+  int frame_id = chunk->frame_id % frame_lookahead;
 
   // Set a global per thread identifier :
   if (unlikely (tid == -1))

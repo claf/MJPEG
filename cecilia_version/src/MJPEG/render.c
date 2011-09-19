@@ -17,8 +17,8 @@ DECLARE_DATA{
 
 
 // Global timeouted frames tables :
-int32_t Done[FRAME_LOOKAHEAD];
-int32_t Free[FRAME_LOOKAHEAD];
+int32_t* Done;
+int32_t* Free;
 
 // Internal function : 
 static void render_init(int width, int height, int framerate);
@@ -36,7 +36,7 @@ void METHOD(render, render)(void *_this, int width, int height, int framerate)
   int delay; // time between two frames.
   int wait; // time to wait before printing next frame.
   int frame_id; // frame id that should be printed now.
-  int frame_fetch_id = FRAME_LOOKAHEAD; // next fetched frame id.
+  int frame_fetch_id = frame_lookahead; // next fetched frame id.
   struct timeval beg, end;
   SDL_Event event;
   SDL_Surface* src;
@@ -64,7 +64,7 @@ void METHOD(render, render)(void *_this, int width, int height, int framerate)
       gettimeofday (&end, NULL);
       TRACE_FRAME (last_frame_id, end, end, "next");
 
-      for (int i = 0; i < FRAME_LOOKAHEAD; i++)
+      for (int i = 0; i < frame_lookahead; i++)
       {
         if ((in_progress[i] < frame_id) && (Done[i] == nb_streams))
         {
@@ -77,11 +77,11 @@ void METHOD(render, render)(void *_this, int width, int height, int framerate)
     }
 
     /* If frame_id is ready : */
-    if ((Done[frame_id % FRAME_LOOKAHEAD] == nb_streams) &&
-        (in_progress[frame_id % FRAME_LOOKAHEAD] == frame_id))
+    if ((Done[frame_id % frame_lookahead] == nb_streams) &&
+        (in_progress[frame_id % frame_lookahead] == frame_id))
     {
       /* Copy the buffer into the right SDL_Surface : */
-      src = Surfaces_resized[frame_id % FRAME_LOOKAHEAD];
+      src = Surfaces_resized[frame_id % frame_lookahead];
 #ifdef MJPEG_USES_TIMING
       tick_t td1, td2;
       GET_TICK(td1);
@@ -93,8 +93,8 @@ void METHOD(render, render)(void *_this, int width, int height, int framerate)
       TRACE_FRAME (frame_id, beg, end, "print");
 
       /* Reset Done and Free struct : */
-      Done[frame_id % FRAME_LOOKAHEAD] = 0;
-      Free[frame_id % FRAME_LOOKAHEAD] = 1;
+      Done[frame_id % frame_lookahead] = 0;
+      Free[frame_id % frame_lookahead] = 1;
 
       /* Now, wait until we have to print the frame : */
       wait = (delay * frame_id) - SDL_GetTicks();
@@ -142,7 +142,7 @@ void METHOD(render, render)(void *_this, int width, int height, int framerate)
       }
 
     /* If we have free places : */
-    while (Free[frame_fetch_id % FRAME_LOOKAHEAD])
+    while (Free[frame_fetch_id % frame_lookahead])
     {
       //PFRAME ("Call to fetch component to decode frame %d\n", 4, frame_fetch_id);
       gettimeofday (&beg, NULL);
@@ -156,7 +156,7 @@ void METHOD(render, render)(void *_this, int width, int height, int framerate)
 
       CALL (fetch, fetch, beg);
 
-      Free[frame_fetch_id % FRAME_LOOKAHEAD] = 0;
+      Free[frame_fetch_id % frame_lookahead] = 0;
       frame_fetch_id++;
     }
 

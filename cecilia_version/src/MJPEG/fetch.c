@@ -21,6 +21,7 @@ DECLARE_DATA{
 #include "cecilia.h"
 
 /* Global definition : */
+int frame_lookahead = 5;
 uint8_t nb_streams = 0; 
 volatile uint8_t end_of_file = 0;
 #ifdef MJPEG_USES_TIMING
@@ -28,8 +29,8 @@ time_mjpeg_t *mjpeg_time_table; //[6] = {{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,
 #endif
 
 // Global Surfaces structures :
-SDL_Surface *Surfaces_normal[MAX_STREAM][FRAME_LOOKAHEAD];
-SDL_Surface *Surfaces_resized[FRAME_LOOKAHEAD];
+SDL_Surface **Surfaces_normal[MAX_STREAM];
+SDL_Surface **Surfaces_resized;
 
 // Global stream table :
 stream_info_t* streams;
@@ -40,7 +41,7 @@ shift_t* resize_Factors;
 uint8_t position[MAX_STREAM];
 
 // Global frame achievement table (nb_chunk already treated) :
-uint32_t Achievements[MAX_STREAM][FRAME_LOOKAHEAD];
+uint32_t* Achievements[MAX_STREAM];
 
 // Global black & white or color decode :
 uint32_t color = 1;
@@ -49,12 +50,17 @@ uint32_t color = 1;
 volatile int32_t last_frame_id;
 
 // Global frame id table currently decoding :
-int32_t in_progress[FRAME_LOOKAHEAD];
+int32_t* in_progress;
 
 /* Intern declarations : */
 
-int32_t MCUs[MAX_STREAM][FRAME_LOOKAHEAD][MAX_MCU_X][MAX_MCU_Y][4][4][64];
-uint8_t DQT_table[MAX_STREAM][FRAME_LOOKAHEAD][4][64];
+
+typedef int32_t unit_table_t[4][64];
+typedef unit_table_t mcu_table_t[MAX_MCU_X][MAX_MCU_Y][4];
+mcu_table_t *MCUs[MAX_STREAM];
+uint8_t (*DQT_table[MAX_STREAM])[4][64]; //[FRAME_LOOKAHEAD][4][64];
+
+
 volatile int32_t nb_ftp; // number of frame to process.
 uint8_t HT_type = 0;
 uint8_t HT_index = 0;
@@ -89,6 +95,7 @@ static void usage(char *progname) {
   printf("Usage : %s [options] <mjpeg_file_1> [<mjpeg_file_2> ...]\n", progname);
   printf("Options list :\n");
   printf("\t-f <framerate> : set framerate for the movie\n");
+  printf("\t-b <buffer_size> : set buffer size (frame loolahead) for the movie\n");
   printf("\t-c : decode streams in black and white format\n");
   printf("\t-h : display this help and exit\n");
 }
@@ -128,7 +135,7 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
   time.tv_sec = 0;
   time.tv_nsec = 200; 
   last_frame_id = -1;
-  nb_ftp = FRAME_LOOKAHEAD;
+  nb_ftp = frame_lookahead;
   screen_init_needed = 1;
 
   /* Set a global per thread identifier */
@@ -154,6 +161,13 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
   options(argc, argv);
   surfaces_init ();
   factors_init ();
+
+  for (int i = 0; i < nb_streams; i++)
+  {
+    MCUs[i] = (void *) malloc (sizeof (int32_t[MAX_MCU_X][MAX_MCU_Y][4][4][64]) * frame_lookahead);
+    DQT_table[i] = (void *) malloc (sizeof (uint8_t[4][64]) * frame_lookahead);
+  }
+
 
   /* TODO : read begining of every files to find max_X and max_Y use
    * skip_frame to obtain movies sizes and fill position, decalage and
@@ -292,7 +306,9 @@ noskip:
             if (stream_init[stream_id] == 1){
               stream_init[stream_id] = 0;
 
-              for (int i = 0; i < FRAME_LOOKAHEAD; i++)
+              Achievements[stream_id] = (uint32_t*) malloc (sizeof (uint32_t) * frame_lookahead);
+
+              for (int i = 0; i < frame_lookahead; i++)
               {
                 Achievements[stream_id][i] = 0;
               }
@@ -301,7 +317,11 @@ noskip:
                 screen_init_needed = 0;
 
                 PFETCH ("Init : setting Done and Free tables to 0\n");
-                for (int i = 0; i < FRAME_LOOKAHEAD; i++)
+
+                Done = (int32_t*) malloc (sizeof(int32_t) * frame_lookahead);
+                Free = (int32_t*) malloc (sizeof(int32_t) * frame_lookahead);
+
+                for (int i = 0; i < frame_lookahead; i++)
                 {
                   Done[i] = 0;
                   Free[i] = 0;
@@ -447,12 +467,12 @@ noskip:
 
             for (index_X = 0; index_X < nb_MCU_X; index_X++) {
               for (index_Y = 0; index_Y < nb_MCU_Y; index_Y++) {
-                // TODO : allocate chunks with nb_stream, FRAME_LOOKAHEAD, max_X and max_Y
+                // TODO : allocate chunks with nb_stream, frame_lookahead, max_X and max_Y
                 // max_X and max_Y are largest dimension of streams.
                 // TODO : add stream_id and frame_id infos!
-                //chunks = malloc (sizeof(frame_chunk_t) * nb_streams * FRAME_LOOKAHEAD * MAX_MCU_X * MAX_MCU_Y);
-                frame_chunk_t *chunk = chunks + (stream_id * FRAME_LOOKAHEAD * MAX_MCU_X * MAX_MCU_Y)
-                  + ((frame_id[stream_id] % FRAME_LOOKAHEAD) * MAX_MCU_X * MAX_MCU_Y) 
+                //chunks = malloc (sizeof(frame_chunk_t) * nb_streams * frame_lookahead * MAX_MCU_X * MAX_MCU_Y);
+                frame_chunk_t *chunk = chunks + (stream_id * frame_lookahead * MAX_MCU_X * MAX_MCU_Y)
+                  + ((frame_id[stream_id] % frame_lookahead) * MAX_MCU_X * MAX_MCU_Y) 
                   + (index_X * MAX_MCU_Y)
                   + index_Y;
 
@@ -462,7 +482,7 @@ noskip:
                 chunk->stream_id = stream_id;
                 chunk->frame_id  = frame_id[stream_id];
                 
-                in_progress[frame_id[stream_id] % FRAME_LOOKAHEAD] = chunk->frame_id;
+                in_progress[frame_id[stream_id] % frame_lookahead] = chunk->frame_id;
 
                 // Fill MCU structure :
                 for (index = 0; index < SOS_section.n; index++)
@@ -479,14 +499,14 @@ noskip:
 
                   for (chroma_ss = 0; chroma_ss < nb_MCUz; chroma_ss++)
                   {
-                    MCU = MCUs [stream_id] [frame_id[stream_id] % FRAME_LOOKAHEAD] [index_X] [index_Y] [index] [chroma_ss];
+                    MCU = MCUs [stream_id] [frame_id[stream_id] % frame_lookahead] [index_X] [index_Y] [index] [chroma_ss];
                     unpack_block(movies[stream_id], &scan_desc,index, MCU);
                     chunk->DQT_index[index][chroma_ss] = SOF_component[component_index].q_table;
                   }
 
                 }
-                chunk->data = (int32_t*) MCUs [stream_id] [frame_id[stream_id] % FRAME_LOOKAHEAD] [index_X] [index_Y];
-                chunk->DQT_table = (uint8_t*) &(DQT_table[stream_id][frame_id[stream_id] % FRAME_LOOKAHEAD]);/*[SOF_component[component_index].q_table];*/
+                chunk->data = (int32_t*) MCUs [stream_id] [frame_id[stream_id] % frame_lookahead] [index_X] [index_Y];
+                chunk->DQT_table = (uint8_t*) &(DQT_table[stream_id][frame_id[stream_id] % frame_lookahead]);/*[SOF_component[component_index].q_table];*/
 #ifdef MJPEG_USES_GTG
                 doState ("Fo");
 #endif
@@ -552,9 +572,9 @@ noskip:
 
               IPRINTF("Reading quantization table\r\n");
               // printf("\nQT_index = %d\n", QT_index);
-              COPY_SECTION(DQT_table[stream_id][frame_id[stream_id] % FRAME_LOOKAHEAD][QT_index], 64, movies[stream_id]);
+              COPY_SECTION(DQT_table[stream_id][frame_id[stream_id] % frame_lookahead][QT_index], 64, movies[stream_id]);
               DQT_size += 64;
-              //PRINT_DQT(DQT_table[stream_id][frame_id[stream_id] % FRAME_LOOKAHEAD][QT_index]);
+              //PRINT_DQT(DQT_table[stream_id][frame_id[stream_id] % frame_lookahead][QT_index]);
             }
 
             break;
@@ -610,6 +630,8 @@ noskip:
   }
 
 clean_end:
+  pthread_join (thid,NULL);
+
   /* Free malloc'ed stuff : */
   for (HT_index = 0; HT_index < 4; HT_index++) {
     free_huffman_tables(tables[HUFF_DC][HT_index]);
@@ -619,9 +641,16 @@ clean_end:
   free (frame_id);
   free (movies);
   free (stream_init);
-  //free (chunks);
+  free (chunks);
   free (decalage);
   free (resize_Factors);
+  free (in_progress);
+  free (Achievements);
+  free (Done);
+  free (Free);
+  free (Surfaces_resized);
+  for (int i=0; i < nb_streams; i++)
+    free (Surfaces_normal[i]);
 
   printf ("\n#dropped frames : %d\n", dropped);
 
@@ -650,7 +679,6 @@ clean_end:
   free (mjpeg_time_table);
 #endif
 
-  pthread_join (thid,NULL);
 
   PFETCH ("End\n");
   return;
@@ -697,6 +725,14 @@ static void options(int argc, char** argv)
           usage(argv[0]);
           exit(0);
           break;
+        case 'b':
+          if ((argc - args) < 1) {
+            usage(argv[0]);
+            exit(1);
+          }
+          frame_lookahead = atoi(argv[args+1]);
+          args += 2;
+          break;
         case 'c':
           color=0;
           args++;
@@ -722,7 +758,7 @@ static void options(int argc, char** argv)
   movies      = malloc (nb_streams * sizeof (FILE*));
   stream_init = malloc (nb_streams * sizeof (uint8_t));
   streams     = malloc (nb_streams * sizeof (stream_info_t));
-  chunks      = malloc (nb_streams * FRAME_LOOKAHEAD * MAX_MCU_X * MAX_MCU_Y
+  chunks      = malloc (nb_streams * frame_lookahead * MAX_MCU_X * MAX_MCU_Y
       * sizeof (frame_chunk_t));
 
   // Allocation for streams FILE table :
@@ -741,15 +777,22 @@ static void options(int argc, char** argv)
 
 static void surfaces_init ()
 {
-  for (int frame = 0; frame < FRAME_LOOKAHEAD; frame++)
+  in_progress = (int32_t*) malloc (sizeof (int32_t) * frame_lookahead);
+  Surfaces_resized = (SDL_Surface**) malloc (sizeof (SDL_Surface*) * frame_lookahead);
+
+  for (int frame = 0; frame < frame_lookahead; frame++)
   {
     in_progress[frame] = -1;
 
     Surfaces_resized[frame] = SDL_CreateRGBSurface(SDL_SWSURFACE, WINDOW_H, WINDOW_W, 32, 0, 0, 0, 0);
     if (Surfaces_resized[frame] == NULL)
       printf ("SDL_CreateRGBSurface ERROR %s:%d\n", __FILE__, __LINE__);
-
-    for (int stream = 0; stream < nb_streams; stream++)
+  }
+  
+  for (int stream = 0; stream < nb_streams; stream++)
+  {
+    Surfaces_normal[stream] = (SDL_Surface**) malloc (sizeof (SDL_Surface*) * frame_lookahead);
+    for (int frame = 0; frame < frame_lookahead; frame++)
     {
       Surfaces_normal[stream][frame] = SDL_CreateRGBSurface(SDL_SWSURFACE, WINDOW_H, WINDOW_W, 32, 0, 0, 0, 0);
       if (Surfaces_normal[stream][frame] == NULL)
