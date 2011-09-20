@@ -24,3 +24,15 @@ debug mode :
 
 ***********************************************************
 
+Compilation flags for C2X :
+
+- C2X_USES_TIMING
+- C2X_USES_GTG
+
+Compilation flags for MJPEG :
+
+- _USE_TRACE (get the first trace format that has to be converted with
+  convert.py from Lucas).
+- MJPEG_USES_TIMING
+- MJPEG_USES_GTG
+
