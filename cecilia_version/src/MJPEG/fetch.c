@@ -219,7 +219,7 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
     // if it's the first stream (in order to drop a frame for every stream) and
     // if we need to drop the frame, then drop it for every stream!
     if ((stream_id == 0) && (frame_id[stream_id] <= last_frame_id)) {
-      while(frame_id[stream_id] <= last_frame_id + 2) {
+      while(frame_id[stream_id] <= last_frame_id) {
         for (int s = 0; s < nb_streams; s++) {
           //PFRAME("Skipping frame %d for stream %d\n", 1, frame_id[s], s);  
           PFETCH("Skipping frame %d for stream %d\n", frame_id[s], s);  

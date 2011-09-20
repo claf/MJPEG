@@ -124,7 +124,7 @@ void METHOD(render, render)(void *_this, int width, int height, int framerate)
 
 
     /* If next fetched frame has to be skipped : */
-      while (frame_fetch_id <= last_frame_id + 2) //corresponding test fetch.c:150
+      while (frame_fetch_id <= last_frame_id) //corresponding test fetch.c:150
       {
         //PFRAME ("Call to fetch component to skip frame %d\n", 4, frame_fetch_id);
         gettimeofday (&beg, NULL);
