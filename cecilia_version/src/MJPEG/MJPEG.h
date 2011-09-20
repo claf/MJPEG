@@ -1,12 +1,17 @@
 #ifndef _MJPEG_HEADER_
 #define _MJPEG_HEADER_
 
+#ifndef likely
+# define likely(x)   __builtin_expect(!!(x), 1)
+# define unlikely(x) __builtin_expect(!!(x), 0)
+#endif
+
 #ifdef MJPEG_USES_GTG
 # include "trace_gtg.h"
 #endif
 
 #ifdef _USE_TRACE
-# include <trace.h>
+# include "trace.h"
 #else
 # define TRACE_FRAME(a,b,c,d)
 #endif
@@ -28,11 +33,6 @@
 //TODO : dynamic values
 #define WINDOW_H 512
 #define WINDOW_W 432
-
-#ifndef likely
-# define likely(x)   __builtin_expect(!!(x), 1)
-# define unlikely(x) __builtin_expect(!!(x), 0)
-#endif
 
 #ifdef MJPEG_USES_TIMING
 /* Fine Timing Stuff : */

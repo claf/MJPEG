@@ -135,7 +135,6 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
   time.tv_sec = 0;
   time.tv_nsec = 200; 
   last_frame_id = -1;
-  nb_ftp = frame_lookahead;
   screen_init_needed = 1;
 
   /* Set a global per thread identifier */
@@ -175,6 +174,7 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
   // TODO TRACE FRAME :
   //traceInit ();
 
+  nb_ftp = frame_lookahead;
   /* Actual computation : */
   int elem_read;
   while (end_of_file == 0) {
@@ -645,12 +645,15 @@ clean_end:
   free (decalage);
   free (resize_Factors);
   free (in_progress);
-  free (Achievements);
   free (Done);
   free (Free);
   free (Surfaces_resized);
   for (int i=0; i < nb_streams; i++)
+  {
     free (Surfaces_normal[i]);
+    free (Achievements[i]);
+  }
+
 
   printf ("\n#dropped frames : %d\n", dropped);
 
