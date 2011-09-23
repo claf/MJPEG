@@ -108,10 +108,10 @@ void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk, struct timeval be
         int i = chunk->DQT_index[index][chroma_ss];
         iqzz_block(MCU, unZZ_MCU, (uint8_t*)(chunk->DQT_table + i*64));
         /* In case it happen again ...
-        if ((YCbCr_MCU_ds[component_index] + (64 * chroma_ss)) == NULL){
-          abort();
-        }
-        */
+           if ((YCbCr_MCU_ds[component_index] + (64 * chroma_ss)) == NULL){
+           abort();
+           }
+           */
         IDCT(unZZ_MCU, YCbCr_MCU_ds[component_index] + (64 * chroma_ss));
       }
 
@@ -139,13 +139,13 @@ void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk, struct timeval be
 
 
     /* TODO : free theses struct only at the end of the application
-    for (int i = 0; i < 3; i++)
-    {
-      free (YCbCr_MCU[i]);
-      free (YCbCr_MCU_ds[i]);
-    }
+       for (int i = 0; i < 3; i++)
+       {
+       free (YCbCr_MCU[i]);
+       free (YCbCr_MCU_ds[i]);
+       }
 
-    free(RGB_MCU);*/
+       free(RGB_MCU);*/
   } 
 
   PDECODE("Increment Achievement for stream %d frame %d value %d\n", stream_id,
