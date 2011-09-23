@@ -1,18 +1,24 @@
 #!/bin/bash 
 
-cpus=`seq 2 1 8`
+#cpus=`seq 2 1 8`
+cpus='3'
 
-runs=`seq 0 1 3`
+#bufSize=`seq 1 1 30`
+bufSize='10 15 20'
+
+runs=`seq 1 1 3`
 
 video='/home/claferri/toto.mjpeg'
 
-allfps[2]='45 46'
-allfps[3]='83 84'
-allfps[4]='111 112'
-allfps[5]='142 143'
-allfps[6]='166 167'
-allfps[7]='200 201'
-allfps[8]='200 201'
+allfps[2]='45 46 47 48'
+#allfps[3]='83 84 85 86'
+allfps[3]=`seq 89 1 95`
+
+allfps[4]='111 112 113 114'
+allfps[5]='142 143 144 145'
+allfps[6]='166 167 168'
+allfps[7]='200 201 202'
+allfps[8]='200 201 202 203'
 
 ########
 # OPTS #
@@ -40,7 +46,9 @@ do
         echo "Can't use both Likwid and Oprofile, make your choice"
         exit 1
       fi
-      oprof=1
+      echo "Using likwid implies placement!"
+      sets=1
+      oprof=0
       likwid=1;;
     d) echo "Output directory set to $OPTARG"
       dir=$OPTARG;;
@@ -73,13 +81,13 @@ then
   cpuset[7]="KAAPI_CPUCOUNT=7"
   cpuset[8]="KAAPI_CPUCOUNT=8"
 else
-  cpuset[2]="KAAPI_CPUSET=0,4"
-  cpuset[3]="KAAPI_CPUSET=0,4,8"
-  cpuset[4]="KAAPI_CPUSET=0,4,8,12"
-  cpuset[5]="KAAPI_CPUSET=0,4,8,12,1"
-  cpuset[6]="KAAPI_CPUSET=0,4,8,12,1,5"
-  cpuset[7]="KAAPI_CPUSET=0,4,8,12,1,5,9"
-  cpuset[8]="KAAPI_CPUSET=0,4,8,12,1,5,9,13"
+  cpuset[2]="0,4"
+  cpuset[3]="0,4,8"
+  cpuset[4]="0,4,8,12"
+  cpuset[5]="0,4,8,12,1"
+  cpuset[6]="0,4,8,12,1,5"
+  cpuset[7]="0,4,8,12,1,5,9"
+  cpuset[8]="0,4,8,12,1,5,9,13"
 fi
 
 ########
@@ -134,17 +142,17 @@ fi
 }
 
 function run {
-file=$dir/trace-"$cpu"cpu-"$fps"fps.$run
+file=$dir/trace-"$cpu"cpu-"$fps"fps-"$buffer"fb.$run
 if [ $likwid == '1' ]
 then
-  $likwid_cmd ${cpuset[$cpu]} ./mjpeg -f $fps $video > $file
+  $likwid_cmd ${cpuset[$cpu]} KAAPI_CPUSET=${cpuset[$cpu]} ./mjpeg -b $buffer -f $fps $video > $file
 else
   export ${cpuset[$cpu]}
-  ./mjpeg -f $fps $video > $file
+  ./mjpeg -b $buffer -f $fps $video > $file
 fi
 if [ -f core ]
 then
-  mv core $dir/core.$cpu.$fps.$run.core
+  mv core $dir/core.$cpu.$fps.R$run.B$buffer.core
 fi
 }
 
@@ -153,15 +161,19 @@ fi
 #########
 
 echo "Benchs starting"
-for cpu in $cpus; do
-  echo "CPU : $cpu"
-  for fps in ${allfps[$cpu]}; do
-    echo "  FPS : $fps"
-    for run in $runs; do
-      echo "    RUN : $run"
-      run
+for buffer in $bufSize; do
+  echo -ne "\nBuffer Size : $buffer\n"
+  for cpu in $cpus; do
+    echo -n "CPU : $cpu ("
+    for fps in ${allfps[$cpu]}; do
+      echo -ne "$fps"
+      for run in $runs; do
+        echo -ne "."
+        run
+      done
+      profile $cpu $fps
     done
-    profile $cpu $fps
+    echo -n ")"
   done
 done
 
