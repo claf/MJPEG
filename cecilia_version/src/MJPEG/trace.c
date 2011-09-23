@@ -1,5 +1,5 @@
 #include <stdint.h>
-#include <stdlib.h>
+#include <stdio.h>
 #include <sys/time.h>
 
 #include "trace.h"
