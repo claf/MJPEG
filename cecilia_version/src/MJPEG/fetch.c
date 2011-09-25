@@ -246,7 +246,7 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
   nb_ftp = frame_lookahead;
   /* Actual computation : */
   int elem_read;
-  while (termination == 0) {
+  while ((termination == 0) || (end_of_file == 0)) {
     // TODO TRACE :
     // traceThread WAIT START
 #ifdef MJPEG_USES_GTG
@@ -270,6 +270,12 @@ nbftp:
         while(nb_ftp < frame_lookahead) {}
         printf ("SKIPLINE202 %d fetch at the end on %d buffer size\n", nb_ftp, frame_lookahead);
         termination = 1;
+        goto clean_end;
+      }
+
+      if (termination == 1)
+      {
+        sleep (1);
         goto clean_end;
       }
       // TODO TRACE : 
