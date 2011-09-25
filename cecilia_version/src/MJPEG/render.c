@@ -171,26 +171,21 @@ void METHOD(render, render)(void *_this, int width, int height, int framerate)
         if (event.key.keysym.sym == SDLK_q) {
           printf("bye bye\n");
           initialized = 0;
-          SDL_Quit();
-          end_of_file = 1;
-          return;
-          //exit(1);
+          termination = 1;
         } 
       }   
       if (event.type == SDL_QUIT) {
         printf("\n");
         initialized = 0;
-        SDL_Quit();
-        end_of_file = 1;
-        return;
-        //exit(1);
+        termination = 1;
       }
     }
 
-    if (end_of_file == 1)
+    if (termination != 0)
     {
       initialized = 0;
-      //printf ("#dropped frames : %d\n", dropped);
+      printf ("#printed frames : %d\n", printed);
+      printf ("#dropped frames : %d\n", dropped);
       SDL_Quit();
       return;
     }

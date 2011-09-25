@@ -106,6 +106,7 @@ extern uint8_t nb_streams;
 
 // Global termination variable :
 extern volatile uint8_t end_of_file;
+extern volatile uint8_t termination;
 
 // Global Surfaces structures :
 extern SDL_Surface **Surfaces_normal[MAX_STREAM];

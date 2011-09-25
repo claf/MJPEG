@@ -24,6 +24,7 @@ DECLARE_DATA{
 int frame_lookahead = 5;
 uint8_t nb_streams = 0; 
 volatile uint8_t end_of_file = 0;
+volatile uint8_t termination = 0;
 #ifdef MJPEG_USES_TIMING
 time_mjpeg_t *mjpeg_time_table; //[6] = {{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}};
 #endif
@@ -84,7 +85,6 @@ huff_table_t *tables[2][4] = {
 };
 
 /* Intern functions : */
-static void options(int argc, char** argv);
 static void surfaces_init ();
 static void factors_init ();
 static void skip_frame (FILE* movie);
@@ -130,7 +130,6 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
   int nb_threads = kaapi_getconcurrency() + 1;
   int32_t *MCU = NULL;
   struct timespec time;
-  struct timeval b, e;
 
   time.tv_sec = 0;
   time.tv_nsec = 200; 
@@ -153,11 +152,81 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
   }
 #endif
 
-  /* Options and init management : */
+  /* Options management : */
+  int args = 1;
+
+  if (argc < 2) {
+    usage(argv[0]);
+    return;
+  }
+
+  while (args < argc) {
+    if (argv[args][0] ==  '-') {
+      switch(argv[args][1]) {
+        case 'f':
+          if ((argc - args) < 1) {
+            usage(argv[0]);
+            return;
+          }
+          framerate = atoi(argv[args+1]);
+          args +=2;
+          break;
+        case 'h':
+          usage(argv[0]);
+          return;
+          break;
+        case 'b':
+          if ((argc - args) < 1) {
+            usage(argv[0]);
+            return;
+          }
+          frame_lookahead = atoi(argv[args+1]);
+          args += 2;
+          break;
+        case 'c':
+          color=0;
+          args++;
+          break;
+        default :
+          usage(argv[0]);
+          return;
+      }
+    } else {
+      break;
+    }
+  }
+
+  /* If there is no stream args : */
+  if ((argc - args) < 1) {
+    usage(argv[0]);
+    return;
+  }
+  
+  nb_streams = argc - args;
+  
+  frame_id    = malloc (nb_streams * sizeof (int));
+  movies      = malloc (nb_streams * sizeof (FILE*));
+  stream_init = malloc (nb_streams * sizeof (uint8_t));
+  streams     = malloc (nb_streams * sizeof (stream_info_t));
+  chunks      = malloc (nb_streams * frame_lookahead * MAX_MCU_X * MAX_MCU_Y * sizeof (frame_chunk_t));
+  
+  // Allocation for streams FILE table :
+  for (int i = 0; i < nb_streams; i++)
+  { 
+    frame_id[i] = 0;
+    movies[i] = NULL;
+    stream_init[i] = 1;
+    if ((movies[i] = fopen(argv[args], "r")) == NULL) {
+      perror(strerror(errno));
+      exit(-1);
+    }
+    args++;
+  }
+
+  /* Init Management : */
 #ifdef MJPEG_USES_GTG
   mjpeg_gtg_init ();
 #endif
-  options(argc, argv);
   surfaces_init ();
   factors_init ();
 
@@ -177,7 +246,7 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
   nb_ftp = frame_lookahead;
   /* Actual computation : */
   int elem_read;
-  while (end_of_file == 0) {
+  while (termination == 0) {
     // TODO TRACE :
     // traceThread WAIT START
 #ifdef MJPEG_USES_GTG
@@ -197,6 +266,10 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
       nanosleep (&time, NULL); 
       if (end_of_file != 0)
       {
+nbftp:
+        while(nb_ftp < frame_lookahead) {}
+        printf ("SKIPLINE202 %d fetch at the end on %d buffer size\n", nb_ftp, frame_lookahead);
+        termination = 1;
         goto clean_end;
       }
       // TODO TRACE : 
@@ -224,8 +297,8 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
           //PFRAME("Skipping frame %d for stream %d\n", 1, frame_id[s], s);  
           PFETCH("Skipping frame %d for stream %d\n", frame_id[s], s);  
           skip_frame (movies[s]);
-          if (end_of_file == 1)
-            goto clean_end;
+          if (end_of_file != 0)
+            goto nbftp;
 
           frame_id[s]++;
         }
@@ -241,7 +314,7 @@ noskip:
       if (feof(movies[stream_id])) {
         // TODO : atomic increment, the if end_of_file == nb_streams ...
         end_of_file = 1;
-        break;
+        goto nbftp;
       } else {
         fprintf(stderr, "Error reading marker from input file\n");
         exit (1);
@@ -394,7 +467,6 @@ noskip:
                   tables[HT_type][HT_index]);
               if (loaded_size < 0) {
                 VPRINTF("Failed to load Huffman table\n");
-
                 goto clean_end;
               }
               DHT_size += loaded_size;
@@ -655,7 +727,7 @@ clean_end:
   }
 
 
-  printf ("\n#dropped frames : %d\n", dropped);
+  //printf ("\n#dropped frames : %d\n", dropped);
 
 #ifdef MJPEG_USES_TIMING
   long twork = 0;
@@ -703,80 +775,6 @@ void METHOD (fetch, fetch)(void *_this, struct timeval beg)
   __sync_fetch_and_add(&nb_ftp, 1);
 }
 
-
-static void options(int argc, char** argv)
-{
-  int args = 1;
-
-  if (argc < 2) {
-    usage(argv[0]);
-    exit(1);
-  }
-
-  while (args < argc) {
-    if (argv[args][0] ==  '-') {
-      switch(argv[args][1]) {
-        case 'f':
-          if ((argc - args) < 1) {
-            usage(argv[0]);
-            exit(1);
-          }
-          framerate = atoi(argv[args+1]);
-          args +=2;
-          break;
-        case 'h':
-          usage(argv[0]);
-          exit(0);
-          break;
-        case 'b':
-          if ((argc - args) < 1) {
-            usage(argv[0]);
-            exit(1);
-          }
-          frame_lookahead = atoi(argv[args+1]);
-          args += 2;
-          break;
-        case 'c':
-          color=0;
-          args++;
-          break;
-        default :
-          usage(argv[0]);
-          exit(1);
-          break;
-      }
-    } else {
-      break;
-    }
-  }
-
-  if ((argc - args) < 1) {
-    usage(argv[0]);
-    exit(1);
-  }
-
-  nb_streams = argc - args;
-
-  frame_id    = malloc (nb_streams * sizeof (int));
-  movies      = malloc (nb_streams * sizeof (FILE*));
-  stream_init = malloc (nb_streams * sizeof (uint8_t));
-  streams     = malloc (nb_streams * sizeof (stream_info_t));
-  chunks      = malloc (nb_streams * frame_lookahead * MAX_MCU_X * MAX_MCU_Y
-      * sizeof (frame_chunk_t));
-
-  // Allocation for streams FILE table :
-  for (int i = 0; i < nb_streams; i++)
-  {
-    frame_id[i] = 0;
-    movies[i] = NULL;
-    stream_init[i] = 1;
-    if ((movies[i] = fopen(argv[args], "r")) == NULL) {
-      perror(strerror(errno));
-      exit(-1);
-    }
-    args++;
-  }
-}
 
 static void surfaces_init ()
 {
@@ -1158,7 +1156,7 @@ read_1_byte (FILE* movie)
   NEXT_TOKEN(c, movie);
   if (c == EOF)
   {
-    end_of_file = 1;
+    end_of_file = -1;
   }
     //ERREXIT("Premature EOF in JPEG file");
   return c;
