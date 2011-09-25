@@ -1,9 +1,9 @@
 CC=gcc -Wall -std=gnu99
 CFLAGS+=-g -O0 -I../include/ -I/home/claferri/opt/include/ $(shell pkg-config --cflags kaapi)
-CFLAGS+=-DC2X_USES_TIMING -DMJPEG_USES_TIMING
+CFLAGS+=-DC2X_USES_TIMING -DMJPEG_USES_TIMING -DC2X_USES_PAPI
 #CFLAGS+=-gdwarf-2 -g3 # Macros debug stuffs
 
-LDFLAGS=$(shell pkg-config --libs kaapi) -L/home/claferri/opt/lib/ -lpthread -lSDL -lSGE -lgtg
+LDFLAGS=$(shell pkg-config --libs kaapi) -L/home/claferri/opt/lib/ -lpthread -lSDL -lSGE -lgtg -lpapi
 LDLIB=/home/claferri/opt/lib/:$(shell pkg-config --libs-only-L kaapi | sed 's/^-L//')
 
 ORI=../src/MJPEG
