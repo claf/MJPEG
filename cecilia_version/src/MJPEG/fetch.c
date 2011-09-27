@@ -103,7 +103,6 @@ static void usage(char *progname) {
 int METHOD(entry, main)(void *_this, int argc, char** argv)
 {
   PXKAAPI("Fetch start\n");
-
 #ifdef MJPEG_USES_TIMING
   tick_t t1, t2;
   GET_TICK(t1);
@@ -225,7 +224,13 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
 
   /* Init Management : */
 #ifdef MJPEG_USES_GTG
-  mjpeg_gtg_init ();
+  gtg_init ();
+#ifdef MJPEG_TRACE_FRAME
+  gtg_frameTrace_init ();
+#endif
+#ifdef MJPEG_TRACE_THREAD
+  gtg_threadTrace_init ();
+#endif
 #endif
   surfaces_init ();
   factors_init ();
@@ -249,8 +254,8 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
   while ((termination == 0) || (end_of_file == 0)) {
     // TODO TRACE :
     // traceThread WAIT START
-#ifdef MJPEG_USES_GTG
-    doState ("Wa");
+#ifdef MJPEG_TRACE_THREAD
+    doState ("Wa", tid);
 #endif
 #ifdef MJPEG_USES_TIMING
     GET_TICK(t2);
@@ -260,7 +265,7 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
     // while no frame to process :
     // find a better way!
     while (nb_ftp <= 0) {
-#ifdef MJPEG_USES_GTG
+#ifdef MJPEG_TRACE_THREAD
       doVar (c2x_workqueue_size(&work.wq));
 #endif
       nanosleep (&time, NULL); 
@@ -282,8 +287,8 @@ nbftp:
       // threadEventTrace FETCH STOP (start exec and stop).
 
     }
-#ifdef MJPEG_USES_GTG
-    doState ("Re");
+#ifdef MJPEG_TRACE_THREAD
+    doState ("Re", tid);
 #endif
 #ifdef MJPEG_USES_TIMING
     GET_TICK(t1);
@@ -503,6 +508,9 @@ noskip:
             struct timeval tim;
             gettimeofday(&tim, NULL);
 
+#ifdef MJPEG_TRACE_FRAME
+            pushFrameState ("De", frame_id[stream_id]);
+#endif
             // If you want to skip next ...
             noskip = 0;
 
@@ -585,8 +593,8 @@ noskip:
                 }
                 chunk->data = (int32_t*) MCUs [stream_id] [frame_id[stream_id] % frame_lookahead] [index_X] [index_Y];
                 chunk->DQT_table = (uint8_t*) &(DQT_table[stream_id][frame_id[stream_id] % frame_lookahead]);/*[SOF_component[component_index].q_table];*/
-#ifdef MJPEG_USES_GTG
-                doState ("Fo");
+#ifdef MJPEG_TRACE_THREAD
+                doState ("Fo", tid);
 #endif
 #ifdef MJPEG_USES_TIMING
     GET_TICK(t2);
@@ -597,8 +605,8 @@ noskip:
     GET_TICK(t1);
     mjpeg_time_table[0].tread += TICK_RAW_DIFF (t2,t1);
 #endif 
-#ifdef MJPEG_USES_GTG
-                doState ("Re");
+#ifdef MJPEG_TRACE_THREAD
+                doState ("Re", tid);
 #endif
               }
             }
@@ -732,6 +740,9 @@ clean_end:
     free (Achievements[i]);
   }
 
+#ifdef MJPEG_USES_GTG
+  gtg_finalize();
+#endif
 
   //printf ("\n#dropped frames : %d\n", dropped);
 
@@ -767,15 +778,14 @@ clean_end:
 
 void METHOD (fetch, fetch)(void *_this, struct timeval beg)
 {
-  struct timeval end;
-  gettimeofday (&end, NULL);
-
-
-#ifdef MJPEG_USES_GTG
-  linkEnd (frame_id[0] + nb_ftp);
+#ifdef MJPEG_TRACE_THREAD
+  linkEnd (frame_id[0] + nb_ftp, tid);
 #endif
 
-  TRACE_FRAME (frame_id[0] + nb_ftp , beg, end, "fetch");
+#ifdef MJPEG_TRACE_FRAME
+  popFrameState ("F", frame_id[0] + nb_ftp);
+  //TRACE_FRAME (frame_id[0] + nb_ftp , beg, end, "fetch");
+#endif
 
   PFETCH("Adding 1 frame to process, nb_ftp = %d\n", nb_ftp);
   __sync_fetch_and_add(&nb_ftp, 1);

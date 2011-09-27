@@ -62,7 +62,10 @@ void METHOD(render, render)(void *_this, int width, int height, int framerate)
     {
       /* Store time : */
       gettimeofday (&end, NULL);
-      TRACE_FRAME (last_frame_id, end, end, "next");
+#ifdef MJPEG_TRACE_FRAME
+      doFrameEvent("N", last_frame_id);
+      //TRACE_FRAME (last_frame_id, end, end, "next");
+#endif
 
       for (int i = 0; i < frame_lookahead; i++)
       {
@@ -90,7 +93,6 @@ void METHOD(render, render)(void *_this, int width, int height, int framerate)
 
       /* Store time : */
       gettimeofday (&end, NULL);
-      TRACE_FRAME (frame_id, beg, end, "print");
 
       /* Reset Done and Free struct : */
       Done[frame_id % frame_lookahead] = 0;
@@ -114,7 +116,11 @@ void METHOD(render, render)(void *_this, int width, int height, int framerate)
       mjpeg_time_table[tid].tcopy += TICK_RAW_DIFF(td1,td2);
 #endif
 
-#ifdef MJPEG_USES_GTG
+#ifdef MJPEG_TRACE_FRAME
+      doFrameEvent("P", last_frame_id);
+      //TRACE_FRAME (frame_id, beg, end, "print");
+#endif
+#ifdef MJPEG_TRACE_THREAD
       doEvent ("P", frame_id);
 #endif
 
@@ -132,8 +138,12 @@ void METHOD(render, render)(void *_this, int width, int height, int framerate)
         // TODO TRACE :
         // traceEventThread FETCH START (event so steps are start, exec and
         // stop)!
-#ifdef MJPEG_USES_GTG
+#ifdef MJPEG_TRACE_THREAD
         linkStart ("R", frame_fetch_id);
+#endif
+
+#ifdef MJPEG_TRACE_FRAME
+      pushFrameState ("F", frame_fetch_id);
 #endif
 
         CALL (fetch, fetch, beg);
@@ -150,8 +160,12 @@ void METHOD(render, render)(void *_this, int width, int height, int framerate)
       // TODO TRACE :
       // traceEventThread FETCH START (event so steps are start, exec and
       // stop)!
-#ifdef MJPEG_USES_GTG
+#ifdef MJPEG_TRACE_THREAD
       linkStart ("R", frame_fetch_id);
+#endif
+
+#ifdef MJPEG_TRACE_FRAME
+      pushFrameState ("F", frame_fetch_id);
 #endif
 
       CALL (fetch, fetch, beg);

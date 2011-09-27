@@ -44,8 +44,8 @@ void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk, struct timeval be
   if (unlikely (tid == -1))
     tid = kaapi_get_self_kid ();
 
-#ifdef MJPEG_USES_GTG
-  doState ("De"); 
+#ifdef MJPEG_TRACE_THREAD
+  doState ("De", tid); 
 #endif
 
   struct timeval end;
@@ -167,8 +167,12 @@ void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk, struct timeval be
     Achievements[stream_id][frame_id % frame_lookahead] = 0;
 
     gettimeofday (&end, NULL);
-    TRACE_FRAME (frame_id, beg, end, "decode");
 
+#ifdef MJPEG_TRACE_FRAME
+    popFrameState ("De", frame_id);
+    pushFrameState ("Rs", frame_id);
+    //TRACE_FRAME (frame_id, beg, end, "decode");
+#endif
     CALL (resize, resize, chunk, end);
   }
 
@@ -178,8 +182,8 @@ void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk, struct timeval be
     abort ();
   }
 
-#ifdef MJPEG_USES_GTG
-  doState ("Xk");
+#ifdef MJPEG_TRACE_THREAD
+  doState ("Xk", tid);
 #endif
 
 #ifdef MJPEG_USES_TIMING

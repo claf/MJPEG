@@ -6,14 +6,12 @@
 # define unlikely(x) __builtin_expect(!!(x), 0)
 #endif
 
-#ifdef MJPEG_USES_GTG
-# include "trace_gtg.h"
+#ifdef MJPEG_TRACE_FRAME || MJPEG_TRACE_THREAD
+# define MJPEG_USES_GTG
 #endif
 
-#ifdef _USE_TRACE
-# include "trace.h"
-#else
-# define TRACE_FRAME(a,b,c,d)
+#ifdef MJPEG_USES_GTG
+# include <trace_gtg.h>
 #endif
 
 #include <stdint.h>

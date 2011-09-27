@@ -30,8 +30,8 @@ void METHOD(resize, resize)(void *_this, frame_chunk_t* chunk, struct timeval be
   if (unlikely (tid == -1))
     tid = kaapi_get_self_kid ();
 
-#ifdef MJPEG_USES_GTG
-  doState ("Rs");
+#ifdef MJPEG_TRACE_THREAD
+  doState ("Rs", tid);
 #endif
 
   struct timeval end;
@@ -47,7 +47,11 @@ dropping:
       Free[frame_id] = 1;
       in_progress[frame_id] = -1;
       gettimeofday (&end, NULL);
-      TRACE_FRAME (chunk->frame_id, beg, end, "drop");
+#ifdef MJPEG_TRACE_FRAME
+      popFrameState ("Rs", chunk->frame_id);
+      doFrameEvent ("D", chunk->frame_id);
+      //TRACE_FRAME (chunk->frame_id, beg, end, "drop");
+#endif
     } else {
       __sync_add_and_fetch (&Done[frame_id], 1);
     }
@@ -105,14 +109,17 @@ dropping:
 
   if (nb_frames == nb_streams) {
     gettimeofday (&end, NULL);
-    TRACE_FRAME (chunk->frame_id, beg, end, "resize");
+#ifdef MJPEG_TRACE_FRAME
+    popFrameState ("Rs", chunk->frame_id);
+    //TRACE_FRAME (chunk->frame_id, beg, end, "resize");
+#endif
 
     PRESIZE("Frame %d ready to print (Done[%d] = %d)\n", chunk->frame_id,
         frame_id, Done[frame_id]);
   }
 
-#ifdef MJPEG_USES_GTG
-  doState ("Xk");
+#ifdef MJPEG_TRACE_THREAD
+  doState ("Xk", tid);
 #endif
 
 #ifdef MJPEG_USES_TIMING
