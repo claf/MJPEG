@@ -776,14 +776,14 @@ clean_end:
   return;
 }
 
-void METHOD (fetch, fetch)(void *_this, struct timeval beg)
+void METHOD (fetch, fetch)(void *_this, int fid)
 {
 #ifdef MJPEG_TRACE_THREAD
-  linkEnd (frame_id[0] + nb_ftp, tid);
+  linkEnd (fid, tid);
 #endif
 
 #ifdef MJPEG_TRACE_FRAME
-  popFrameState ("F", frame_id[0] + nb_ftp);
+  popFrameState ("F", fid);
   //TRACE_FRAME (frame_id[0] + nb_ftp , beg, end, "fetch");
 #endif
 

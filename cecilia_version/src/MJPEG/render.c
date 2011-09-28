@@ -146,7 +146,7 @@ void METHOD(render, render)(void *_this, int width, int height, int framerate)
       pushFrameState ("F", frame_fetch_id);
 #endif
 
-        CALL (fetch, fetch, beg);
+        CALL (fetch, fetch, frame_fetch_id);
         
         frame_fetch_id++;
       }
@@ -168,7 +168,7 @@ void METHOD(render, render)(void *_this, int width, int height, int framerate)
       pushFrameState ("F", frame_fetch_id);
 #endif
 
-      CALL (fetch, fetch, beg);
+      CALL (fetch, fetch, frame_fetch_id);
 
       Free[frame_fetch_id % frame_lookahead] = 0;
       frame_fetch_id++;
