@@ -8,7 +8,9 @@ print "Processing file $file\n";
 
 my $R = Statistics::R->new();
 $R->startR ;
-$R->send(qq`pdf("$file.pdf")`);
+
+#$R->send(qq`pdf("$file.pdf")`);
+$R->send(qq`png("$file.png")`);
 
 my $read = 0;
 my $wait = 0;
