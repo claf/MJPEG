@@ -1,3 +1,5 @@
+#define _GNU_SOURCE
+
 #include <errno.h>
 #include <pthread.h>
 #include <stdio.h>
@@ -103,10 +105,6 @@ static void usage(char *progname) {
 int METHOD(entry, main)(void *_this, int argc, char** argv)
 {
   PXKAAPI("Fetch start\n");
-#ifdef MJPEG_USES_TIMING
-  tick_t t1, t2;
-  GET_TICK(t1);
-#endif
 
   /* TODO : dynamic alloc :
    * Streams 
@@ -126,7 +124,6 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
   DQT_section_t DQT_section;
   int stream_id = 0;
   int noskip = 1;
-  int nb_threads = kaapi_getconcurrency() + 1;
   int32_t *MCU = NULL;
   struct timespec time;
 
@@ -140,6 +137,7 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
     tid = kaapi_get_self_kid ();
 
 #ifdef MJPEG_USES_TIMING
+  int nb_threads = kaapi_getconcurrency() + 1;
   mjpeg_time_table = (time_mjpeg_t*) malloc (sizeof (time_mjpeg_t) * nb_threads);
   for (int i = 0; i < nb_threads; i++)
   {
@@ -251,7 +249,15 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
   nb_ftp = frame_lookahead;
   /* Actual computation : */
   int elem_read;
-  while ((termination == 0) || (end_of_file == 0)) {
+
+
+#ifdef MJPEG_USES_TIMING
+  tick_t t1, t2;
+  GET_TICK(t1);
+#endif
+
+
+while ((termination == 0) || (end_of_file == 0)) {
     // TODO TRACE :
     // traceThread WAIT START
 #ifdef MJPEG_TRACE_THREAD
@@ -273,7 +279,6 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
       {
 nbftp:
         while(nb_ftp < frame_lookahead) {}
-        printf ("SKIPLINE202 %d fetch at the end on %d buffer size\n", nb_ftp, frame_lookahead);
         termination = 1;
         goto clean_end;
       }
@@ -420,7 +425,20 @@ noskip:
                 render_args->height =  WINDOW_W;
                 render_args->framerate =  framerate;
 
-                pthread_create(&thid, NULL, (void*(*)(void*)) &render_body, render_args);
+                int res;
+                pthread_attr_t attr;
+                cpu_set_t cpuset;
+                pthread_attr_init (&attr);
+                CPU_ZERO(&cpuset);
+
+                for (int j = 0; j < sysconf (_SC_NPROCESSORS_ONLN); j++)
+                  CPU_SET(j, &cpuset);
+
+                res = pthread_attr_setaffinity_np(&attr, sizeof(cpu_set_t), &cpuset);
+                if (res != 0)
+                  perror ("setaffinity");
+
+                pthread_create(&thid, &attr, (void*(*)(void*)) &render_body, render_args);
 
               }
 
@@ -505,9 +523,6 @@ noskip:
 
         case M_SOS:
           {
-            struct timeval tim;
-            gettimeofday(&tim, NULL);
-
 #ifdef MJPEG_TRACE_FRAME
             pushFrameState ("De", frame_id[stream_id]);
 #endif
@@ -600,7 +615,7 @@ noskip:
     GET_TICK(t2);
     mjpeg_time_table[0].tread += TICK_RAW_DIFF (t1,t2);
 #endif 
-                CALL (decode, decode, chunk, tim);
+                CALL (decode, decode, chunk);
 #ifdef MJPEG_USES_TIMING
     GET_TICK(t1);
     mjpeg_time_table[0].tread += TICK_RAW_DIFF (t2,t1);
@@ -748,7 +763,7 @@ clean_end:
 
 #ifdef MJPEG_USES_TIMING
   long twork = 0;
-  printf ("\n*** MJPEG TIMING INFOS ***\n");
+  printf ("\n*** MJPEG TIMING INFOS ***\n\n");
 
   printf ("Time for thread %d :\t read :%ld\n",0, (long)tick2usec(mjpeg_time_table[0].tread));
   printf ("Time for thread %d :\t wait :%ld\n",0, (long)tick2usec(mjpeg_time_table[0].twait));
@@ -756,10 +771,12 @@ clean_end:
 
   for (int i = 1; i < nb_threads - 1; i++)
   {
+    twork += (long)tick2usec(mjpeg_time_table[i].tdec) + (long)tick2usec(mjpeg_time_table[i].trsz);
+/*
     printf ("Time for thread %d :\t decode :%ld\n",i, (long)tick2usec(mjpeg_time_table[i].tdec));
     printf ("Time for thread %d :\t resize :%ld\n",i, (long)tick2usec(mjpeg_time_table[i].trsz));
-    twork += (long)tick2usec(mjpeg_time_table[i].tdec) + (long)tick2usec(mjpeg_time_table[i].trsz);
     printf ("--------------------------------\n");
+*/
   }
 
   printf ("Time for thread %d :\t copy :%ld\n",nb_threads - 1, (long)tick2usec(mjpeg_time_table[nb_threads-1].tcopy));

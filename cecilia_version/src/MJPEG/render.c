@@ -1,6 +1,11 @@
+#define _GNU_SOURCE
+
 #include <assert.h>
+#include <pthread.h>
+#include <sched.h>
 #include <stdio.h>
 #include <stdint.h>
+#include <sys/time.h>
 #include <unistd.h>
 #include <SDL/SDL.h>
 
@@ -33,6 +38,7 @@ static SDL_Surface *screen;
 
 void METHOD(render, render)(void *_this, int width, int height, int framerate)
 {
+  int res;
   int delay; // time between two frames.
   int wait; // time to wait before printing next frame.
   int frame_id; // frame id that should be printed now.
@@ -41,9 +47,47 @@ void METHOD(render, render)(void *_this, int width, int height, int framerate)
   SDL_Event event;
   SDL_Surface* src;
 
+  /* Set affinity to every CPU avaliable because newly created pthread threads
+   * inherits CPUSET from parent thread (only one CPU if using KAAPI_CPUSET). */
+//  pthread_t thread = pthread_self();
+
+/*  cpu_set_t cpuset;
+  CPU_ZERO(&cpuset);
+
+  for (int j = 0; j < sysconf (_SC_NPROCESSORS_ONLN); j++)
+    CPU_SET(j, &cpuset);
+
+  res = pthread_setaffinity_np(pthread_self(), sizeof(cpu_set_t), &cpuset);
+  if (res != 0)
+    perror ("setaffinity");
+*/
+//  /* Check the actual affinity mask assigned to the thread */
+//
+//  res = pthread_getaffinity_np(thread, sizeof(cpu_set_t), &cpuset);
+//  if (res != 0)
+//    perror("getaffinity");
+//
+//  printf("Set returned by pthread_getaffinity_np() contained:\n");
+//  for (int j = 0; j < CPU_SETSIZE; j++)
+//    if (CPU_ISSET(j, &cpuset))
+//      printf("    CPU %d\n", j);
+
+
+
   tid = kaapi_getconcurrency ();
 
-  sleep(1);
+  struct timespec time;
+  
+  while (nb_ftp != 0)
+  {
+    time.tv_sec = 0;
+    time.tv_nsec = 200;
+
+    nanosleep(&time, NULL);
+  }
+
+  time.tv_nsec = 200000000; // 200ms
+  nanosleep(&time, NULL);
 
   /* screen init and stuff : */
   render_init (width, height, framerate);

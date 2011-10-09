@@ -16,7 +16,7 @@ DECLARE_DATA{
 #include "cecilia.h"
 
 /* Passing frame_chunk_t as a full frame for internal infos only. */
-void METHOD(resize, resize)(void *_this, frame_chunk_t* chunk, struct timeval beg)
+void METHOD(resize, resize)(void *_this, frame_chunk_t* chunk)
 {
 #ifdef MJPEG_USES_TIMING
   tick_t td1, td2;
@@ -53,6 +53,9 @@ dropping:
       //TRACE_FRAME (chunk->frame_id, beg, end, "drop");
 #endif
     } else {
+#ifdef MJPEG_TRACE_FRAME
+      popFrameState ("Rs", chunk->frame_id);
+#endif
       __sync_add_and_fetch (&Done[frame_id], 1);
     }
 
@@ -109,14 +112,14 @@ dropping:
 
   if (nb_frames == nb_streams) {
     gettimeofday (&end, NULL);
+    PRESIZE("Frame %d ready to print (Done[%d] = %d)\n", chunk->frame_id,
+        frame_id, Done[frame_id]);
+  }
+
 #ifdef MJPEG_TRACE_FRAME
     popFrameState ("Rs", chunk->frame_id);
     //TRACE_FRAME (chunk->frame_id, beg, end, "resize");
 #endif
-
-    PRESIZE("Frame %d ready to print (Done[%d] = %d)\n", chunk->frame_id,
-        frame_id, Done[frame_id]);
-  }
 
 #ifdef MJPEG_TRACE_THREAD
   doState ("Xk", tid);

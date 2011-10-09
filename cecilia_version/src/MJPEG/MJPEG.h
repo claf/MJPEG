@@ -6,7 +6,7 @@
 # define unlikely(x) __builtin_expect(!!(x), 0)
 #endif
 
-#ifdef MJPEG_TRACE_FRAME || MJPEG_TRACE_THREAD
+#if defined MJPEG_TRACE_FRAME || defined MJPEG_TRACE_THREAD
 # define MJPEG_USES_GTG
 #endif
 
@@ -50,6 +50,9 @@ extern time_mjpeg_t* mjpeg_time_table;
 
 // global frame buffer size :
 extern int frame_lookahead;
+
+// global frame to process info for render start :
+extern volatile int32_t nb_ftp;
 
 // global per thread identifier :
 extern __thread int tid;

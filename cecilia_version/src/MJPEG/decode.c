@@ -26,7 +26,7 @@ __thread uint8_t *YCbCr_MCU_ds[3] = { NULL, NULL, NULL};
 __thread uint32_t *RGB_MCU = NULL;
 
 
-void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk, struct timeval beg)
+void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk)
 {
   /* TODO : this is the reason 444 video doesnt work anymore, need to store 1 to
    * 3 HV instead of just one as this is currently the case : 
@@ -47,8 +47,6 @@ void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk, struct timeval be
 #ifdef MJPEG_TRACE_THREAD
   doState ("De", tid); 
 #endif
-
-  struct timeval end;
 
   uint8_t dropped = -1;
   uint8_t index;
@@ -166,14 +164,12 @@ void METHOD(decode, decode)(void *_this, frame_chunk_t* chunk, struct timeval be
     // TODO : no need to atomically set Achievements back to null?
     Achievements[stream_id][frame_id % frame_lookahead] = 0;
 
-    gettimeofday (&end, NULL);
-
 #ifdef MJPEG_TRACE_FRAME
     popFrameState ("De", frame_id);
     pushFrameState ("Rs", frame_id);
     //TRACE_FRAME (frame_id, beg, end, "decode");
 #endif
-    CALL (resize, resize, chunk, end);
+    CALL (resize, resize, chunk);
   }
 
   if (Achievements[stream_id][frame_id % frame_lookahead] > streams[stream_id].nb_MCU)
