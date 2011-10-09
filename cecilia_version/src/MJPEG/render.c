@@ -76,18 +76,7 @@ void METHOD(render, render)(void *_this, int width, int height, int framerate)
 
   tid = kaapi_getconcurrency ();
 
-  struct timespec time;
-  
-  while (nb_ftp != 0)
-  {
-    time.tv_sec = 0;
-    time.tv_nsec = 200;
-
-    nanosleep(&time, NULL);
-  }
-
-  time.tv_nsec = 200000000; // 200ms
-  nanosleep(&time, NULL);
+  sleep(1);
 
   /* screen init and stuff : */
   render_init (width, height, framerate);

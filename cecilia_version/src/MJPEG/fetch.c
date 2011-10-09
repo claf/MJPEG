@@ -141,6 +141,7 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
   mjpeg_time_table = (time_mjpeg_t*) malloc (sizeof (time_mjpeg_t) * nb_threads);
   for (int i = 0; i < nb_threads; i++)
   {
+    mjpeg_time_table[i].tunpack = 0;
     mjpeg_time_table[i].twait = 0;
     mjpeg_time_table[i].tread = 0;
     mjpeg_time_table[i].tdec = 0;
@@ -235,7 +236,7 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
 
   for (int i = 0; i < nb_streams; i++)
   {
-    MCUs[i] = (void *) malloc (sizeof (int32_t[MAX_MCU_X][MAX_MCU_Y][4][4][64]) * frame_lookahead);
+    MCUs[i] = (void *) malloc (frame_lookahead* sizeof (int32_t[MAX_MCU_X][MAX_MCU_Y][4][4][64]));
     DQT_table[i] = (void *) malloc (sizeof (uint8_t[4][64]) * frame_lookahead);
   }
 
@@ -252,6 +253,7 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
 
 
 #ifdef MJPEG_USES_TIMING
+  tick_t unpack1, unpack2;
   tick_t t1, t2;
   GET_TICK(t1);
 #endif
@@ -566,6 +568,7 @@ noskip:
                 tables[HUFF_DC][SOS_component[index].acdc & 0x0f];
             }
 
+
             for (index_X = 0; index_X < nb_MCU_X; index_X++) {
               for (index_Y = 0; index_Y < nb_MCU_Y; index_Y++) {
                 // TODO : allocate chunks with nb_stream, frame_lookahead, max_X and max_Y
@@ -601,7 +604,14 @@ noskip:
                   for (chroma_ss = 0; chroma_ss < nb_MCUz; chroma_ss++)
                   {
                     MCU = MCUs [stream_id] [frame_id[stream_id] % frame_lookahead] [index_X] [index_Y] [index] [chroma_ss];
+#ifdef MJPEG_USES_TIMING
+            GET_TICK(unpack1);
+#endif
                     unpack_block(movies[stream_id], &scan_desc,index, MCU);
+#ifdef MJPEG_USES_TIMING
+            GET_TICK (unpack2);
+            mjpeg_time_table[0].tunpack += TICK_RAW_DIFF (unpack1, unpack2);
+#endif
                     chunk->DQT_index[index][chroma_ss] = SOF_component[component_index].q_table;
                   }
 
@@ -612,19 +622,20 @@ noskip:
                 doState ("Fo", tid);
 #endif
 #ifdef MJPEG_USES_TIMING
-    GET_TICK(t2);
-    mjpeg_time_table[0].tread += TICK_RAW_DIFF (t1,t2);
+                GET_TICK(t2);
+                mjpeg_time_table[0].tread += TICK_RAW_DIFF (t1,t2);
 #endif 
                 CALL (decode, decode, chunk);
 #ifdef MJPEG_USES_TIMING
-    GET_TICK(t1);
-    mjpeg_time_table[0].tread += TICK_RAW_DIFF (t2,t1);
+                GET_TICK(t1);
+                mjpeg_time_table[0].tread += TICK_RAW_DIFF (t2,t1);
 #endif 
 #ifdef MJPEG_TRACE_THREAD
                 doState ("Re", tid);
 #endif
               }
             }
+
 
             // TODO : atomic inc?
             frame_id[stream_id]++; // next frame for this stream
@@ -766,17 +777,16 @@ clean_end:
   printf ("\n*** MJPEG TIMING INFOS ***\n\n");
 
   printf ("Time for thread %d :\t read :%ld\n",0, (long)tick2usec(mjpeg_time_table[0].tread));
+  printf ("Time for thread %d :\t unpack :%ld\n",0, (long)tick2usec(mjpeg_time_table[0].tunpack));
   printf ("Time for thread %d :\t wait :%ld\n",0, (long)tick2usec(mjpeg_time_table[0].twait));
   printf ("--------------------------------\n");
 
   for (int i = 1; i < nb_threads - 1; i++)
   {
     twork += (long)tick2usec(mjpeg_time_table[i].tdec) + (long)tick2usec(mjpeg_time_table[i].trsz);
-/*
     printf ("Time for thread %d :\t decode :%ld\n",i, (long)tick2usec(mjpeg_time_table[i].tdec));
     printf ("Time for thread %d :\t resize :%ld\n",i, (long)tick2usec(mjpeg_time_table[i].trsz));
     printf ("--------------------------------\n");
-*/
   }
 
   printf ("Time for thread %d :\t copy :%ld\n",nb_threads - 1, (long)tick2usec(mjpeg_time_table[nb_threads-1].tcopy));

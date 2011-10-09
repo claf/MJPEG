@@ -37,6 +37,7 @@
 
 // per worker thread structure :
 typedef struct time_mjpeg {
+  long tunpack; // for fetch component.
   long twait; // for fetch component.
   long tread; // for fetch component.
   long tdec;
