@@ -1,6 +1,6 @@
 CC=gcc -Wall -std=gnu99
 CFLAGS+=-g -O0 -I../include/ -I/home/claferri/opt/include/ $(shell pkg-config --cflags kaapi)
-CFLAGS+=-DC2X_USES_TIMING -DMJPEG_USES_TIMING -DC2X_USES_PAPI -DMJPEG_TRACE_FRAME
+CFLAGS+=-DC2X_USES_TIMING -DMJPEG_USES_TIMING -DC2X_USES_PAPI -DMJPEG_TRACE_FRAME -D_C2X_USES_LOCKFREE #-D_C2X_DEBUG
 #CFLAGS+=-gdwarf-2 -g3 # Macros debug stuffs
 
 LDFLAGS=$(shell pkg-config --libs kaapi) -L/home/claferri/opt/lib/ -lpthread -lSDL -lSGE -lgtg -lpapi -ltrace_gtg
@@ -37,6 +37,12 @@ debug: $(OUT)
 	LD_LIBRARY_PATH=$(LDLIB) cgdb -- --args mjpeg ~/toto.mjpeg 
 
 perl:$(TMPFILE)
+
+diff:
+	mkdir -p dtemp/
+	mv -n *.[ch] dtemp/
+	make veryclean && make perl
+	diff -q ./ dtemp/
 
 clean:
 	rm -rf $(OUT) *.o
