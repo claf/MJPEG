@@ -38,7 +38,6 @@ static SDL_Surface *screen;
 
 void METHOD(render, render)(void *_this, int width, int height, int framerate)
 {
-  int res;
   int delay; // time between two frames.
   int wait; // time to wait before printing next frame.
   int frame_id; // frame id that should be printed now.
@@ -47,20 +46,6 @@ void METHOD(render, render)(void *_this, int width, int height, int framerate)
   SDL_Event event;
   SDL_Surface* src;
 
-  /* Set affinity to every CPU avaliable because newly created pthread threads
-   * inherits CPUSET from parent thread (only one CPU if using KAAPI_CPUSET). */
-//  pthread_t thread = pthread_self();
-
-/*  cpu_set_t cpuset;
-  CPU_ZERO(&cpuset);
-
-  for (int j = 0; j < sysconf (_SC_NPROCESSORS_ONLN); j++)
-    CPU_SET(j, &cpuset);
-
-  res = pthread_setaffinity_np(pthread_self(), sizeof(cpu_set_t), &cpuset);
-  if (res != 0)
-    perror ("setaffinity");
-*/
 //  /* Check the actual affinity mask assigned to the thread */
 //
 //  res = pthread_getaffinity_np(thread, sizeof(cpu_set_t), &cpuset);
@@ -71,8 +56,6 @@ void METHOD(render, render)(void *_this, int width, int height, int framerate)
 //  for (int j = 0; j < CPU_SETSIZE; j++)
 //    if (CPU_ISSET(j, &cpuset))
 //      printf("    CPU %d\n", j);
-
-
 
   tid = kaapi_getconcurrency ();
 
