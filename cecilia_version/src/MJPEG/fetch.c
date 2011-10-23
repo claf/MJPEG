@@ -236,9 +236,18 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
 
   for (int i = 0; i < nb_streams; i++)
   {
-    MCUs[i] = (void *) malloc (frame_lookahead* sizeof (int32_t[MAX_MCU_X][MAX_MCU_Y][4][4][64]));
+    MCUs[i] = (void *) malloc (frame_lookahead * sizeof (int32_t[MAX_MCU_X][MAX_MCU_Y][4][4][64]));
     DQT_table[i] = (void *) malloc (sizeof (uint8_t[4][64]) * frame_lookahead);
   }
+
+
+  for (int i=0; i < nb_streams; i++)
+    for (int j=0; j < frame_lookahead; j++)
+      for (int k=0; k < MAX_MCU_X; k++)
+        for (int l=0; l < MAX_MCU_Y; l++)
+          for (int m=0; m < 4; m++)
+            for (int n=0; n < 4; n++)
+              MCUs[i][j][k][l][m][n][0] = 5;
 
 
   /* TODO : read begining of every files to find max_X and max_Y use
@@ -418,27 +427,31 @@ noskip:
                   Free[i] = 0;
                 }
 
-                // TODO : here 1st and 2nd arguments are not used.
-                // TODO : pthread_create now!
-                //render_init(SOF_section.width, SOF_section.height, framerate);
                 //CALL (render, render, WINDOW_H, WINDOW_W, framerate);
                 render_arg_t* render_args = (render_arg_t*) malloc (sizeof (render_arg_t));
                 render_args->width =  WINDOW_H;
                 render_args->height =  WINDOW_W;
                 render_args->framerate =  framerate;
 
+                /* Set affinity to every CPU avaliable because newly created
+                 * pthread threads inherits CPUSET from parent thread (only one
+                 * CPU if using KAAPI_CPUSET). */
                 int res;
-                pthread_attr_t attr;
                 cpu_set_t cpuset;
-                pthread_attr_init (&attr);
+                pthread_attr_t attr;
+
                 CPU_ZERO(&cpuset);
-
                 for (int j = 0; j < sysconf (_SC_NPROCESSORS_ONLN); j++)
+                {
                   CPU_SET(j, &cpuset);
+                }
 
-                res = pthread_attr_setaffinity_np(&attr, sizeof(cpu_set_t), &cpuset);
+                pthread_attr_init (&attr);
+                res = pthread_attr_setaffinity_np (&attr, sizeof(cpu_set_t), &cpuset);
                 if (res != 0)
+                {
                   perror ("setaffinity");
+                }
 
                 pthread_create(&thid, &attr, (void*(*)(void*)) &render_body, render_args);
 
