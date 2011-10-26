@@ -1,4 +1,4 @@
-CC=gcc -Wall -std=gnu99
+CC=gcc -Werror -Wall -std=gnu99
 CFLAGS+=-g -O0 -I../include/ -I/home/claferri/opt/include/ $(shell pkg-config --cflags kaapi)
 CFLAGS+=-DC2X_USES_TIMING -DMJPEG_USES_TIMING -DC2X_USES_PAPI -DMJPEG_TRACE_FRAME -D_C2X_USES_LOCKFREE #-D_C2X_DEBUG
 #CFLAGS+=-gdwarf-2 -g3 # Macros debug stuffs
