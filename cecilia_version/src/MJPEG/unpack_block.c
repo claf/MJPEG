@@ -8,6 +8,8 @@
 #include "unpack_block.h"
 #include "define_common.h"
 #include "utils.h"
+#include "MJPEG.h"
+#include "timing.h"
 
 /** Tree version of unpack block
  * Once more, enjoy !
@@ -86,6 +88,9 @@ uint8_t get_symbol(FILE * movie, scan_desc_t * scan_desc,
 void unpack_block(FILE * movie, scan_desc_t * scan_desc,
     uint32_t index, int32_t T[64])
 {
+#ifdef MJPEG_USES_TIMING
+  tick_t unpack1, unpack2;
+#endif
   uint32_t temp = 0, i = 0, run = 0, cat = 0;
   int32_t value = 0;
   uint8_t symbol = 0;
@@ -97,9 +102,16 @@ void unpack_block(FILE * movie, scan_desc_t * scan_desc,
   value = reformat(temp, symbol);
   value += scan_desc->pred[index];
   scan_desc->pred[index] = value;
+#ifdef MJPEG_USES_TIMING
+  GET_TICK(unpack1);
+#endif
 
   T[0] = value;
 
+#ifdef MJPEG_USES_TIMING
+  GET_TICK (unpack2);
+  mjpeg_time_table[0].tunpack += TICK_RAW_DIFF (unpack1, unpack2);
+#endif 
   for (i = 1; i < 64; i++) {
     symbol = get_symbol(movie, scan_desc, HUFF_AC, index);
 

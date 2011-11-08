@@ -34,6 +34,10 @@ void METHOD(resize, resize)(void *_this, frame_chunk_t* chunk)
   doState ("Rs", tid);
 #endif
 
+#ifdef MJPEG_TRACE_FRAME
+  doFrameEvent("M", chunk->frame_id);
+#endif
+
   struct timeval end;
   //PRESIZE("Called for frame %d from stream %d!\n", chunk->frame_id, stream_id);
 
