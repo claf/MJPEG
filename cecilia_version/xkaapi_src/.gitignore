@@ -2,5 +2,7 @@ benchs/
 *.o
 *.c
 *.h
+*.mjpeg
+*.trace
 mjpeg
 .Generated
