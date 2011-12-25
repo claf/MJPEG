@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <sys/time.h>
+#include <time.h>
 #include <unistd.h>
 #include <SDL/SDL.h>
 
@@ -38,7 +39,7 @@ static SDL_Surface *screen;
 
 void METHOD(render, render)(void *_this, int width, int height, int framerate)
 {
-  int delay; // time between two frames.
+  float delay; // time between two frames.
   int wait; // time to wait before printing next frame.
   int frame_id; // frame id that should be printed now.
   int frame_fetch_id = frame_lookahead; // next fetched frame id.
@@ -59,12 +60,12 @@ void METHOD(render, render)(void *_this, int width, int height, int framerate)
 
   tid = kaapi_getconcurrency ();
 
-  sleep(1);
+  usleep(sleep_time * 1000);
 
   /* screen init and stuff : */
   render_init (width, height, framerate);
 
-  delay = 1000 / global_framerate;
+  delay = 1000 / (float)global_framerate;
   gettimeofday (&beg, NULL);
 
   /* Because now it's a thread. */
@@ -159,10 +160,11 @@ void METHOD(render, render)(void *_this, int width, int height, int framerate)
 #endif
 
 #ifdef MJPEG_TRACE_FRAME
-      pushFrameState ("F", frame_fetch_id);
+        pushFrameState ("F", frame_fetch_id);
 #endif
 
-        CALL (fetch, fetch, frame_fetch_id);
+        __sync_fetch_and_add(&nb_ftp, 1);
+        //fetch (frame_fetch_id);
         
         frame_fetch_id++;
       }
@@ -184,7 +186,8 @@ void METHOD(render, render)(void *_this, int width, int height, int framerate)
       pushFrameState ("F", frame_fetch_id);
 #endif
 
-      CALL (fetch, fetch, frame_fetch_id);
+      __sync_fetch_and_add(&nb_ftp, 1);
+      //fetch (frame_fetch_id);
 
       Free[frame_fetch_id % frame_lookahead] = 0;
       frame_fetch_id++;

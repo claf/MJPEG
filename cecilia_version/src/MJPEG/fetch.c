@@ -31,6 +31,9 @@ volatile uint8_t termination = 0;
 time_mjpeg_t *mjpeg_time_table; //[6] = {{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}};
 #endif
 
+// Global Render sleep time :
+int sleep_time;
+
 // Global Surfaces structures :
 SDL_Surface **Surfaces_normal[MAX_STREAM];
 SDL_Surface **Surfaces_resized;
@@ -97,7 +100,9 @@ static void usage(char *progname) {
   printf("Usage : %s [options] <mjpeg_file_1> [<mjpeg_file_2> ...]\n", progname);
   printf("Options list :\n");
   printf("\t-f <framerate> : set framerate for the movie\n");
+  printf("\t-n <nb_frames> : set max frames number for the movie\n");
   printf("\t-b <buffer_size> : set buffer size (frame loolahead) for the movie\n");
+  printf("\t-s <sleep> : set Render sleep time\n");
   printf("\t-c : decode streams in black and white format\n");
   printf("\t-h : display this help and exit\n");
 }
@@ -113,6 +118,7 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
    */
 
   pthread_t thid;
+  int nb_frames = 6000;
   uint8_t marker[2];
   uint8_t QT_index = 0;
   uint16_t max_ss_h = 0 , max_ss_v = 0;
@@ -137,6 +143,9 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
     tid = kaapi_get_self_kid ();
 
 #ifdef MJPEG_USES_TIMING
+  int nb_fetch = 0;
+  long sum_tfetch = 0;
+  
   int nb_threads = kaapi_getconcurrency() + 1;
   mjpeg_time_table = (time_mjpeg_t*) malloc (sizeof (time_mjpeg_t) * nb_threads);
   for (int i = 0; i < nb_threads; i++)
@@ -172,6 +181,22 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
         case 'h':
           usage(argv[0]);
           return;
+          break;
+        case 'n':
+          if ((argc - args) < 1) {
+            usage(argv[0]); 
+            return;
+          } 
+          nb_frames = atoi(argv[args+1]);
+          args += 2;
+          break;
+        case 's':
+          if ((argc - args) < 1) {
+            usage(argv[0]);
+            return;
+          }
+          sleep_time = atoi(argv[args+1]);
+          args += 2;
           break;
         case 'b':
           if ((argc - args) < 1) {
@@ -223,9 +248,11 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
 
   /* Init Management : */
 #ifdef MJPEG_USES_GTG
-  gtg_init ();
+  char* filename = malloc (sizeof (char) * MAX_FILENAME);
+  sprintf (filename, "Trace_%s_%dc_%df_%ds_%db", argv[args - 1], nb_threads - 2, framerate, sleep_time, frame_lookahead);
+  gtg_init (filename);
 #ifdef MJPEG_TRACE_FRAME
-  gtg_frameTrace_init ();
+  gtg_frameTrace_init (nb_frames);
 #endif
 #ifdef MJPEG_TRACE_THREAD
   gtg_threadTrace_init ();
@@ -469,7 +496,7 @@ noskip:
               streams[stream_id].nb_MCU = nb_MCU;
 
               //#ifdef MY_DEBUG
-              //printf ("Read and Set nb_MCU :  %d\n",nb_MCU);
+              printf ("Read MCU_x %d MCU_y %d\n", nb_MCU_X, nb_MCU_Y);
               //#endif
 
             }
@@ -545,6 +572,10 @@ noskip:
           {
 #ifdef MJPEG_TRACE_FRAME
             pushFrameState ("De", frame_id[stream_id]);
+#endif
+#ifdef MJPEG_USES_TIMING
+            tick_t sum_tfetch_1, sum_tfetch_2;
+            GET_TICK (sum_tfetch_1);
 #endif
             // If you want to skip next ...
             noskip = 0;
@@ -623,12 +654,12 @@ noskip:
                   {
                     MCU = MCUs [stream_id] [frame_id[stream_id] % frame_lookahead] [index_X] [index_Y] [index] [chroma_ss];
 #ifdef MJPEG_USES_TIMING
-                    GET_TICK(unpack1);
+            //        GET_TICK(unpack1);
 #endif
                     unpack_block(movies[stream_id], &scan_desc,index, MCU);
 #ifdef MJPEG_USES_TIMING
-                    GET_TICK (unpack2);
-                    mjpeg_time_table[0].tunpack += TICK_RAW_DIFF (unpack1, unpack2);
+              //      GET_TICK (unpack2);
+               //     mjpeg_time_table[0].tunpack += TICK_RAW_DIFF (unpack1, unpack2);
 #endif
                     chunk->DQT_index[index][chroma_ss] = SOF_component[component_index].q_table;
                   }
@@ -658,8 +689,12 @@ noskip:
             doFrameEvent("M", frame_id[stream_id]);
 #endif
 #ifdef MJPEG_USES_TIMING
-            printf ("Unpack for image %d : %ld\n", frame_id[stream_id], mjpeg_time_table[0].tunpack);
-            mjpeg_time_table[0].tunpack = 0;
+            GET_TICK(sum_tfetch_2);
+            sum_tfetch += TICK_RAW_DIFF (sum_tfetch_1, sum_tfetch_2);
+            nb_fetch++;
+
+           // printf ("Unpack for image %d : %ld\n", frame_id[stream_id], mjpeg_time_table[0].tunpack);
+            //mjpeg_time_table[0].tunpack = 0;
 #endif
 
             // TODO : atomic inc?
@@ -804,6 +839,8 @@ clean_end:
   printf ("Time for thread %d :\t read   :%ld\n",0, (long)tick2usec(mjpeg_time_table[0].tread));
   printf ("Time for thread %d :\t unpack :%ld\n",0, (long)tick2usec(mjpeg_time_table[0].tunpack));
   printf ("Time for thread %d :\t wait   :%ld\n",0, (long)tick2usec(mjpeg_time_table[0].twait));
+  printf ("\n");
+  printf ("Average time for thread Fetch :\t fetch   :%ld\n", (long)(tick2usec(sum_tfetch)/nb_fetch));
   printf ("--------------------------------\n");
 
   for (int i = 1; i < nb_threads - 1; i++)

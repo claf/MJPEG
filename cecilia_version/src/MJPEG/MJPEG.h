@@ -21,6 +21,7 @@
 #include "utils.h"
 
 #define FRAME_LOOKAHEAD 5
+#define MAX_FILENAME 50
 #define MAX_SAMPLING 4
 #define MAX_STREAM 3
 
@@ -125,6 +126,9 @@ extern uint8_t position[MAX_STREAM];
 
 // Global stream table :
 extern stream_info_t* streams;
+
+// Global Render sleep time :
+extern int sleep_time;
 
 // Global chunk achievement table :
 extern uint32_t* Achievements[MAX_STREAM];
