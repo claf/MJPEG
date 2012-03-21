@@ -24,6 +24,10 @@ debug mode :
 
 ***********************************************************
 
+
+Also look at the Makefile for const description.
+
+
 Compilation flags for C2X :
 
 - C2X_USES_TIMING
