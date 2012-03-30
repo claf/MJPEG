@@ -1,12 +1,12 @@
 CC=gcc -Wall -std=gnu99
 CFLAGS+=-g -O0 -I../include/ -I/home/claferri/opt/include/ $(shell pkg-config --cflags kaapi)
 
-CFLAGS+=-DC2X_USES_TIMING
-CFLAGS+=-DMJPEG_USES_TIMING
-CFLAGS+=-DMJPEG_TRACE_FRAME
-#CFLAGS+=-D_C2X_USES_LOCKFREE
-#CFLAGS+=-DC2X_USES_PAPI
-#CFLAGS+=-D_C2X_DEBUG
+CFLAGS+=-DC2X_USES_TIMING # Allow to print global time spent to steal / push / pop ...
+CFLAGS+=-DMJPEG_USES_TIMING # Allow to print global time spent to decode / resize by thread
+CFLAGS+=-DMJPEG_TRACE_FRAME # Generate a ViTe trace of execution
+CFLAGS+=-D_C2X_USES_LOCKFREE # Uses lockfree implem of workqueue (see c2x.h)
+#CFLAGS+=-DC2X_USES_PAPI # Uses PAPI counters
+#CFLAGS+=-D_C2X_DEBUG # Debug stuffs
 
 #CFLAGS+=-gdwarf-2 -g3 # Macros debug stuffs
 
@@ -52,9 +52,9 @@ diff:
 	diff -q ./ dtemp/
 
 clean:
-	rm -rf $(OUT) *.o
+	rm -rf $(OUT) *.o *.ept
 
 veryclean:
 	rm -rf $(OUT) *.o $(HEADERS) $(SRC) $(TMPFILE) 
 
-.SILENT: clean veryclean
+#.SILENT: clean veryclean
