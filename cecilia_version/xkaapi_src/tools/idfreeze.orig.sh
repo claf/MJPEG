@@ -1,24 +1,25 @@
 #!/bin/bash 
 
 #cpus=`seq 2 1 8`
-cpus='3'
+cpus='8'
 
 #bufSize=`seq 1 1 30`
-bufSize='10 15 20'
+bufSize='5'
 
-runs=`seq 1 1 3`
+runs=`seq 0 1 0`
 
 video='/home/claferri/toto.mjpeg'
 
 allfps[2]='45 46 47 48'
 #allfps[3]='83 84 85 86'
-allfps[3]=`seq 89 1 95`
+allfps[3]=`seq 83 1 83`
 
 allfps[4]='111 112 113 114'
 allfps[5]='142 143 144 145'
 allfps[6]='166 167 168'
 allfps[7]='200 201 202'
-allfps[8]='200 201 202 203'
+allfps[8]='150'
+#allfps[8]='200 201 202 203'
 
 ########
 # OPTS #
@@ -46,8 +47,6 @@ do
         echo "Can't use both Likwid and Oprofile, make your choice"
         exit 1
       fi
-      echo "Using likwid implies placement!"
-      sets=1
       oprof=0
       likwid=1;;
     d) echo "Output directory set to $OPTARG"
@@ -105,7 +104,10 @@ export LD_LIBRARY_PATH=/home/claferri/opt/debug/lib/:/home/claferri/opt/lib/
 if [ $oprof == '1' ]
 then
   opcontrol --reset
-  opcontrol --setup --event=CPU_CLK_UNHALTED:1000000:0:1:1 --no-vmlinux --buffer-size=65536 --buffer-watershed=0 --cpu-buffer-size=0 --callgraph=10 --separate=library
+  opcontrol --setup --event=CPU_CLK_UNHALTED:1000000:0:1:1 \
+    --event=DATA_CACHE_MISSES:1000000 --no-vmlinux \
+    --buffer-size=100000 --buffer-watershed=25000 --cpu-buffer-size=0 \
+    --callgraph=10 --separate=library 
   opcontrol --shutdown
   opcontrol --start
   echo "Enable oprofile, disable likwid :"
@@ -145,7 +147,13 @@ function run {
 file=$dir/trace-"$cpu"cpu-"$fps"fps-"$buffer"fb.$run
 if [ $likwid == '1' ]
 then
-  $likwid_cmd ${cpuset[$cpu]} KAAPI_CPUSET=${cpuset[$cpu]} ./mjpeg -b $buffer -f $fps $video > $file
+  if [ $sets == '1' ]
+  then
+    #TODO test
+    $likwid_cmd 0-47 KAAPI_CPUSET=${cpuset[$cpu]} ./mjpeg -b $buffer -f $fps $video > $file
+  else
+    $likwid_cmd 0-47 KAAPI_CPUCOUNT=$cpu ./mjpeg -b $buffer -f $fps $video > $file
+  fi
 else
   export ${cpuset[$cpu]}
   ./mjpeg -b $buffer -f $fps $video > $file
