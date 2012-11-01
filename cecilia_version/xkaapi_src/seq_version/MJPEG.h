@@ -1,12 +1,9 @@
 #ifndef _MJPEG_HEADER_
 #define _MJPEG_HEADER_
 
-#ifdef __GNU__
-#  define likely(x)      __builtin_expect(!!(x), 1)
-#  define unlikely(x)    __builtin_expect(!!(x), 0)
-#else
-#  define likely(x)      (x)
-#  define unlikely(x)    (x)
+#ifndef likely
+# define likely(x)   __builtin_expect(!!(x), 1)
+# define unlikely(x) __builtin_expect(!!(x), 0)
 #endif
 
 #if defined MJPEG_TRACE_FRAME || defined MJPEG_TRACE_THREAD

@@ -1,7 +1,7 @@
 CC=gcc -Wall -std=gnu99
-CFLAGS+=-g -O0 -I../include/ -I/home/claferri/opt/include/ $(shell pkg-config --cflags kaapi)
+CFLAGS+=-g -O0 -I../include/ -I/home/claferri/opt/include/ 
 
-CFLAGS+=-DC2X_USES_TIMING # Allow to print global time spent to steal / push / pop ...
+#CFLAGS+=-DC2X_USES_TIMING # Allow to print global time spent to steal / push / pop ...
 CFLAGS+=-DMJPEG_USES_TIMING # Allow to print global time spent to decode / resize by thread
 CFLAGS+=-DMJPEG_TRACE_FRAME # Generate a ViTe trace of execution
 CFLAGS+=-D_C2X_USES_LOCKFREE # Uses lockfree implem of workqueue (see c2x.h)
@@ -10,12 +10,12 @@ CFLAGS+=-D_C2X_USES_LOCKFREE # Uses lockfree implem of workqueue (see c2x.h)
 
 #CFLAGS+=-gdwarf-2 -g3 # Macros debug stuffs
 
-LDFLAGS=$(shell pkg-config --libs kaapi) -L/home/claferri/opt/lib/ -lpthread -lSDL -lSGE -lgtg -lpapi -ltrace_gtg
-LDLIB=/home/claferri/opt/lib/:$(shell pkg-config --libs-only-L kaapi | sed 's/^-L//')
+LDFLAGS=-L/home/claferri/opt/lib/ -lpthread -lSDL -lSGE -lgtg -lpapi -ltrace_gtg
+LDLIB=/home/claferri/opt/lib/
 
 ORI=../src/MJPEG
-SRC=main.c decode.c fetch.c resize.c render.c conv.c huffman.c idct.c iqzz.c skip_segment.c unpack_block.c upsampler.c c2x.c timing.c trace.c
-HEADERS=conv.h define_common.h huffman.h idct.h iqzz.h main.h MJPEG.h skip_segment.h unpack_block.h upsampler.h utils.h c2x.h timing.h trace.h
+SRC=decode.c fetch.c resize.c render.c conv.c huffman.c idct.c iqzz.c skip_segment.c unpack_block.c upsampler.c timing.c trace.c
+HEADERS=conv.h define_common.h huffman.h idct.h iqzz.h main.h MJPEG.h skip_segment.h unpack_block.h upsampler.h utils.h timing.h trace.h
 OBJ=$(SRC:.c=.o)
 OUT=mjpeg
 TMPFILE=.Generated
@@ -28,12 +28,6 @@ $(OUT):$(OBJ)
 %.o:%.c
 	$(CC) $(CFLAGS) -o $@ -c $^
 
-$(TMPFILE):$(wildcard $(ORI)/*.c)
-	c2x -V -s splitter -i MJPEG.h ./ $(ORI) 
-	touch $(TMPFILE)
-
-$(SRC):$(TMPFILE)
-
 run: $(OUT)
 	LD_LIBRARY_PATH=$(LDLIB) ./mjpeg ~/toto.mjpeg
 
@@ -43,8 +37,6 @@ gdb: $(OUT)
 debug: $(OUT)
 	LD_LIBRARY_PATH=$(LDLIB) cgdb -- --args mjpeg ~/toto.mjpeg 
 
-perl:$(TMPFILE)
-
 diff:
 	mkdir -p dtemp/
 	mv -n *.[ch] dtemp/
@@ -53,8 +45,5 @@ diff:
 
 clean:
 	rm -rf $(OUT) *.o *.ept
-
-veryclean:
-	rm -rf $(OUT) *.o $(HEADERS) $(SRC) $(TMPFILE) 
 
 #.SILENT: clean veryclean
