@@ -1,0 +1,13 @@
+Index: src/render/Render_opengl.cpp
+===================================================================
+--- src/render/Render_opengl.cpp	(revision 1254)
++++ src/render/Render_opengl.cpp	(working copy)
+@@ -883,7 +883,7 @@
+ 
+     buf.time             = time   + offset_x;
+     buf.height           = height + offset_y;
+-    buf.container_height = container_height   + offset_y;
++    buf.container_height = -container_height/2   ;
+     buf.red              = _red;
+     buf.green            = _green;
+     buf.blue             = _blue;

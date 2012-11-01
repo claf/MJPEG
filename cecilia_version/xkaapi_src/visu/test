@@ -1,0 +1,1376 @@
+LD_LIBRARY_PATH=/home/claferri/opt/debug/lib   ./mjpeg ~/toto.mjpeg
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 0 for stream 0
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 1 for stream 0
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 2 for stream 0
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 3 for stream 0
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 4 for stream 0
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 5 for stream 0
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 6 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 0 decoded! start :	50056 end :	50078 duration :	22
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 7 for stream 0
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 8 for stream 0
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 9 for stream 0
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 10 for stream 0
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 11 for stream 0
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 12 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 1 decoded! start :	50060 end :	50100 duration :	40
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 13 for stream 0
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 14 for stream 0
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 15 for stream 0
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 16 for stream 0
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 17 for stream 0
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 18 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 2 decoded! start :	50064 end :	50123 duration :	59
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 19 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 3 decoded! start :	50068 end :	50141 duration :	73
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 4 decoded! start :	50071 end :	50159 duration :	88
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 5 decoded! start :	50075 end :	50176 duration :	101
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 0 resized! start :	50079 end :	50180 duration :	101
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 6 decoded! start :	50078 end :	50197 duration :	119
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 7 decoded! start :	50082 end :	50215 duration :	133
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 8 decoded! start :	50086 end :	50233 duration :	147
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 9 decoded! start :	50089 end :	50250 duration :	161
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 10 decoded! start :	50093 end :	50268 duration :	175
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 11 decoded! start :	50096 end :	50285 duration :	189
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 1 resized! start :	50100 end :	50290 duration :	190
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 12 decoded! start :	50100 end :	50306 duration :	206
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 13 decoded! start :	50103 end :	50324 duration :	221
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 14 decoded! start :	50107 end :	50342 duration :	235
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 15 decoded! start :	50110 end :	50359 duration :	249
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 16 decoded! start :	50113 end :	50377 duration :	264
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 17 decoded! start :	50117 end :	50395 duration :	278
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 2 resized! start :	50123 end :	50415 duration :	292
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 18 decoded! start :	50120 end :	50416 duration :	296
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 19 decoded! start :	50123 end :	50433 duration :	310
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 3 resized! start :	50141 end :	50437 duration :	296
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 4 resized! start :	50159 end :	50440 duration :	281
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 5 resized! start :	50176 end :	50443 duration :	267
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 6 resized! start :	50197 end :	50446 duration :	249
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 7 resized! start :	50215 end :	50450 duration :	235
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 8 resized! start :	50233 end :	50453 duration :	220
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 9 resized! start :	50250 end :	50456 duration :	206
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 10 resized! start :	50268 end :	50460 duration :	192
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 11 resized! start :	50285 end :	50463 duration :	178
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 12 resized! start :	50306 end :	50466 duration :	160
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 13 resized! start :	50324 end :	50469 duration :	145
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 14 resized! start :	50342 end :	50473 duration :	131
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 15 resized! start :	50359 end :	50476 duration :	117
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 16 resized! start :	50377 end :	50479 duration :	102
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 17 resized! start :	50395 end :	50482 duration :	87
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 18 resized! start :	50416 end :	50486 duration :	70
+[0;34;40m[Frame::render_body][0;37;40m	Frame 0 ready at 1 ... printing
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 20
+[0;34;40m[Frame::render_body][0;37;40m	Frame 1 ready at 40 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 19 resized! start :	50433 end :	51100 duration :	667
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 21
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 39.699968
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 20 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.105984
+[0;34;40m[Frame::render_body][0;37;40m	Frame 2 ready at 80 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 21 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 20 decoded! start :	51137 end :	51155 duration :	18
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 21 decoded! start :	51139 end :	51173 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 22
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 20 resized! start :	51155 end :	51176 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 3 ready at 120 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 21 resized! start :	51173 end :	51180 duration :	7
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 23
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.048128
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 22 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.096000
+[0;34;40m[Frame::render_body][0;37;40m	Frame 4 ready at 160 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 23 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 22 decoded! start :	51216 end :	51235 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 23 decoded! start :	51218 end :	51253 duration :	35
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 22 resized! start :	51235 end :	51256 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 24
+[0;34;40m[Frame::render_body][0;37;40m	Frame 5 ready at 200 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 23 resized! start :	51253 end :	51259 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 25
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.212992
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 24 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.083968
+[0;34;40m[Frame::render_body][0;37;40m	Frame 6 ready at 240 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 25 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 24 decoded! start :	51296 end :	51315 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 25 decoded! start :	51299 end :	51333 duration :	34
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 24 resized! start :	51315 end :	51336 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 26
+[0;34;40m[Frame::render_body][0;37;40m	Frame 7 ready at 280 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 25 resized! start :	51333 end :	51339 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 27
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 39.933952
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 26 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.093952
+[0;34;40m[Frame::render_body][0;37;40m	Frame 8 ready at 320 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 27 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 26 decoded! start :	51376 end :	51395 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 27 decoded! start :	51378 end :	51413 duration :	35
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 26 resized! start :	51395 end :	51416 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 28
+[0;34;40m[Frame::render_body][0;37;40m	Frame 9 ready at 360 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 27 resized! start :	51413 end :	51419 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 29
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.210944
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 28 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.083968
+[0;34;40m[Frame::render_body][0;37;40m	Frame 10 ready at 400 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 29 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 28 decoded! start :	51456 end :	51475 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 29 decoded! start :	51459 end :	51493 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 30
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 28 resized! start :	51475 end :	51496 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 11 ready at 440 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 29 resized! start :	51493 end :	51499 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 31
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 39.977984
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 30 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.090880
+[0;34;40m[Frame::render_body][0;37;40m	Frame 12 ready at 480 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 31 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 30 decoded! start :	51536 end :	51555 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 31 decoded! start :	51538 end :	51573 duration :	35
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 30 resized! start :	51555 end :	51576 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 32
+[0;34;40m[Frame::render_body][0;37;40m	Frame 13 ready at 520 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 31 resized! start :	51573 end :	51579 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 33
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.208896
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 32 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.085248
+[0;34;40m[Frame::render_body][0;37;40m	Frame 14 ready at 560 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 33 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 32 decoded! start :	51616 end :	51635 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 33 decoded! start :	51619 end :	51653 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 34
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 32 resized! start :	51635 end :	51656 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 15 ready at 600 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 33 resized! start :	51653 end :	51659 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 35
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 39.984896
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 34 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.087040
+[0;34;40m[Frame::render_body][0;37;40m	Frame 16 ready at 640 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 35 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 34 decoded! start :	51696 end :	51715 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 35 decoded! start :	51698 end :	51733 duration :	35
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 34 resized! start :	51715 end :	51736 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 36
+[0;34;40m[Frame::render_body][0;37;40m	Frame 17 ready at 680 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 35 resized! start :	51733 end :	51739 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 37
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.231936
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 36 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.086016
+[0;34;40m[Frame::render_body][0;37;40m	Frame 18 ready at 720 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 37 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 36 decoded! start :	51776 end :	51795 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 37 decoded! start :	51779 end :	51813 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 38
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 36 resized! start :	51795 end :	51816 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 19 ready at 760 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 37 resized! start :	51813 end :	51820 duration :	7
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 39
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 39.980032
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 38 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.083200
+[0;34;40m[Frame::render_body][0;37;40m	Frame 20 ready at 800 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 39 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 38 decoded! start :	51856 end :	51875 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 39 decoded! start :	51858 end :	51893 duration :	35
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 38 resized! start :	51875 end :	51896 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 40
+[0;34;40m[Frame::render_body][0;37;40m	Frame 21 ready at 840 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 39 resized! start :	51893 end :	51899 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 41
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.214016
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 40 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.152064
+[0;34;40m[Frame::render_body][0;37;40m	Frame 22 ready at 880 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 41 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 40 decoded! start :	51936 end :	51955 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 41 decoded! start :	51939 end :	51973 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 42
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 40 resized! start :	51955 end :	51976 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 23 ready at 920 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 41 resized! start :	51973 end :	51979 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 43
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.054016
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 42 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.082944
+[0;34;40m[Frame::render_body][0;37;40m	Frame 24 ready at 960 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 43 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 42 decoded! start :	52016 end :	52035 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 43 decoded! start :	52018 end :	52053 duration :	35
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 44
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 42 resized! start :	52035 end :	52056 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 25 ready at 1000 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 43 resized! start :	52053 end :	52059 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 45
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 39.739904
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 44 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.079872
+[0;34;40m[Frame::render_body][0;37;40m	Frame 26 ready at 1040 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 45 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 44 decoded! start :	52095 end :	52114 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 45 decoded! start :	52098 end :	52132 duration :	34
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 44 resized! start :	52114 end :	52135 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 46
+[0;34;40m[Frame::render_body][0;37;40m	Frame 27 ready at 1080 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 45 resized! start :	52132 end :	52139 duration :	7
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 47
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 39.981824
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 46 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.097024
+[0;34;40m[Frame::render_body][0;37;40m	Frame 28 ready at 1120 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 47 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 46 decoded! start :	52176 end :	52195 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 47 decoded! start :	52178 end :	52213 duration :	35
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 46 resized! start :	52195 end :	52216 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 48
+[0;34;40m[Frame::render_body][0;37;40m	Frame 29 ready at 1160 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 47 resized! start :	52213 end :	52219 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 49
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.206080
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 48 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.143872
+[0;34;40m[Frame::render_body][0;37;40m	Frame 30 ready at 1200 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 49 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 48 decoded! start :	52256 end :	52275 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 49 decoded! start :	52259 end :	52293 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 50
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 48 resized! start :	52275 end :	52296 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 31 ready at 1240 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 49 resized! start :	52293 end :	52299 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 51
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 39.980800
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 50 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.088064
+[0;34;40m[Frame::render_body][0;37;40m	Frame 32 ready at 1280 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 51 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 50 decoded! start :	52336 end :	52355 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 51 decoded! start :	52338 end :	52373 duration :	35
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 52
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 50 resized! start :	52355 end :	52376 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 33 ready at 1320 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 51 resized! start :	52373 end :	52379 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 53
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.212992
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 52 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.089856
+[0;34;40m[Frame::render_body][0;37;40m	Frame 34 ready at 1360 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 53 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 52 decoded! start :	52416 end :	52435 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 53 decoded! start :	52419 end :	52453 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 54
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 52 resized! start :	52435 end :	52456 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 35 ready at 1400 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 53 resized! start :	52453 end :	52459 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 55
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.060160
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 54 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.094976
+[0;34;40m[Frame::render_body][0;37;40m	Frame 36 ready at 1440 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 55 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 54 decoded! start :	52496 end :	52515 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 55 decoded! start :	52498 end :	52533 duration :	35
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 54 resized! start :	52515 end :	52536 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 56
+[0;34;40m[Frame::render_body][0;37;40m	Frame 37 ready at 1480 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 55 resized! start :	52533 end :	52539 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 57
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.276992
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 56 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.084224
+[0;34;40m[Frame::render_body][0;37;40m	Frame 38 ready at 1520 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 57 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 56 decoded! start :	52576 end :	52595 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 57 decoded! start :	52579 end :	52613 duration :	34
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 56 resized! start :	52595 end :	52616 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 58
+[0;34;40m[Frame::render_body][0;37;40m	Frame 39 ready at 1560 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 57 resized! start :	52613 end :	52619 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 59
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 39.983872
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 58 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.093952
+[0;34;40m[Frame::render_body][0;37;40m	Frame 40 ready at 1600 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 59 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 58 decoded! start :	52656 end :	52675 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 59 decoded! start :	52659 end :	52693 duration :	34
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 58 resized! start :	52675 end :	52696 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 60
+[0;34;40m[Frame::render_body][0;37;40m	Frame 41 ready at 1640 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 59 resized! start :	52693 end :	52699 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 61
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.278016
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 60 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.089088
+[0;34;40m[Frame::render_body][0;37;40m	Frame 42 ready at 1680 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 61 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 60 decoded! start :	52736 end :	52755 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 61 decoded! start :	52739 end :	52773 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 62
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 60 resized! start :	52755 end :	52776 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 43 ready at 1720 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 61 resized! start :	52773 end :	52779 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 63
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 39.987968
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 62 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.131072
+[0;34;40m[Frame::render_body][0;37;40m	Frame 44 ready at 1760 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 63 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 62 decoded! start :	52816 end :	52835 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 63 decoded! start :	52819 end :	52853 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 64
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 62 resized! start :	52835 end :	52856 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 45 ready at 1800 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 63 resized! start :	52853 end :	52859 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 65
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.215808
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 64 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.094976
+[0;34;40m[Frame::render_body][0;37;40m	Frame 46 ready at 1840 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 65 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 64 decoded! start :	52896 end :	52915 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 65 decoded! start :	52899 end :	52933 duration :	34
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 64 resized! start :	52915 end :	52936 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 66
+[0;34;40m[Frame::render_body][0;37;40m	Frame 47 ready at 1880 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 65 resized! start :	52933 end :	52939 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 67
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 39.987200
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 66 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.083968
+[0;34;40m[Frame::render_body][0;37;40m	Frame 48 ready at 1920 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 67 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 66 decoded! start :	52976 end :	52995 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 67 decoded! start :	52979 end :	53013 duration :	34
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 66 resized! start :	52995 end :	53016 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 68
+[0;34;40m[Frame::render_body][0;37;40m	Frame 49 ready at 1961 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 67 resized! start :	53013 end :	53019 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 69
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 39.667968
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 68 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.081152
+[0;34;40m[Frame::render_body][0;37;40m	Frame 50 ready at 2000 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 69 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 68 decoded! start :	53056 end :	53075 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 69 decoded! start :	53058 end :	53092 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 70
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 68 resized! start :	53075 end :	53096 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 51 ready at 2040 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 69 resized! start :	53093 end :	53099 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 71
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.877056
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 70 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.086016
+[0;34;40m[Frame::render_body][0;37;40m	Frame 52 ready at 2080 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 71 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 70 decoded! start :	53136 end :	53155 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 71 decoded! start :	53138 end :	53173 duration :	35
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 70 resized! start :	53155 end :	53176 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 72
+[0;34;40m[Frame::render_body][0;37;40m	Frame 53 ready at 2120 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 71 resized! start :	53173 end :	53179 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 73
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.275968
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 72 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.090112
+[0;34;40m[Frame::render_body][0;37;40m	Frame 54 ready at 2160 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 73 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 72 decoded! start :	53216 end :	53235 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 73 decoded! start :	53219 end :	53253 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 74
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 72 resized! start :	53235 end :	53256 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 55 ready at 2200 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 73 resized! start :	53253 end :	53259 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 75
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 39.986176
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 74 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.093952
+[0;34;40m[Frame::render_body][0;37;40m	Frame 56 ready at 2240 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 75 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 74 decoded! start :	53296 end :	53315 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 75 decoded! start :	53299 end :	53333 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 76
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 74 resized! start :	53315 end :	53336 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 57 ready at 2280 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 75 resized! start :	53333 end :	53340 duration :	7
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 77
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.221184
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 76 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.100096
+[0;34;40m[Frame::render_body][0;37;40m	Frame 58 ready at 2320 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 77 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 76 decoded! start :	53376 end :	53395 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 77 decoded! start :	53379 end :	53413 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 78
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 76 resized! start :	53395 end :	53416 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 59 ready at 2360 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 77 resized! start :	53413 end :	53420 duration :	7
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 79
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 39.980032
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 78 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.090880
+[0;34;40m[Frame::render_body][0;37;40m	Frame 60 ready at 2400 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 79 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 78 decoded! start :	53456 end :	53475 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 79 decoded! start :	53459 end :	53493 duration :	34
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 78 resized! start :	53475 end :	53496 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 80
+[0;34;40m[Frame::render_body][0;37;40m	Frame 61 ready at 2440 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 79 resized! start :	53493 end :	53499 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 81
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.151040
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 80 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.090880
+[0;34;40m[Frame::render_body][0;37;40m	Frame 62 ready at 2480 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 81 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 80 decoded! start :	53536 end :	53555 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 81 decoded! start :	53539 end :	53573 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 82
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 80 resized! start :	53555 end :	53576 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 63 ready at 2520 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 81 resized! start :	53573 end :	53580 duration :	7
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 83
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.044032
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 82 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.089088
+[0;34;40m[Frame::render_body][0;37;40m	Frame 64 ready at 2560 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 83 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 82 decoded! start :	53616 end :	53635 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 83 decoded! start :	53619 end :	53653 duration :	34
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 82 resized! start :	53635 end :	53656 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 84
+[0;34;40m[Frame::render_body][0;37;40m	Frame 65 ready at 2600 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 83 resized! start :	53653 end :	53659 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 85
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.203008
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 84 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.113152
+[0;34;40m[Frame::render_body][0;37;40m	Frame 66 ready at 2640 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 85 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 84 decoded! start :	53696 end :	53715 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 85 decoded! start :	53699 end :	53733 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 86
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 84 resized! start :	53715 end :	53736 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 67 ready at 2680 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 85 resized! start :	53733 end :	53739 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 87
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.004096
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 86 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.099072
+[0;34;40m[Frame::render_body][0;37;40m	Frame 68 ready at 2720 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 87 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 86 decoded! start :	53776 end :	53795 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 87 decoded! start :	53779 end :	53813 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 88
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 86 resized! start :	53795 end :	53816 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 69 ready at 2760 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 87 resized! start :	53813 end :	53819 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 89
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.129024
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 88 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.089088
+[0;34;40m[Frame::render_body][0;37;40m	Frame 70 ready at 2800 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 89 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 88 decoded! start :	53856 end :	53875 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 89 decoded! start :	53859 end :	53893 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 90
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 88 resized! start :	53875 end :	53896 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 71 ready at 2840 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 89 resized! start :	53893 end :	53899 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 91
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.043008
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 90 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.097024
+[0;34;40m[Frame::render_body][0;37;40m	Frame 72 ready at 2880 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 91 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 90 decoded! start :	53936 end :	53955 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 91 decoded! start :	53939 end :	53973 duration :	34
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 90 resized! start :	53955 end :	53976 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 92
+[0;34;40m[Frame::render_body][0;37;40m	Frame 73 ready at 2920 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 91 resized! start :	53973 end :	53979 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 93
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.260864
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 92 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.098048
+[0;34;40m[Frame::render_body][0;37;40m	Frame 74 ready at 2961 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 93 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 92 decoded! start :	54016 end :	54035 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 93 decoded! start :	54019 end :	54053 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 94
+[0;34;40m[Frame::render_body][0;37;40m	Frame 75 ready at 3000 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 92 resized! start :	54035 end :	54056 duration :	21
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 93 resized! start :	54053 end :	54060 duration :	7
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 95
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 39.443200
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 94 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.081920
+[0;34;40m[Frame::render_body][0;37;40m	Frame 76 ready at 3040 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 95 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 94 decoded! start :	54095 end :	54114 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 95 decoded! start :	54098 end :	54132 duration :	34
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 94 resized! start :	54114 end :	54135 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 96
+[0;34;40m[Frame::render_body][0;37;40m	Frame 77 ready at 3080 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 95 resized! start :	54132 end :	54139 duration :	7
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 97
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.273920
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 96 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.093184
+[0;34;40m[Frame::render_body][0;37;40m	Frame 78 ready at 3120 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 97 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 96 decoded! start :	54176 end :	54195 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 97 decoded! start :	54179 end :	54213 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 98
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 96 resized! start :	54195 end :	54216 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 79 ready at 3160 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 97 resized! start :	54213 end :	54220 duration :	7
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 99
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 39.973120
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 98 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.088064
+[0;34;40m[Frame::render_body][0;37;40m	Frame 80 ready at 3200 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 99 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 98 decoded! start :	54256 end :	54275 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 99 decoded! start :	54259 end :	54293 duration :	34
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 98 resized! start :	54275 end :	54296 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 100
+[0;34;40m[Frame::render_body][0;37;40m	Frame 81 ready at 3240 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 99 resized! start :	54293 end :	54299 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 101
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.275968
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 100 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.094976
+[0;34;40m[Frame::render_body][0;37;40m	Frame 82 ready at 3280 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 101 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 100 decoded! start :	54336 end :	54355 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 101 decoded! start :	54339 end :	54373 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 102
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 100 resized! start :	54355 end :	54376 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 83 ready at 3320 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 101 resized! start :	54373 end :	54379 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 103
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.047104
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 102 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.094976
+[0;34;40m[Frame::render_body][0;37;40m	Frame 84 ready at 3360 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 103 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 102 decoded! start :	54416 end :	54435 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 103 decoded! start :	54419 end :	54453 duration :	34
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 102 resized! start :	54435 end :	54456 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 104
+[0;34;40m[Frame::render_body][0;37;40m	Frame 85 ready at 3400 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 103 resized! start :	54453 end :	54459 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 105
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.224000
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 104 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.088064
+[0;34;40m[Frame::render_body][0;37;40m	Frame 86 ready at 3440 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 105 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 104 decoded! start :	54496 end :	54515 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 105 decoded! start :	54499 end :	54533 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 106
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 104 resized! start :	54515 end :	54536 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 87 ready at 3480 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 105 resized! start :	54533 end :	54539 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 107
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 39.961856
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 106 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.114944
+[0;34;40m[Frame::render_body][0;37;40m	Frame 88 ready at 3520 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 107 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 106 decoded! start :	54576 end :	54595 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 107 decoded! start :	54579 end :	54613 duration :	34
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 106 resized! start :	54595 end :	54616 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 108
+[0;34;40m[Frame::render_body][0;37;40m	Frame 89 ready at 3560 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 107 resized! start :	54613 end :	54619 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 109
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.196096
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 108 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.091136
+[0;34;40m[Frame::render_body][0;37;40m	Frame 90 ready at 3600 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 109 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 108 decoded! start :	54656 end :	54675 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 109 decoded! start :	54659 end :	54693 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 110
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 108 resized! start :	54675 end :	54696 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 91 ready at 3640 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 109 resized! start :	54693 end :	54700 duration :	7
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 111
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.039936
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 110 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.089856
+[0;34;40m[Frame::render_body][0;37;40m	Frame 92 ready at 3680 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 111 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 110 decoded! start :	54736 end :	54755 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 111 decoded! start :	54739 end :	54773 duration :	34
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 110 resized! start :	54755 end :	54776 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 112
+[0;34;40m[Frame::render_body][0;37;40m	Frame 93 ready at 3720 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 111 resized! start :	54773 end :	54779 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 113
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.276992
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 112 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.084992
+[0;34;40m[Frame::render_body][0;37;40m	Frame 94 ready at 3760 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 113 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 112 decoded! start :	54816 end :	54835 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 113 decoded! start :	54819 end :	54853 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 114
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 112 resized! start :	54835 end :	54856 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 95 ready at 3800 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 113 resized! start :	54853 end :	54859 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 115
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 39.982848
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 114 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.083968
+[0;34;40m[Frame::render_body][0;37;40m	Frame 96 ready at 3840 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 115 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 114 decoded! start :	54896 end :	54915 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 115 decoded! start :	54899 end :	54933 duration :	34
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 114 resized! start :	54915 end :	54936 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 116
+[0;34;40m[Frame::render_body][0;37;40m	Frame 97 ready at 3880 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 115 resized! start :	54933 end :	54939 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 117
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.270848
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 116 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.081920
+[0;34;40m[Frame::render_body][0;37;40m	Frame 98 ready at 3920 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 117 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 116 decoded! start :	54976 end :	54995 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 117 decoded! start :	54979 end :	55013 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 118
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 116 resized! start :	54995 end :	55016 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 99 ready at 3960 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 117 resized! start :	55013 end :	55019 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 119
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 39.440896
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 118 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.083968
+[0;34;40m[Frame::render_body][0;37;40m	Frame 100 ready at 4000 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 119 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 118 decoded! start :	55056 end :	55075 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 119 decoded! start :	55058 end :	55092 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 120
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 118 resized! start :	55075 end :	55096 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 101 ready at 4040 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 119 resized! start :	55092 end :	55099 duration :	7
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 121
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 41.095936
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 120 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.086016
+[0;34;40m[Frame::render_body][0;37;40m	Frame 102 ready at 4080 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 121 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 120 decoded! start :	55136 end :	55155 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 121 decoded! start :	55139 end :	55173 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 122
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 120 resized! start :	55155 end :	55176 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 103 ready at 4120 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 121 resized! start :	55173 end :	55179 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 123
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.047872
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 122 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.104960
+[0;34;40m[Frame::render_body][0;37;40m	Frame 104 ready at 4160 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 123 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 122 decoded! start :	55216 end :	55235 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 123 decoded! start :	55219 end :	55253 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 124
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 122 resized! start :	55235 end :	55256 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 105 ready at 4200 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 123 resized! start :	55253 end :	55259 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 125
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.209920
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 124 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.092928
+[0;34;40m[Frame::render_body][0;37;40m	Frame 106 ready at 4240 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 125 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 124 decoded! start :	55296 end :	55315 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 125 decoded! start :	55299 end :	55333 duration :	34
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 124 resized! start :	55315 end :	55336 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 126
+[0;34;40m[Frame::render_body][0;37;40m	Frame 107 ready at 4280 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 125 resized! start :	55333 end :	55339 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 127
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 39.975936
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 126 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.091904
+[0;34;40m[Frame::render_body][0;37;40m	Frame 108 ready at 4320 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 127 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 126 decoded! start :	55376 end :	55395 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 127 decoded! start :	55379 end :	55413 duration :	34
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 126 resized! start :	55395 end :	55416 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 128
+[0;34;40m[Frame::render_body][0;37;40m	Frame 109 ready at 4360 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 127 resized! start :	55413 end :	55419 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 129
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.209920
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 128 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.119040
+[0;34;40m[Frame::render_body][0;37;40m	Frame 110 ready at 4400 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 129 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 128 decoded! start :	55456 end :	55475 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 129 decoded! start :	55459 end :	55493 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 130
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 128 resized! start :	55475 end :	55496 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 111 ready at 4440 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 129 resized! start :	55493 end :	55499 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 131
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 39.981056
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 130 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.095232
+[0;34;40m[Frame::render_body][0;37;40m	Frame 112 ready at 4480 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 131 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 130 decoded! start :	55536 end :	55555 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 131 decoded! start :	55539 end :	55573 duration :	34
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 130 resized! start :	55555 end :	55576 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 132
+[0;34;40m[Frame::render_body][0;37;40m	Frame 113 ready at 4520 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 131 resized! start :	55573 end :	55579 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 133
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.269824
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 132 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.091904
+[0;34;40m[Frame::render_body][0;37;40m	Frame 114 ready at 4560 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 133 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 132 decoded! start :	55616 end :	55635 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 133 decoded! start :	55619 end :	55653 duration :	34
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 132 resized! start :	55635 end :	55656 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 134
+[0;34;40m[Frame::render_body][0;37;40m	Frame 115 ready at 4600 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 133 resized! start :	55653 end :	55659 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 135
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 39.977984
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 134 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.144896
+[0;34;40m[Frame::render_body][0;37;40m	Frame 116 ready at 4640 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 135 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 134 decoded! start :	55696 end :	55715 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 135 decoded! start :	55699 end :	55733 duration :	34
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 134 resized! start :	55715 end :	55736 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 136
+[0;34;40m[Frame::render_body][0;37;40m	Frame 117 ready at 4680 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 135 resized! start :	55733 end :	55739 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 137
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.207872
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 136 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.086016
+[0;34;40m[Frame::render_body][0;37;40m	Frame 118 ready at 4720 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 137 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 136 decoded! start :	55776 end :	55795 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 137 decoded! start :	55779 end :	55813 duration :	34
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 136 resized! start :	55795 end :	55816 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 138
+[0;34;40m[Frame::render_body][0;37;40m	Frame 119 ready at 4760 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 137 resized! start :	55813 end :	55819 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 139
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 39.969792
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 138 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.084992
+[0;34;40m[Frame::render_body][0;37;40m	Frame 120 ready at 4800 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 139 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 138 decoded! start :	55856 end :	55875 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 139 decoded! start :	55858 end :	55893 duration :	35
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 138 resized! start :	55875 end :	55896 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 140
+[0;34;40m[Frame::render_body][0;37;40m	Frame 121 ready at 4840 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 139 resized! start :	55893 end :	55899 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 141
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.200960
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 140 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.094976
+[0;34;40m[Frame::render_body][0;37;40m	Frame 122 ready at 4880 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 141 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 140 decoded! start :	55936 end :	55955 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 141 decoded! start :	55939 end :	55973 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 142
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 140 resized! start :	55955 end :	55976 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 123 ready at 4920 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 141 resized! start :	55973 end :	55979 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 143
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.117760
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 142 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.094976
+[0;34;40m[Frame::render_body][0;37;40m	Frame 124 ready at 4960 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 143 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 142 decoded! start :	56016 end :	56035 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 143 decoded! start :	56019 end :	56053 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 144
+[0;34;40m[Frame::render_body][0;37;40m	Frame 125 ready at 5000 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 142 resized! start :	56035 end :	56056 duration :	21
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 143 resized! start :	56053 end :	56059 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 145
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 39.674112
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 144 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.093952
+[0;34;40m[Frame::render_body][0;37;40m	Frame 126 ready at 5040 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 145 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 144 decoded! start :	56095 end :	56114 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 145 decoded! start :	56098 end :	56132 duration :	34
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 144 resized! start :	56114 end :	56135 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 146
+[0;34;40m[Frame::render_body][0;37;40m	Frame 127 ready at 5080 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 145 resized! start :	56132 end :	56139 duration :	7
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 147
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 39.954944
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 146 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.095232
+[0;34;40m[Frame::render_body][0;37;40m	Frame 128 ready at 5120 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 147 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 146 decoded! start :	56176 end :	56195 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 147 decoded! start :	56178 end :	56213 duration :	35
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 146 resized! start :	56195 end :	56216 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 148
+[0;34;40m[Frame::render_body][0;37;40m	Frame 129 ready at 5160 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 147 resized! start :	56213 end :	56219 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 149
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.199168
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 148 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.083200
+[0;34;40m[Frame::render_body][0;37;40m	Frame 130 ready at 5200 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 149 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 148 decoded! start :	56256 end :	56275 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 149 decoded! start :	56259 end :	56293 duration :	34
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 148 resized! start :	56275 end :	56296 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 150
+[0;34;40m[Frame::render_body][0;37;40m	Frame 131 ready at 5240 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 149 resized! start :	56293 end :	56299 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 151
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.041984
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 150 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.119040
+[0;34;40m[Frame::render_body][0;37;40m	Frame 132 ready at 5280 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 151 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 150 decoded! start :	56336 end :	56355 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 151 decoded! start :	56339 end :	56373 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 152
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 150 resized! start :	56355 end :	56376 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 133 ready at 5320 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 151 resized! start :	56373 end :	56379 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 153
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.275200
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 152 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.082944
+[0;34;40m[Frame::render_body][0;37;40m	Frame 134 ready at 5360 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 153 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 152 decoded! start :	56416 end :	56435 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 153 decoded! start :	56419 end :	56452 duration :	33
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 152 resized! start :	56435 end :	56456 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 154
+[0;34;40m[Frame::render_body][0;37;40m	Frame 135 ready at 5400 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 153 resized! start :	56453 end :	56459 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 155
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 39.983872
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 154 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.080896
+[0;34;40m[Frame::render_body][0;37;40m	Frame 136 ready at 5440 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 155 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 154 decoded! start :	56496 end :	56515 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 155 decoded! start :	56499 end :	56533 duration :	34
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 154 resized! start :	56515 end :	56536 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 156
+[0;34;40m[Frame::render_body][0;37;40m	Frame 137 ready at 5480 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 155 resized! start :	56533 end :	56539 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 157
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.283136
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 156 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.085760
+[0;34;40m[Frame::render_body][0;37;40m	Frame 138 ready at 5520 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 157 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 156 decoded! start :	56576 end :	56595 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 157 decoded! start :	56579 end :	56613 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 158
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 156 resized! start :	56595 end :	56616 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 139 ready at 5560 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 157 resized! start :	56613 end :	56620 duration :	7
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 159
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.054784
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 158 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.096000
+[0;34;40m[Frame::render_body][0;37;40m	Frame 140 ready at 5600 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 159 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 158 decoded! start :	56656 end :	56675 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 159 decoded! start :	56659 end :	56693 duration :	34
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 158 resized! start :	56675 end :	56696 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 160
+[0;34;40m[Frame::render_body][0;37;40m	Frame 141 ready at 5640 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 159 resized! start :	56693 end :	56699 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 161
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.211968
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 160 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.089856
+[0;34;40m[Frame::render_body][0;37;40m	Frame 142 ready at 5680 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 161 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 160 decoded! start :	56736 end :	56755 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 161 decoded! start :	56739 end :	56773 duration :	34
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 160 resized! start :	56755 end :	56776 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 162
+[0;34;40m[Frame::render_body][0;37;40m	Frame 143 ready at 5720 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 161 resized! start :	56773 end :	56779 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 163
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.050944
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 162 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.088832
+[0;34;40m[Frame::render_body][0;37;40m	Frame 144 ready at 5760 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 163 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 162 decoded! start :	56816 end :	56835 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 163 decoded! start :	56819 end :	56853 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 164
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 162 resized! start :	56835 end :	56856 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 145 ready at 5800 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 163 resized! start :	56853 end :	56859 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 165
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.218880
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 164 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.086016
+[0;34;40m[Frame::render_body][0;37;40m	Frame 146 ready at 5840 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 165 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 164 decoded! start :	56896 end :	56915 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 165 decoded! start :	56899 end :	56933 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 166
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 164 resized! start :	56915 end :	56936 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 147 ready at 5880 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 165 resized! start :	56933 end :	56940 duration :	7
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 167
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 39.966976
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 166 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.092928
+[0;34;40m[Frame::render_body][0;37;40m	Frame 148 ready at 5920 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 167 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 166 decoded! start :	56976 end :	56995 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 167 decoded! start :	56979 end :	57013 duration :	34
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 166 resized! start :	56995 end :	57016 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 168
+[0;34;40m[Frame::render_body][0;37;40m	Frame 149 ready at 5961 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 167 resized! start :	57013 end :	57019 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 169
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 39.661056
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 168 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.096000
+[0;34;40m[Frame::render_body][0;37;40m	Frame 150 ready at 6000 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 169 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 168 decoded! start :	57056 end :	57075 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 169 decoded! start :	57058 end :	57093 duration :	35
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 170
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 168 resized! start :	57075 end :	57096 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 151 ready at 6040 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 169 resized! start :	57093 end :	57099 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 171
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.875008
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 170 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.083200
+[0;34;40m[Frame::render_body][0;37;40m	Frame 152 ready at 6080 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 171 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 170 decoded! start :	57136 end :	57155 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 171 decoded! start :	57138 end :	57173 duration :	35
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 172
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 170 resized! start :	57155 end :	57176 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 153 ready at 6120 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 171 resized! start :	57173 end :	57179 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 173
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.269824
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 172 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.123904
+[0;34;40m[Frame::render_body][0;37;40m	Frame 154 ready at 6160 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 173 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 172 decoded! start :	57216 end :	57235 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 173 decoded! start :	57219 end :	57253 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 174
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 172 resized! start :	57235 end :	57256 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 155 ready at 6200 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 173 resized! start :	57253 end :	57259 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 175
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 39.980032
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 174 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.089088
+[0;34;40m[Frame::render_body][0;37;40m	Frame 156 ready at 6240 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 175 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 174 decoded! start :	57296 end :	57315 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 175 decoded! start :	57298 end :	57333 duration :	35
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 174 resized! start :	57315 end :	57336 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 176
+[0;34;40m[Frame::render_body][0;37;40m	Frame 157 ready at 6280 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 175 resized! start :	57333 end :	57339 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 177
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.271104
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 176 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.084992
+[0;34;40m[Frame::render_body][0;37;40m	Frame 158 ready at 6320 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 177 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 176 decoded! start :	57376 end :	57395 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 177 decoded! start :	57379 end :	57413 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 178
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 176 resized! start :	57395 end :	57416 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 159 ready at 6360 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 177 resized! start :	57413 end :	57419 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 179
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 39.966976
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 178 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.089088
+[0;34;40m[Frame::render_body][0;37;40m	Frame 160 ready at 6400 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 179 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 178 decoded! start :	57456 end :	57475 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 179 decoded! start :	57458 end :	57492 duration :	34
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 178 resized! start :	57475 end :	57496 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 180
+[0;34;40m[Frame::render_body][0;37;40m	Frame 161 ready at 6440 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 179 resized! start :	57493 end :	57499 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 181
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.207872
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 180 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.086016
+[0;34;40m[Frame::render_body][0;37;40m	Frame 162 ready at 6480 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 181 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 180 decoded! start :	57536 end :	57555 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 181 decoded! start :	57539 end :	57573 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 182
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 180 resized! start :	57555 end :	57576 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 163 ready at 6520 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 181 resized! start :	57573 end :	57579 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 183
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.045056
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 182 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.088064
+[0;34;40m[Frame::render_body][0;37;40m	Frame 164 ready at 6560 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 183 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 182 decoded! start :	57616 end :	57635 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 183 decoded! start :	57618 end :	57653 duration :	35
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 182 resized! start :	57635 end :	57656 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 184
+[0;34;40m[Frame::render_body][0;37;40m	Frame 165 ready at 6600 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 183 resized! start :	57653 end :	57659 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 185
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.210944
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 184 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.096000
+[0;34;40m[Frame::render_body][0;37;40m	Frame 166 ready at 6640 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 185 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 184 decoded! start :	57696 end :	57715 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 185 decoded! start :	57699 end :	57733 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 186
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 184 resized! start :	57715 end :	57736 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 167 ready at 6680 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 185 resized! start :	57733 end :	57740 duration :	7
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 187
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 39.992064
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 186 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.088832
+[0;34;40m[Frame::render_body][0;37;40m	Frame 168 ready at 6720 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 187 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 186 decoded! start :	57776 end :	57795 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 187 decoded! start :	57779 end :	57813 duration :	34
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 186 resized! start :	57795 end :	57816 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 188
+[0;34;40m[Frame::render_body][0;37;40m	Frame 169 ready at 6760 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 187 resized! start :	57813 end :	57819 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 189
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.208128
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 188 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.093952
+[0;34;40m[Frame::render_body][0;37;40m	Frame 170 ready at 6800 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 189 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 188 decoded! start :	57856 end :	57875 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 189 decoded! start :	57859 end :	57893 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 190
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 188 resized! start :	57875 end :	57896 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 171 ready at 6840 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 189 resized! start :	57893 end :	57900 duration :	7
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 191
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 39.969024
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 190 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.089088
+[0;34;40m[Frame::render_body][0;37;40m	Frame 172 ready at 6880 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 191 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 190 decoded! start :	57936 end :	57955 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 191 decoded! start :	57939 end :	57973 duration :	34
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 190 resized! start :	57955 end :	57976 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 192
+[0;34;40m[Frame::render_body][0;37;40m	Frame 173 ready at 6920 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 191 resized! start :	57973 end :	57979 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 193
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.277248
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 192 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.080896
+[0;34;40m[Frame::render_body][0;37;40m	Frame 174 ready at 6961 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 193 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 192 decoded! start :	58016 end :	58035 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 193 decoded! start :	58019 end :	58053 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 194
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 192 resized! start :	58035 end :	58056 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 175 ready at 7000 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 193 resized! start :	58053 end :	58059 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 195
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 39.447040
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 194 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.089856
+[0;34;40m[Frame::render_body][0;37;40m	Frame 176 ready at 7040 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 195 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 194 decoded! start :	58095 end :	58114 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 195 decoded! start :	58098 end :	58132 duration :	34
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 194 resized! start :	58114 end :	58135 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 196
+[0;34;40m[Frame::render_body][0;37;40m	Frame 177 ready at 7080 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 195 resized! start :	58132 end :	58139 duration :	7
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 197
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.212992
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 196 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.130048
+[0;34;40m[Frame::render_body][0;37;40m	Frame 178 ready at 7120 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 197 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 196 decoded! start :	58176 end :	58195 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 197 decoded! start :	58179 end :	58213 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 198
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 196 resized! start :	58195 end :	58216 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 179 ready at 7160 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 197 resized! start :	58213 end :	58220 duration :	7
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 199
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 39.982080
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 198 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.087040
+[0;34;40m[Frame::render_body][0;37;40m	Frame 180 ready at 7200 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 199 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 198 decoded! start :	58256 end :	58275 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 199 decoded! start :	58259 end :	58293 duration :	34
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 198 resized! start :	58275 end :	58296 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 200
+[0;34;40m[Frame::render_body][0;37;40m	Frame 181 ready at 7240 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 199 resized! start :	58293 end :	58299 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 201
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.225792
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 200 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.090112
+[0;34;40m[Frame::render_body][0;37;40m	Frame 182 ready at 7280 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 201 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 200 decoded! start :	58336 end :	58355 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 201 decoded! start :	58339 end :	58373 duration :	34
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 200 resized! start :	58355 end :	58376 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 202
+[0;34;40m[Frame::render_body][0;37;40m	Frame 183 ready at 7320 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 201 resized! start :	58373 end :	58379 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 203
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 39.987200
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 202 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.081920
+[0;34;40m[Frame::render_body][0;37;40m	Frame 184 ready at 7360 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 203 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 202 decoded! start :	58416 end :	58435 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 203 decoded! start :	58419 end :	58452 duration :	33
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 202 resized! start :	58435 end :	58456 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 204
+[0;34;40m[Frame::render_body][0;37;40m	Frame 185 ready at 7400 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 203 resized! start :	58453 end :	58459 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 205
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.226048
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 204 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.141056
+[0;34;40m[Frame::render_body][0;37;40m	Frame 186 ready at 7440 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 205 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 204 decoded! start :	58496 end :	58515 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 205 decoded! start :	58499 end :	58533 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 206
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 204 resized! start :	58515 end :	58536 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 187 ready at 7480 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 205 resized! start :	58533 end :	58540 duration :	7
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 207
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 39.954176
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 206 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.083200
+[0;34;40m[Frame::render_body][0;37;40m	Frame 188 ready at 7520 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 207 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 206 decoded! start :	58576 end :	58595 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 207 decoded! start :	58579 end :	58613 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 208
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 206 resized! start :	58595 end :	58616 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 189 ready at 7560 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 207 resized! start :	58613 end :	58619 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 209
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.263936
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 208 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.089856
+[0;34;40m[Frame::render_body][0;37;40m	Frame 190 ready at 7600 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 209 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 208 decoded! start :	58656 end :	58675 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 209 decoded! start :	58659 end :	58693 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 210
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 208 resized! start :	58675 end :	58696 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 191 ready at 7640 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 209 resized! start :	58693 end :	58699 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 211
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 39.972864
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 210 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.081920
+[0;34;40m[Frame::render_body][0;37;40m	Frame 192 ready at 7680 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 211 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 210 decoded! start :	58736 end :	58755 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 211 decoded! start :	58739 end :	58773 duration :	34
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 210 resized! start :	58755 end :	58776 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 212
+[0;34;40m[Frame::render_body][0;37;40m	Frame 193 ready at 7720 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 211 resized! start :	58773 end :	58779 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 213
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.217856
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 212 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.086016
+[0;34;40m[Frame::render_body][0;37;40m	Frame 194 ready at 7760 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 213 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 212 decoded! start :	58816 end :	58835 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 213 decoded! start :	58819 end :	58853 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 214
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 212 resized! start :	58835 end :	58856 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 195 ready at 7800 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 213 resized! start :	58853 end :	58859 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 215
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.001024
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 214 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.079104
+[0;34;40m[Frame::render_body][0;37;40m	Frame 196 ready at 7840 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 215 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 214 decoded! start :	58896 end :	58915 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 215 decoded! start :	58898 end :	58933 duration :	35
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 216
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 214 resized! start :	58915 end :	58936 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 197 ready at 7880 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 215 resized! start :	58933 end :	58939 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 217
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.289024
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 216 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.087040
+[0;34;40m[Frame::render_body][0;37;40m	Frame 198 ready at 7920 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 217 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 216 decoded! start :	58976 end :	58995 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 217 decoded! start :	58979 end :	59013 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 218
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 216 resized! start :	58995 end :	59016 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 199 ready at 7960 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 217 resized! start :	59013 end :	59019 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 219
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 39.438848
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 218 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.088064
+[0;34;40m[Frame::render_body][0;37;40m	Frame 200 ready at 8000 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 219 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 218 decoded! start :	59056 end :	59074 duration :	18
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 219 decoded! start :	59058 end :	59092 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 220
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 218 resized! start :	59074 end :	59095 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 201 ready at 8040 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 219 resized! start :	59092 end :	59099 duration :	7
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 221
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 41.336064
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 220 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.078848
+[0;34;40m[Frame::render_body][0;37;40m	Frame 202 ready at 8080 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 221 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 220 decoded! start :	59136 end :	59155 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 221 decoded! start :	59139 end :	59173 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 222
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 220 resized! start :	59155 end :	59176 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 203 ready at 8120 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 221 resized! start :	59173 end :	59179 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 223
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 39.986176
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 222 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.093952
+[0;34;40m[Frame::render_body][0;37;40m	Frame 204 ready at 8160 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 223 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 222 decoded! start :	59216 end :	59235 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 223 decoded! start :	59218 end :	59253 duration :	35
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 222 resized! start :	59235 end :	59256 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 224
+[0;34;40m[Frame::render_body][0;37;40m	Frame 205 ready at 8200 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 223 resized! start :	59253 end :	59259 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 225
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.212992
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 224 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.083968
+[0;34;40m[Frame::render_body][0;37;40m	Frame 206 ready at 8240 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 225 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 224 decoded! start :	59296 end :	59315 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 225 decoded! start :	59299 end :	59333 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 226
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 224 resized! start :	59315 end :	59336 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 207 ready at 8280 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 225 resized! start :	59333 end :	59339 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 227
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 39.972864
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 226 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.087040
+[0;34;40m[Frame::render_body][0;37;40m	Frame 208 ready at 8320 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 227 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 226 decoded! start :	59376 end :	59395 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 227 decoded! start :	59378 end :	59413 duration :	35
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 226 resized! start :	59395 end :	59416 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 228
+[0;34;40m[Frame::render_body][0;37;40m	Frame 209 ready at 8360 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 227 resized! start :	59413 end :	59419 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 229
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.218112
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 228 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.086016
+[0;34;40m[Frame::render_body][0;37;40m	Frame 210 ready at 8400 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 229 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 228 decoded! start :	59456 end :	59475 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 229 decoded! start :	59459 end :	59493 duration :	34
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 228 resized! start :	59475 end :	59496 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 230
+[0;34;40m[Frame::render_body][0;37;40m	Frame 211 ready at 8440 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 229 resized! start :	59493 end :	59499 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 231
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 39.990016
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 230 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.096000
+[0;34;40m[Frame::render_body][0;37;40m	Frame 212 ready at 8480 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 231 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 230 decoded! start :	59536 end :	59555 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 231 decoded! start :	59539 end :	59573 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 232
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 230 resized! start :	59555 end :	59576 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 213 ready at 8520 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 231 resized! start :	59573 end :	59579 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 233
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.209152
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 232 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.089088
+[0;34;40m[Frame::render_body][0;37;40m	Frame 214 ready at 8560 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 233 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 232 decoded! start :	59616 end :	59635 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 233 decoded! start :	59619 end :	59653 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 234
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 232 resized! start :	59635 end :	59656 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 215 ready at 8600 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 233 resized! start :	59653 end :	59659 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 235
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 39.976960
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 234 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.090880
+[0;34;40m[Frame::render_body][0;37;40m	Frame 216 ready at 8640 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 235 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 234 decoded! start :	59696 end :	59715 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 235 decoded! start :	59699 end :	59733 duration :	34
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 236
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 234 resized! start :	59715 end :	59736 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Frame 217 ready at 8680 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 235 resized! start :	59733 end :	59740 duration :	7
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 237
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.215040
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 236 for stream 0
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 0.090112
+[0;34;40m[Frame::render_body][0;37;40m	Frame 218 ready at 8720 ... printing
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 237 for stream 0
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 236 decoded! start :	59776 end :	59795 duration :	19
+[0;32;40m[Frame::decode_body][0;37;40m	Frame 237 decoded! start :	59779 end :	59813 duration :	34
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 236 resized! start :	59795 end :	59816 duration :	21
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 238
+[0;34;40m[Frame::render_body][0;37;40m	Frame 219 ready at 8760 ... printing
+[0;32;40m[Frame::resize_body][0;37;40m	Frame 237 resized! start :	59813 end :	59819 duration :	6
+[0;34;40m[Frame::render_body][0;37;40m	Call to fetch component to decode frame 239
+[0;31;40m[Frame::fetch_body][0;37;40m	Received skip of decode command in 40.047104
+
+[0;31;40m[Frame::main_body][0;37;40m	Start decoding of frame 238 for stream 0
