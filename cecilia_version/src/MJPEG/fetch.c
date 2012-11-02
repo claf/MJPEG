@@ -111,6 +111,11 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
 {
   PXKAAPI("Fetch start\n");
 
+#ifdef MJPEG_USES_TIMING
+  tick_t tinit1, tinit2;
+  GET_TICK(tinit1);
+#endif
+
   /* TODO : dynamic alloc :
    * Streams 
    * Achievements
@@ -292,6 +297,8 @@ int METHOD(entry, main)(void *_this, int argc, char** argv)
   tick_t unpack1, unpack2;
   tick_t t1, t2;
   GET_TICK(t1);
+  GET_TICK(tinit2);
+  printf ("MJPEG's Init. Time : %ld\n",(long)tick2usec(TICK_RAW_DIFF (tinit1,tinit2)));
 #endif
 
 
@@ -833,7 +840,8 @@ clean_end:
   //printf ("\n#dropped frames : %d\n", dropped);
 
 #ifdef MJPEG_USES_TIMING
-  long twork = 0;
+  long twork_dec = 0;
+  long twork_res = 0;
   printf ("\n*** MJPEG TIMING INFOS ***\n\n");
 
   printf ("Time for thread %d :\t read   :%ld\n",0, (long)tick2usec(mjpeg_time_table[0].tread));
@@ -845,7 +853,8 @@ clean_end:
 
   for (int i = 1; i < nb_threads - 1; i++)
   {
-    twork += (long)tick2usec(mjpeg_time_table[i].tdec) + (long)tick2usec(mjpeg_time_table[i].trsz);
+    twork_dec += (long)tick2usec(mjpeg_time_table[i].tdec);
+    twork_res += (long)tick2usec(mjpeg_time_table[i].trsz);
     printf ("Time for thread %d :\t decode :%ld\n",i, (long)tick2usec(mjpeg_time_table[i].tdec));
     printf ("Time for thread %d :\t resize :%ld\n",i, (long)tick2usec(mjpeg_time_table[i].trsz));
     printf ("--------------------------------\n");
@@ -854,7 +863,9 @@ clean_end:
   printf ("Time for thread %d :\t copy   :%ld\n",nb_threads - 1, (long)tick2usec(mjpeg_time_table[nb_threads-1].tcopy));
   printf ("--------------------------------\n");
 
-  printf ("\nTotal work : %ld\n", twork);
+  printf ("\nTotal decode : %ld", twork_dec);
+  printf ("\nTotal resize : %ld", twork_res);
+  printf ("\nTotal work : %ld\n", twork_dec+twork_res);
   printf ("\n*** END ***\n");
 
   free (mjpeg_time_table);

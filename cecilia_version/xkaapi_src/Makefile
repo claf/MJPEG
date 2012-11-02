@@ -29,7 +29,8 @@ $(OUT):$(OBJ)
 	$(CC) $(CFLAGS) -o $@ -c $^
 
 $(TMPFILE):$(wildcard $(ORI)/*.c)
-	c2x -V -s splitter -i MJPEG.h ./ $(ORI) 
+	c2x -V -s splitter_half -i MJPEG.h ./ $(ORI) 
+	#c2x -V -s splitter -i MJPEG.h ./ $(ORI) 
 	touch $(TMPFILE)
 
 $(SRC):$(TMPFILE)
